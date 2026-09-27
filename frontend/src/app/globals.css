@@ -1,0 +1,1672 @@
+@import "tailwindcss";
+
+/*
+ * VAUG design tokens.
+ *
+ * The page alternates dark and light bands (<Band tone="dark|light">).
+ *  - Dark bands lead with purple.
+ *  - Light bands lead with yellow (as fills and highlighter marks; text stays ink).
+ * The theme toggle switches between "light" (alternating bands, default)
+ * and "dark" (every band dark; light bands keep their yellow accent).
+ * Components use only the semantic names below (bg-bg, text-fg, bg-accent …).
+ */
+
+@custom-variant dark (&:where([data-tone="dark"], [data-tone="dark"] *));
+
+/* Dark band (purple) */
+:root,
+[data-tone="dark"] {
+  --bg: #131116;
+  --surface: #1b1920;
+  --surface-2: #26232c;
+  --border: rgb(255 255 255 / 0.1);
+  --border-strong: rgb(255 255 255 / 0.2);
+  --fg: #f4f2f7;
+  --muted: #a39eab;
+  --subtle: #6e6977;
+  --accent: #8b5cf6;
+  --accent-hover: #9d74f8;
+  --accent-fg: #ffffff;
+  --accent-soft: rgb(139 92 246 / 0.16);
+  --accent-text: #b69cff;
+  --mark: rgb(139 92 246 / 0.45);
+  --btn-bg: #f4f2f7;
+  --btn-fg: #131116;
+  --btn-box: #131116;
+  --btn-arrow: #b69cff;
+  --logo-dot: #ffd23f;
+  color-scheme: dark;
+}
+
+/* Light band (yellow) */
+[data-tone="light"] {
+  --bg: #f5f4f0;
+  --surface: #ffffff;
+  --surface-2: #ebe9e3;
+  --border: rgb(19 17 22 / 0.1);
+  --border-strong: rgb(19 17 22 / 0.22);
+  --fg: #131116;
+  --muted: #5d5864;
+  --subtle: #8f8a96;
+  --accent: #ffd23f;
+  --accent-hover: #ffc814;
+  --accent-fg: #131116;
+  --accent-soft: rgb(255 210 63 / 0.28);
+  --accent-text: #6d28d9;
+  --mark: #ffd23f;
+  --btn-bg: #131116;
+  --btn-fg: #f5f4f0;
+  --btn-box: #f5f4f0;
+  --btn-arrow: #131116;
+  --logo-dot: #7c3aed;
+  color-scheme: light;
+}
+
+/* All-dark theme: light bands go dark but keep yellow as their accent. */
+[data-theme="dark"] [data-tone="light"] {
+  --bg: #17151a;
+  --surface: #1f1d24;
+  --surface-2: #29262f;
+  --border: rgb(255 255 255 / 0.1);
+  --border-strong: rgb(255 255 255 / 0.2);
+  --fg: #f4f2f7;
+  --muted: #a39eab;
+  --subtle: #6e6977;
+  --accent-text: #ffd23f;
+  --accent-soft: rgb(255 210 63 / 0.14);
+  --mark: rgb(255 210 63 / 0.35);
+  --btn-bg: #ffd23f;
+  --btn-fg: #131116;
+  --btn-box: #131116;
+  --btn-arrow: #ffd23f;
+  --logo-dot: #ffd23f;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-text: var(--accent-text);
+
+  /* Fixed brand colours, identical everywhere. */
+  --color-purple: #7c3aed;
+  --color-purple-light: #b69cff;
+  --color-yellow: #ffd23f;
+  --color-ink: #131116;
+  --color-paper: #f5f4f0;
+
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-code);
+
+  --animate-marquee: marquee var(--marquee-duration, 40s) linear infinite;
+  --animate-marquee-y: marquee-y var(--marquee-duration, 40s) linear infinite;
+  --animate-pulse-dot: pulse-dot 2s ease-in-out infinite;
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes marquee-y {
+    from { transform: translateY(0); }
+    to { transform: translateY(-50%); }
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+  @keyframes fade-up {
+    from { opacity: 0.3; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes feed-in {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: none; }
+  }
+}
+
+@layer base {
+  html {
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    background: #131116;
+    color: var(--fg);
+    font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    letter-spacing: -0.03em;
+  }
+
+  ::selection {
+    background: #ffd23f;
+    color: #131116;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent-text);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  /* Band: a full-width section with its own tone. */
+  .band {
+    background: var(--bg);
+    color: var(--fg);
+    border-bottom: 1px solid var(--border);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Frame: the centred column with vertical rails on both sides. */
+  .frame {
+    position: relative;
+    width: 100%;
+    max-width: 78rem;
+    margin-inline: auto;
+  }
+  @media (min-width: 1280px) {
+    .frame {
+      border-inline: 1px solid var(--border);
+    }
+  }
+  .frame-pad {
+    padding-inline: 1rem;
+  }
+  @media (min-width: 640px) {
+    .frame-pad { padding-inline: 2rem; }
+  }
+  @media (min-width: 1024px) {
+    .frame-pad { padding-inline: 4rem; }
+  }
+
+  /* Small dot where one grid line crosses another. */
+  .grid-dot {
+    position: absolute;
+    z-index: 2;
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: var(--subtle);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  /* Highlighter mark behind a phrase. */
+  .mark {
+    background: linear-gradient(transparent 58%, var(--mark) 58%, var(--mark) 92%, transparent 92%);
+    padding-inline: 0.08em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+
+  .mask-fade-x {
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  }
+  .mask-fade-y {
+    mask-image: linear-gradient(to bottom, transparent, black 12%, black 88%, transparent);
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Scroll reveal: only hidden once JS has marked the page ready. */
+  /* Entrance recipe used everywhere: short, starts partly visible, never blocks reading. */
+  .js-ready [data-reveal] {
+    opacity: 0.35;
+    transform: translateY(14px);
+    transition: opacity 0.25s ease-out, transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition-delay: min(var(--reveal-delay, 0ms), 240ms);
+  }
+  .js-ready [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Line illustrations draw themselves in when they scroll into view. */
+  .draw :is(path, line, circle, rect, ellipse, polyline, polygon) {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 2s cubic-bezier(0.6, 0, 0.2, 1);
+  }
+  .js-ready .draw:not(.is-visible) :is(path, line, circle, rect, ellipse, polyline, polygon) {
+    stroke-dashoffset: 1;
+  }
+}
+
+/* ---------- Progress bar ---------- */
+.progress-bar {
+  transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.progress-bar.is-reading {
+  transition: transform 0.1s linear;
+}
+
+/* ---------- Cursor companion ---------- */
+/* The native cursor always stays visible; these are an enhancement on top. */
+:root {
+  --spark-a: #ffd23f;
+  --spark-b: #8b5cf6;
+}
+.cursor-ring,
+.cursor-trail {
+  display: none;
+}
+.has-cursor.cursor-visible .cursor-ring,
+.has-cursor.cursor-visible .cursor-trail {
+  display: block;
+}
+.cursor-ring {
+  --p: 0;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100;
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: 1.5px solid #fff;
+  mix-blend-mode: difference;
+  pointer-events: none;
+  transition: width 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), height 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-radius 0.35s ease, background-color 0.3s ease, border-color 0.3s ease, opacity 0.2s ease;
+}
+/* Reading-progress arc, shown while scrolling */
+.cursor-ring::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 999px;
+  background: conic-gradient(#fff calc(var(--p) * 1turn), transparent 0);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2px));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.cursor-ring.is-scrolling:not(.is-wrap, .has-label)::after {
+  opacity: 1;
+}
+.cursor-ring.is-hover {
+  width: 60px;
+  height: 60px;
+  background: rgb(255 255 255 / 0.1);
+}
+.cursor-ring.is-wrap {
+  background: transparent;
+}
+.cursor-ring.is-down {
+  width: 26px;
+  height: 26px;
+  animation: cursor-charge 0.5s ease-in-out infinite alternate;
+}
+.cursor-ring.is-text {
+  opacity: 0;
+}
+.cursor-ring.has-label {
+  width: 88px;
+  height: 88px;
+  mix-blend-mode: normal;
+  background: var(--spark-a);
+  border-color: var(--spark-a);
+  box-shadow: 0 12px 30px -10px rgb(0 0 0 / 0.45);
+}
+.cursor-ring__label {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0.6);
+  font: 600 12px var(--font-body);
+  letter-spacing: 0.04em;
+  color: #131116;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.cursor-ring.has-label .cursor-ring__label {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+@keyframes cursor-charge {
+  from { background-color: rgb(255 255 255 / 0.1); }
+  to { background-color: rgb(255 255 255 / 0.55); }
+}
+
+/* Comet tail */
+.cursor-trail {
+  position: fixed;
+  left: -5px;
+  top: -5px;
+  z-index: 99;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #fff;
+  mix-blend-mode: difference;
+  pointer-events: none;
+  opacity: 0;
+}
+
+/* Click sparks */
+.cursor-sparks {
+  position: fixed;
+  inset: 0;
+  z-index: 101;
+  pointer-events: none;
+}
+.cursor-spark {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 999px;
+  background: var(--spark-a);
+  box-shadow: 0 0 8px var(--spark-a);
+  animation: cursor-spark 0.7s cubic-bezier(0.15, 0.7, 0.3, 1) forwards;
+}
+.cursor-spark.is-alt {
+  background: var(--spark-b);
+  box-shadow: 0 0 8px var(--spark-b);
+}
+@keyframes cursor-spark {
+  0% { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(0.2); opacity: 0; }
+}
+
+/* ---------- Glass ---------- */
+.glass {
+  background: color-mix(in srgb, var(--surface) 55%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(1.5);
+  backdrop-filter: blur(16px) saturate(1.5);
+  border: 1px solid rgb(255 255 255 / 0.22);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.3), 0 18px 40px -24px rgb(0 0 0 / 0.45);
+}
+[data-tone="light"] .glass {
+  border-color: rgb(255 255 255 / 0.7);
+}
+
+/* ---------- Hover helpers ---------- */
+[data-magnetic] {
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+[data-tilt] {
+  position: relative;
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease;
+  will-change: transform;
+}
+[data-tilt]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  background: radial-gradient(420px circle at var(--gx, 50%) var(--gy, 50%), rgb(255 255 255 / 0.14), transparent 55%);
+}
+[data-tilt]:hover::after {
+  opacity: 1;
+}
+[data-tilt]:hover {
+  box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.45);
+}
+[data-parallax] {
+  transition: translate 0.2s linear;
+}
+[data-glow] {
+  position: relative;
+  isolation: isolate;
+}
+[data-glow]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%), var(--accent-soft), transparent 65%);
+}
+[data-glow]:hover::before {
+  opacity: 1;
+}
+
+/* Light sweep across buttons on hover */
+.btn-sweep::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(110deg, transparent 25%, rgb(255 255 255 / 0.28) 50%, transparent 75%);
+  transform: translateX(-120%);
+  transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.btn-sweep:hover::before {
+  transform: translateX(120%);
+}
+
+/* Underline that grows from the left on hover */
+.link-underline {
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.2s ease;
+}
+.link-underline:hover {
+  background-size: 100% 1px;
+}
+
+/* Busy cursor shuttling between a lead card and the CRM sheet */
+.story-copy-cursor {
+  left: 30%;
+  top: 20%;
+  animation: copy-shuttle 1.4s cubic-bezier(0.6, 0, 0.3, 1) infinite;
+}
+@keyframes copy-shuttle {
+  0%, 100% { left: 30%; top: 18%; }
+  45%, 55% { left: 62%; top: 88%; }
+}
+
+/* ---------- Hero ---------- */
+.hero-aurora {
+  animation: aurora 16s ease-in-out infinite alternate;
+}
+@keyframes aurora {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(8%, -6%) scale(1.15); }
+  100% { transform: translate(-6%, 8%) scale(0.95); }
+}
+@keyframes underline-draw {
+  0% { transform: scaleX(0); transform-origin: left; }
+  35%, 80% { transform: scaleX(1); transform-origin: left; }
+  80.1% { transform-origin: right; }
+  100% { transform: scaleX(0); transform-origin: right; }
+}
+
+/* ---------- Word-by-word title reveal ---------- */
+.word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.word > span {
+  display: inline-block;
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition-delay: min(calc(var(--i) * 25ms), 250ms);
+}
+.js-ready [data-reveal]:not(.is-visible) .word > span {
+  transform: translateY(110%);
+}
+
+/* ---------- Illustration motion ---------- */
+.ill .ill-grid {
+  stroke-dasharray: 2 6 !important;
+  stroke-dashoffset: 0 !important;
+  stroke-width: 0.8;
+  opacity: 0.35;
+}
+.js-ready .draw:not(.is-visible) .ill-motion {
+  opacity: 0;
+}
+.ill-motion {
+  transition: opacity 0.6s ease 1.2s;
+}
+.ill-float { animation: ill-float 4s ease-in-out infinite; }
+.ill-bounce { animation: ill-bounce 1.8s cubic-bezier(0.3, 0, 0.3, 1) infinite; }
+.ill-rise { animation: ill-rise 3.3s ease-in-out infinite both; }
+.ill-steam { animation: ill-steam 2.4s ease-in-out infinite; }
+.ill-shackle { animation: ill-shackle 3s ease-in-out infinite; }
+.ill-blink { animation: ill-blink 1.1s steps(1, end) infinite; }
+.ill-spin,
+.ill-pulse,
+.ill-turn,
+.ill-flame,
+.ill-grow,
+.ill-swing,
+.ill-wobble,
+.ill-pulse-badge {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.ill-spin { animation: ill-spin 10s linear infinite; }
+.ill-pulse { animation: ill-pulse 2.6s ease-out infinite; }
+.ill-turn { animation: ill-turn 4s ease-in-out infinite; }
+.ill-flame { transform-origin: top center; animation: ill-flame 0.3s ease-in-out infinite alternate; }
+.ill-grow { transform-origin: bottom center; animation: ill-grow 3.2s cubic-bezier(0.6, 0, 0.2, 1) infinite; }
+.ill-swing { transform-origin: top center; animation: ill-swing 3.2s ease-in-out infinite; }
+.ill-wobble { transform-origin: 20% 80%; animation: ill-wobble 2.2s ease-in-out infinite; }
+.ill-pulse-badge { animation: ill-badge 2.4s ease-in-out infinite; }
+.ill-progress { stroke-dasharray: 1 !important; animation: ill-progress 3.4s cubic-bezier(0.6, 0, 0.2, 1) infinite; }
+@keyframes ill-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+@keyframes ill-bounce { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-12px); } 60% { transform: translateY(0); } 70% { transform: translateY(-4px); } }
+@keyframes ill-rise { 0% { opacity: 0; transform: translateY(14px); } 20%, 60% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-22px); } }
+@keyframes ill-steam { 0%, 100% { opacity: 0.2; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-4px); } }
+@keyframes ill-shackle { 0%, 60%, 100% { transform: translateY(0); } 70%, 85% { transform: translateY(-6px); } }
+@keyframes ill-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes ill-spin { to { transform: rotate(360deg); } }
+@keyframes ill-pulse { 0% { transform: scale(0.85); opacity: 0.9; } 100% { transform: scale(1.3); opacity: 0; } }
+@keyframes ill-turn { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(0.15); } }
+@keyframes ill-flame { from { transform: scaleY(0.75); opacity: 0.8; } to { transform: scaleY(1.15); opacity: 1; } }
+@keyframes ill-grow { 0%, 100% { transform: scaleY(0.55); } 45%, 70% { transform: scaleY(1); } }
+@keyframes ill-swing { 0%, 100% { transform: rotate(-7deg); } 50% { transform: rotate(7deg); } }
+@keyframes ill-wobble { 0%, 100% { transform: rotate(0); } 30% { transform: rotate(-14deg); } 55% { transform: rotate(6deg); } }
+@keyframes ill-badge { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+@keyframes ill-progress { 0% { stroke-dashoffset: 1; } 65%, 85% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+
+/* ---------- Case study mock ---------- */
+.mock-line {
+  stroke-dasharray: 1;
+  animation: mock-line 2.4s cubic-bezier(0.6, 0, 0.2, 1) 0.3s both;
+}
+.mock-notify {
+  animation: mock-notify 3.6s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+}
+@keyframes mock-line { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes mock-notify {
+  0% { opacity: 0; transform: translateY(-8px) scale(0.95); }
+  15%, 80% { opacity: 1; transform: none; }
+  100% { opacity: 0; transform: translateY(-4px); }
+}
+
+/* ---------- VAUG wordmark ---------- */
+.vaug-logo {
+  display: inline-flex;
+  align-items: flex-end;
+  font-weight: 900;
+  letter-spacing: -0.07em;
+  line-height: 0.8;
+  padding-bottom: 0.05em;
+}
+.vaug-logo__letters {
+  display: inline-flex;
+  overflow: hidden;
+  padding: 0.08em 0.04em 0.04em 0;
+}
+.vaug-logo__letters > span {
+  display: inline-block;
+}
+.vaug-logo__arrow {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 0.24em;
+  margin-left: 0.07em;
+  margin-bottom: 0.08em;
+  color: var(--logo-dot);
+}
+.vaug-logo__shaft {
+  display: block;
+  width: 0.24em;
+  height: 0.24em;
+  border-radius: 999px;
+  background: currentColor;
+  transition: width 0.55s cubic-bezier(0.5, -0.4, 0.3, 1.5), height 0.35s ease;
+}
+.vaug-logo__head {
+  position: absolute;
+  right: -0.13em;
+  width: 0.26em;
+  height: 0.3em;
+  opacity: 0;
+  transform: translateX(-0.3em) scale(0.6);
+  transition: opacity 0.25s ease, transform 0.55s cubic-bezier(0.5, -0.4, 0.3, 1.5);
+}
+.group:hover .vaug-logo__shaft,
+.vaug-logo:hover .vaug-logo__shaft {
+  width: 0.72em;
+  height: 0.14em;
+}
+.group:hover .vaug-logo__head,
+.vaug-logo:hover .vaug-logo__head {
+  opacity: 1;
+  transform: none;
+}
+
+/* One-time intro: letters rise, dot drops, then shoots forward as an arrow. */
+.vaug-logo--intro .vaug-logo__letters > span {
+  animation: logo-rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--i) * 70ms + 150ms);
+}
+.vaug-logo--intro .vaug-logo__arrow {
+  animation: logo-drop 0.6s cubic-bezier(0.3, 1.6, 0.5, 1) 0.6s both;
+}
+.vaug-logo--intro .vaug-logo__shaft {
+  animation: logo-shoot 1.1s cubic-bezier(0.6, 0, 0.2, 1) 1.3s backwards;
+}
+.vaug-logo--intro .vaug-logo__head {
+  animation: logo-head 1.1s cubic-bezier(0.6, 0, 0.2, 1) 1.3s backwards;
+}
+@keyframes logo-rise {
+  from { transform: translateY(110%); }
+  to { transform: none; }
+}
+@keyframes logo-drop {
+  from { transform: translateY(-1.2em); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+@keyframes logo-shoot {
+  0%, 100% { width: 0.24em; height: 0.24em; }
+  40%, 60% { width: 0.72em; height: 0.14em; }
+}
+@keyframes logo-head {
+  0%, 100% { opacity: 0; transform: translateX(-0.3em) scale(0.6); }
+  40%, 60% { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .js-ready [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+  .js-ready .draw:not(.is-visible) :is(path, line, circle, rect, ellipse, polyline, polygon) {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ---------- Page transitions (app/template.tsx) ---------- */
+::view-transition-old(.vt-page-out) {
+  animation: vt-page-out 140ms ease-in both;
+}
+::view-transition-new(.vt-page-in) {
+  animation: vt-page-in 260ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+::view-transition-group(.case-morph) {
+  animation-duration: 520ms;
+  animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes vt-page-out {
+  to { opacity: 0; transform: translateY(-6px); }
+}
+@keyframes vt-page-in {
+  from { opacity: 0.4; transform: translateY(10px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* ==================== Engineering pages (src/components/engineering) ==================== */
+/* Base styles are the finished state; keyframes start from "off". Delays are negative
+   so every item is already mid-cycle on load, and reduced motion simply shows the base. */
+.eng-a-flow {
+  stroke-dasharray: 12 88;
+  animation: eng-flow var(--eng-d, 2.4s) linear infinite;
+  animation-delay: calc(var(--i, 0) * -0.45s);
+}
+.eng-a-lit,
+.eng-a-unlit {
+  animation: eng-lit var(--eng-d, 6s) ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * var(--eng-step, 0.6s) - var(--eng-d, 6s));
+}
+.eng-a-unlit { opacity: 0; animation-name: eng-unlit; }
+.eng-a-float { animation: eng-float 5s ease-in-out infinite; animation-delay: calc(var(--i, 0) * -1.3s); }
+.eng-a-pulse { opacity: 0; transform-box: fill-box; transform-origin: center; animation: eng-pulse 2.6s ease-out infinite; animation-delay: calc(var(--i, 0) * -1.3s); }
+.eng-a-bar { transform-origin: bottom; transform-box: fill-box; animation: eng-bar 2.8s ease-in-out infinite; animation-delay: calc(var(--i, 0) * -0.35s); }
+.eng-a-type { display: inline-block; overflow: hidden; white-space: nowrap; vertical-align: bottom; animation: eng-type 6s steps(18, end) infinite; }
+.eng-a-caret { animation: eng-caret 1s steps(1, end) infinite; }
+.eng-a-toast { animation: eng-toast 7s cubic-bezier(0.6, 0, 0.2, 1) infinite; }
+.eng-a-tab { animation: eng-tab 8s cubic-bezier(0.6, 0, 0.2, 1) infinite; }
+.eng-a-cursor { animation: eng-cursor 7s cubic-bezier(0.6, 0, 0.2, 1) infinite; }
+.eng-a-fill { transform-origin: left; animation: eng-fill var(--eng-d, 6s) cubic-bezier(0.6, 0, 0.2, 1) infinite; }
+.eng-a-ring { animation: eng-ring 6s cubic-bezier(0.2, 0.7, 0.2, 1) infinite; animation-delay: calc(var(--i, 0) * -0.25s); }
+.eng-a-beam { animation: eng-beam 3.2s linear infinite; animation-delay: calc(var(--i, 0) * -0.6s); }
+.eng-a-beam-y { animation: eng-beam-y 2.6s linear infinite; }
+.eng-a-spin { animation: eng-spin 1s linear infinite; }
+.eng-a-orbit { animation: eng-spin 60s linear infinite; }
+.eng-a-orbit-rev { animation: eng-spin 60s linear infinite reverse; }
+.eng-a-fade { animation: eng-fade 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.eng-orbit:hover .eng-a-orbit,
+.eng-orbit:hover .eng-a-orbit-rev,
+.eng-orbit:focus-within .eng-a-orbit,
+.eng-orbit:focus-within .eng-a-orbit-rev { animation-play-state: paused; }
+
+.eng-grid-dots {
+  background-image: radial-gradient(circle at 1px 1px, var(--border-strong) 1px, transparent 0);
+  background-size: 16px 16px;
+}
+.eng-gauge-arc {
+  stroke-dasharray: 100;
+  stroke-dashoffset: var(--eng-off, 0);
+  transition: stroke-dashoffset 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) 0.25s;
+}
+.js-ready [data-reveal]:not(.is-visible) .eng-gauge-arc { stroke-dashoffset: 100; }
+.eng-rail-line { transform-origin: top; transition: transform 1.4s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.js-ready [data-reveal]:not(.is-visible) .eng-rail-line { transform: scaleY(0); }
+
+@keyframes eng-flow { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
+@keyframes eng-lit { 0%, 6% { opacity: 0; } 12%, 80% { opacity: 1; } 90%, 100% { opacity: 0; } }
+@keyframes eng-unlit { 0%, 6% { opacity: 1; } 12%, 80% { opacity: 0; } 90%, 100% { opacity: 1; } }
+@keyframes eng-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes eng-pulse { 0% { opacity: 0.55; transform: scale(1); } 100% { opacity: 0; transform: scale(1.9); } }
+@keyframes eng-bar { 0%, 100% { transform: scaleY(var(--lo, 0.45)); } 50% { transform: scaleY(1); } }
+@keyframes eng-type { 0% { max-width: 0; } 45%, 100% { max-width: 18ch; } }
+@keyframes eng-caret { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+@keyframes eng-toast {
+  0%, 12% { transform: translateY(-140%); opacity: 0; }
+  20%, 62% { transform: none; opacity: 1; }
+  72%, 100% { transform: translateY(-140%); opacity: 0; }
+}
+@keyframes eng-tab {
+  0%, 20% { transform: translateX(0); }
+  25%, 45% { transform: translateX(100%); }
+  50%, 70% { transform: translateX(200%); }
+  75%, 95% { transform: translateX(300%); }
+  100% { transform: translateX(0); }
+}
+@keyframes eng-cursor {
+  0%, 100% { left: 18%; top: 72%; }
+  25% { left: 62%; top: 30%; }
+  50% { left: 40%; top: 58%; }
+  75% { left: 74%; top: 76%; }
+}
+@keyframes eng-fill { 0% { transform: scaleX(0); } 70%, 92% { transform: scaleX(1); } 100% { transform: scaleX(1); opacity: 0; } }
+@keyframes eng-ring { 0% { stroke-dashoffset: 100; } 35%, 100% { stroke-dashoffset: var(--eng-off, 0); } }
+@keyframes eng-beam { from { transform: translateX(-120%); } to { transform: translateX(520%); } }
+@keyframes eng-beam-y { from { transform: translateY(-120%); } to { transform: translateY(620%); } }
+@keyframes eng-spin { to { transform: rotate(360deg); } }
+@keyframes eng-fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  [class*="eng-a-"] { animation: none !important; }
+  .eng-gauge-arc, .eng-rail-line { transition: none !important; }
+}
+/* ==================== /Engineering pages ==================== */
+
+/* ---------- Case studies ---------- */
+.cs-float { animation: cs-float 7s ease-in-out infinite; }
+@keyframes cs-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -12px; } }
+.cs-bar { width: 0; animation: cs-bar 3.6s cubic-bezier(0.6, 0, 0.2, 1) infinite; }
+@keyframes cs-bar { 0% { width: 0; } 55%, 85% { width: 100%; } 100% { width: 100%; opacity: 0; } }
+.cs-shimmer { position: relative; overflow: hidden; }
+.cs-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.7), transparent);
+  transform: translateX(-100%);
+  animation: cs-shimmer 2.4s ease-in-out infinite;
+  animation-delay: inherit;
+}
+@keyframes cs-shimmer { 60%, 100% { transform: translateX(100%); } }
+/* timeline spine draws down when revealed */
+.cs-spine { transform-origin: top; transition: transform 1.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.js-ready [data-reveal]:not(.is-visible) .cs-spine { transform: scaleY(0); }
+@media (prefers-reduced-motion: reduce) {
+  .cs-float, .cs-bar, .cs-shimmer::after { animation: none; }
+  .cs-bar { width: 60%; }
+}
+
+/* ---------- contact / legal / 404 (contact-page area) ---------- */
+@keyframes contact-ping {
+  0% { transform: scale(1); opacity: 0.9; }
+  100% { transform: scale(3.4); opacity: 0; }
+}
+@keyframes contact-breathe {
+  0%, 100% { transform: scale(0.8); opacity: 0.5; }
+  50% { transform: scale(1.3); opacity: 1; }
+}
+@keyframes contact-twinkle {
+  0%, 100% { opacity: 0.22; }
+  50% { opacity: 0.55; }
+}
+.contact-map-ping,
+.contact-map-breathe {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.contact-map-ping { animation: contact-ping 2.4s cubic-bezier(0.2, 0.7, 0.2, 1) infinite; }
+.contact-map-breathe { animation: contact-breathe 3.2s ease-in-out infinite; }
+.contact-map-dots circle {
+  opacity: 0.22;
+  animation: contact-twinkle 4.5s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * -0.31s);
+}
+@keyframes contact-node {
+  0%, 70%, 100% { box-shadow: 0 0 0 0 rgb(139 92 246 / 0); }
+  80% { box-shadow: 0 0 0 10px rgb(139 92 246 / 0.25); }
+}
+.contact-step-node { animation: contact-node 4s ease-out infinite; animation-delay: calc(var(--i, 0) * 1s); }
+
+/* legal hero visual */
+@keyframes legal-scan {
+  0% { top: -2rem; }
+  100% { top: 100%; }
+}
+@keyframes legal-stamp {
+  0% { transform: rotate(-30deg) scale(2); opacity: 0; }
+  60% { transform: rotate(-8deg) scale(0.92); opacity: 1; }
+  100% { transform: rotate(-12deg) scale(1); opacity: 1; }
+}
+@keyframes legal-line {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.legal-doc-scan { animation: legal-scan 3.2s cubic-bezier(0.5, 0, 0.5, 1) infinite; }
+.legal-doc-line {
+  transform-origin: left;
+  animation: legal-line 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(0.3s + var(--i, 0) * 0.09s);
+}
+.legal-stamp { animation: legal-stamp 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 1.2s both; }
+.legal-doc-tick {
+  animation: nf-line 0.5s ease-out both;
+  animation-delay: calc(1.1s + var(--i, 0) * 0.2s);
+}
+
+/* 404 */
+@keyframes nf-spin { to { transform: rotate(360deg); } }
+@keyframes nf-counter { to { transform: rotate(-360deg); } }
+@keyframes nf-float {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-0.06em) rotate(-3deg); }
+}
+@keyframes nf-search {
+  0%, 100% { transform: translate(-0.08em, 0.04em); }
+  25% { transform: translate(0.08em, -0.06em); }
+  50% { transform: translate(0.06em, 0.08em); }
+  75% { transform: translate(-0.07em, -0.05em); }
+}
+@keyframes nf-line {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes nf-blink { 50% { opacity: 0; } }
+.nf-orbit { animation: nf-spin 9s linear infinite; }
+.nf-counter { animation: nf-counter 9s linear infinite; }
+.nf-digit { animation: nf-float 4s ease-in-out infinite; }
+.nf-search { animation: nf-search 3.6s ease-in-out infinite; }
+.nf-line { animation: nf-line 0.5s ease-out both; animation-delay: calc(0.4s + var(--i, 0) * 0.55s); }
+.nf-caret { animation: nf-blink 1s steps(1) infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-map-comets { display: none; }
+  .contact-map-ping, .contact-map-breathe, .contact-map-dots circle, .contact-step-node,
+  .legal-doc-scan, .nf-orbit, .nf-counter, .nf-digit, .nf-search, .nf-caret { animation: none; }
+  .legal-doc-scan { display: none; }
+}
+/* ---------- end contact-page area ---------- */
+
+/* ---------- industries + who-we-serve area (ind-*, aud-*) ---------- */
+.ind-float { animation: ind-float 5s ease-in-out infinite; }
+.ind-wave { animation: ind-wave 1.6s ease-in-out infinite; animation-delay: var(--d, 0s); }
+.ind-dash { stroke-dasharray: 6 7; animation: ind-dash 1.4s linear infinite; animation-delay: var(--d, 0s); }
+.ind-needle { animation: ind-needle 4.5s cubic-bezier(0.5, 0, 0.3, 1) infinite; }
+.ind-ping { animation: ind-ping 2.4s ease-out infinite; animation-delay: var(--d, 0s); }
+.ind-ping-ring { animation: ind-ping-ring 2.8s ease-out infinite; }
+.ind-feed { opacity: 0; animation: ind-feed 7s cubic-bezier(0.2, 0.8, 0.2, 1) infinite; animation-delay: var(--d, 0s); }
+.ind-beat { animation: ind-beat 1.2s ease-in-out infinite; }
+.ind-scan { stroke-dasharray: 0.22 0.78; animation: ind-scan 2.6s linear infinite; }
+.ind-blink { opacity: 0; animation: ind-blink 3.2s ease-in-out infinite; animation-delay: var(--d, 0s); }
+.ind-window { opacity: 0; animation: ind-window 6s ease-in-out infinite; animation-delay: var(--d, 0s); }
+.ind-rise { animation: ind-rise 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) both; animation-delay: var(--d, 0s); }
+.ind-bob { animation: ind-bob 2.2s ease-in-out infinite; animation-delay: var(--d, 0s); }
+.ind-count { animation: ind-count 6s cubic-bezier(0.6, 0, 0.2, 1) infinite; }
+.ind-grow { transform-box: fill-box; transform-origin: 50% 100%; animation: ind-grow 3.6s cubic-bezier(0.6, 0, 0.2, 1) infinite; animation-delay: var(--d, 0s); }
+.ind-truck { animation: ind-truck 7s linear infinite; }
+.ind-stop-a { opacity: 0; animation: ind-stop-a 7s linear infinite; }
+.ind-stop-b { opacity: 0; animation: ind-stop-b 7s linear infinite; }
+.ind-arc { animation: ind-arc 6s ease-in-out infinite; }
+.ind-sweep { animation: ind-sweep 5s cubic-bezier(0.6, 0, 0.2, 1) infinite; }
+.ind-star { transform-box: fill-box; transform-origin: center; animation: ind-star 4s ease-in-out infinite; animation-delay: var(--d, 0s); }
+.ind-orbit { animation: ind-orbit var(--orbit, 60s) linear infinite; }
+.ind-orbit-counter { animation: ind-orbit var(--orbit, 60s) linear infinite reverse; }
+.ind-orbit-wrap:is(:hover, :focus-within) :is(.ind-orbit, .ind-orbit-counter) { animation-play-state: paused; }
+.ind-panel-in { animation: ind-panel-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.ind-point { animation: ind-panel-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+@keyframes ind-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes ind-wave { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+@keyframes ind-dash { to { stroke-dashoffset: -26; } }
+@keyframes ind-needle { 0%, 100% { transform: rotate(-58deg); } 45% { transform: rotate(-30deg); } 60% { transform: rotate(-42deg); } }
+@keyframes ind-ping { 0% { transform: scale(0.7); opacity: 0.8; } 100% { transform: scale(1.9); opacity: 0; } }
+@keyframes ind-ping-ring { 0% { transform: scale(1); opacity: 0.9; } 100% { transform: scale(1.6); opacity: 0; } }
+@keyframes ind-feed {
+  0% { opacity: 0; transform: translateY(8px); }
+  7%, 82% { opacity: 1; transform: none; }
+  92%, 100% { opacity: 0; transform: translateY(-4px); }
+}
+@keyframes ind-beat { 0%, 100% { transform: scale(1); } 15% { transform: scale(1.25); } 30% { transform: scale(1); } 45% { transform: scale(1.15); } }
+@keyframes ind-scan { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes ind-blink { 0%, 100% { opacity: 0; } 30%, 60% { opacity: 1; } }
+@keyframes ind-window { 0%, 100% { opacity: 0; } 20%, 70% { opacity: 0.95; } }
+@keyframes ind-rise { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes ind-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+@keyframes ind-count {
+  0%, 28% { transform: translateY(0); }
+  33%, 61% { transform: translateY(-16px); }
+  66%, 94% { transform: translateY(-32px); }
+  100% { transform: translateY(0); }
+}
+@keyframes ind-grow { 0%, 100% { transform: scaleY(0.45); } 45%, 75% { transform: scaleY(1); } }
+/* van route: M60 240 V160 H180 V90 H330 (driven over 85%, then parked) */
+@keyframes ind-truck {
+  0% { transform: translate(60px, 240px); }
+  16.2% { transform: translate(60px, 160px); }
+  40.5% { transform: translate(180px, 160px); }
+  54.6% { transform: translate(180px, 90px); }
+  85%, 96% { transform: translate(330px, 90px); opacity: 1; }
+  100% { transform: translate(330px, 90px); opacity: 0; }
+}
+@keyframes ind-stop-a { 0%, 40% { opacity: 0; transform: scale(0.4); } 43%, 96% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+@keyframes ind-stop-b { 0%, 84% { opacity: 0; transform: scale(0.4); } 87%, 96% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+@keyframes ind-arc {
+  0% { transform: rotate(-55deg); opacity: 0; }
+  10% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: rotate(55deg); opacity: 0; }
+}
+@keyframes ind-sweep { 0% { transform: scaleX(0); } 30%, 85% { transform: scaleX(1); } 100% { transform: scaleX(0); opacity: 0; } }
+@keyframes ind-star { 0%, 100% { transform: scale(1); } 10% { transform: scale(1.3); } 20% { transform: scale(1); } }
+@keyframes ind-orbit { to { transform: rotate(360deg); } }
+@keyframes ind-panel-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+/* who-we-serve scenes */
+.aud-grow-line { stroke-dasharray: 1; animation: aud-grow-line 5.4s cubic-bezier(0.6, 0, 0.2, 1) infinite; }
+.aud-milestone { opacity: 0; animation: aud-milestone 5.4s ease-out infinite; animation-delay: var(--d, 0s); }
+.aud-flame { transform-box: fill-box; transform-origin: top center; animation: aud-flame 0.25s ease-in-out infinite alternate; }
+.aud-redact { animation: aud-redact 2.8s ease-in-out infinite; animation-delay: var(--d, 0s); }
+.aud-shackle { animation: aud-shackle 3.6s ease-in-out infinite; }
+.aud-card { animation: aud-card 6s ease-in-out infinite; }
+.aud-toggle { animation: aud-toggle 6s ease-in-out infinite; }
+.aud-node-pulse { opacity: 0; animation: aud-node-pulse 3.2s ease-out infinite; animation-delay: var(--d, 0s); }
+
+@keyframes aud-grow-line { 0% { stroke-dashoffset: 1; } 55%, 90% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+@keyframes aud-milestone { 0% { opacity: 0; transform: scale(0.3); } 8%, 80% { opacity: 1; transform: scale(1); } 100% { opacity: 0; } }
+@keyframes aud-flame { from { transform: scaleY(0.7); } to { transform: scaleY(1.2); } }
+@keyframes aud-redact { 0%, 100% { opacity: 0.85; } 50% { opacity: 0.45; } }
+@keyframes aud-shackle { 0%, 55%, 100% { transform: translateY(0); } 65%, 80% { transform: translateY(-5px); } }
+@keyframes aud-card { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-4px, -6px); } }
+@keyframes aud-toggle { 0%, 12% { transform: translateX(-18px); } 22%, 100% { transform: translateX(0); } }
+@keyframes aud-node-pulse { 0% { opacity: 0.55; transform: scale(1); } 60%, 100% { opacity: 0; transform: scale(1.9); } }
+
+/* journey rails draw in when the timeline is revealed */
+.aud-rail-x { transform-origin: left; transition: transform 1.6s cubic-bezier(0.6, 0, 0.2, 1) 0.2s; }
+.aud-rail-y { transform-origin: top; transition: transform 1.6s cubic-bezier(0.6, 0, 0.2, 1) 0.2s; }
+.aud-stage { transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); transition-delay: calc(var(--i, 0) * 180ms + 300ms); }
+.js-ready .aud-journey:not(.is-visible) .aud-rail-x { transform: scaleX(0); }
+.js-ready .aud-journey:not(.is-visible) .aud-rail-y { transform: scaleY(0); }
+.js-ready .aud-journey:not(.is-visible) .aud-stage { opacity: 0; transform: translateY(18px); }
+
+@media (prefers-reduced-motion: reduce) {
+  :is([class^="ind-"], [class*=" ind-"], [class^="aud-"], [class*=" aud-"]) { animation: none !important; }
+  .ind-feed, .ind-stop-a, .ind-stop-b, .aud-milestone, .ind-arc { opacity: 1; }
+  .ind-blink, .ind-window, .aud-node-pulse { opacity: 0; }
+  .ind-truck { transform: translate(180px, 160px); }
+  .ind-arc { transform: rotate(0deg); }
+  .js-ready .aud-journey:not(.is-visible) :is(.aud-rail-x, .aud-rail-y, .aud-stage) { opacity: 1; transform: none; }
+}
+/* ---------- end industries + who-we-serve area ---------- */
+
+/* ==================== Services + Agents area (svc-*, agents-*) ==================== */
+@keyframes svc-ping { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(2.4); opacity: 0; } }
+@keyframes svc-spin { to { transform: rotate(360deg); } }
+@keyframes svc-spin-rev { to { transform: rotate(-360deg); } }
+@keyframes svc-fade-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes svc-slide { from { opacity: 0; transform: translateX(-14px); } to { opacity: 1; transform: none; } }
+@keyframes svc-dot { 0%, 60%, 100% { transform: none; opacity: 0.5; } 30% { transform: translateY(-3px); opacity: 1; } }
+@keyframes svc-toast { 0%, 100% { opacity: 0.5; } 12%, 40% { opacity: 1; background: var(--accent-soft); } }
+@keyframes svc-cell { 0%, 60%, 100% { transform: scale(1); } 30% { transform: scale(0.55); } }
+@keyframes svc-build { 0% { opacity: 0; transform: translateY(6px) scale(0.97); } 8%, 88% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; transform: none; } }
+@keyframes svc-dash { 0% { stroke-dashoffset: 400; } 40%, 100% { stroke-dashoffset: 0; } }
+@keyframes svc-float { from { transform: translateY(0); } to { transform: translateY(-8px); } }
+@keyframes svc-type { 0% { clip-path: inset(0 100% 0 0); } 60%, 100% { clip-path: inset(0 0 0 0); } }
+@keyframes svc-draw-loop { 0% { stroke-dashoffset: 1; } 45%, 92% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+@keyframes svc-area { 0%, 25% { opacity: 0; } 50%, 92% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes svc-pop { 0% { transform: scale(0); } 10%, 100% { transform: scale(1); } }
+@keyframes svc-chip { 0%, 22%, 100% { background: transparent; color: var(--muted); border-color: var(--border); } 6%, 14% { background: var(--accent-soft); color: var(--fg); border-color: var(--accent-text); } }
+@keyframes svc-lock { 0%, 88%, 100% { transform: none; } 91% { transform: rotate(-5deg) scale(1.05); } 94% { transform: rotate(5deg) scale(1.05); } 97% { transform: none; } }
+@keyframes svc-progress { 0% { transform: scaleX(0); } 80%, 97% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
+@keyframes svc-shine { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+@keyframes svc-pop-in { 0% { transform: scale(0.6); opacity: 0; } 70% { transform: scale(1.08); opacity: 1; } 100% { transform: none; } }
+@keyframes svc-runner-y { from { top: 0; } to { top: 100%; } }
+@keyframes svc-runner-x { from { left: 0; } to { left: 100%; } }
+@keyframes svc-tile { 0%, 20%, 100% { border-color: var(--border); box-shadow: none; } 6%, 12% { border-color: var(--accent-text); box-shadow: 0 0 36px -10px var(--accent-text); } }
+
+.svc-ping { animation: svc-ping 2.6s ease-out infinite; }
+.svc-orbit { animation: svc-spin 40s linear infinite; }
+.svc-orbit-counter { display: flex; animation: svc-spin-rev 40s linear infinite; }
+.svc-toast { animation: svc-toast 3.6s ease-in-out infinite; }
+.svc-slide-in { animation: svc-slide 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.svc-typing > span, .agents-typing > span { animation: svc-dot 1.2s ease-in-out infinite; }
+.svc-typing > span:nth-child(2), .agents-typing > span:nth-child(2) { animation-delay: 0.15s; }
+.svc-typing > span:nth-child(3), .agents-typing > span:nth-child(3) { animation-delay: 0.3s; }
+.svc-cell { animation: svc-cell 4s ease-in-out infinite; }
+.svc-build { animation: svc-build 7s cubic-bezier(0.2, 0.8, 0.2, 1) infinite backwards; }
+.svc-dash { stroke-dasharray: 400; animation: svc-dash 7s ease-out 1.4s infinite backwards; }
+.svc-float { animation: svc-float 3.2s ease-in-out infinite alternate; }
+.svc-type { animation: svc-type 5s steps(34, end) infinite; }
+.svc-draw-loop { stroke-dasharray: 1; animation: svc-draw-loop 5s cubic-bezier(0.5, 0, 0.3, 1) infinite; }
+.svc-fade { animation: svc-area 5s ease-out infinite; }
+.svc-pop { transform-box: fill-box; transform-origin: center; animation: svc-pop 5s cubic-bezier(0.3, 1.6, 0.5, 1) infinite backwards; }
+.svc-chip { animation: svc-chip 3.15s ease-in-out infinite; }
+.svc-lock { animation: svc-lock 4.5s ease-in-out infinite; }
+.svc-progress { transform-origin: left; animation: svc-progress 4.5s cubic-bezier(0.5, 0, 0.5, 1) infinite; }
+.svc-shine { animation: svc-shine 2.4s ease-in-out infinite; }
+.svc-quiz-in { animation: svc-fade-up 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.svc-pop-in { animation: svc-pop-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+[data-reveal].is-visible .svc-check { animation: svc-pop-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s both; }
+.svc-tile-float { animation: svc-float 5s ease-in-out infinite alternate; }
+.svc-tile { animation: svc-tile 6s ease-in-out infinite; animation-delay: var(--tile-delay, 0s); }
+
+/* Milestones fill as the progress bar reaches them (bar spans 0–80% of the loop). */
+@keyframes svc-stone-0 { 0%, 1% { background: var(--bg); color: var(--accent-text); transform: scale(0.9); } 4%, 97% { background: var(--accent); color: var(--accent-fg); transform: none; } 100% { background: var(--bg); color: var(--accent-text); } }
+@keyframes svc-stone-1 { 0%, 25% { background: var(--bg); color: var(--accent-text); transform: scale(0.9); } 28%, 97% { background: var(--accent); color: var(--accent-fg); transform: none; } 100% { background: var(--bg); color: var(--accent-text); } }
+@keyframes svc-stone-2 { 0%, 52% { background: var(--bg); color: var(--accent-text); transform: scale(0.9); } 55%, 97% { background: var(--accent); color: var(--accent-fg); transform: none; } 100% { background: var(--bg); color: var(--accent-text); } }
+@keyframes svc-stone-3 { 0%, 78% { background: var(--bg); color: var(--accent-text); transform: scale(0.9); } 81%, 97% { background: var(--accent); color: var(--accent-fg); transform: none; } 100% { background: var(--bg); color: var(--accent-text); } }
+.svc-stone-0 { animation: svc-stone-0 4.5s ease-out infinite; }
+.svc-stone-1 { animation: svc-stone-1 4.5s ease-out infinite; }
+.svc-stone-2 { animation: svc-stone-2 4.5s ease-out infinite; }
+.svc-stone-3 { animation: svc-stone-3 4.5s ease-out infinite; }
+
+/* Rescue terminal: each error flips to a fix in turn, then the deploy line lands. */
+.svc-bad { opacity: 0; }
+@keyframes svc-bad-0 { 0%, 12% { opacity: 1; transform: none; } 15%, 95% { opacity: 0; transform: translateX(6px); } 100% { opacity: 1; } }
+@keyframes svc-bad-1 { 0%, 25% { opacity: 1; transform: none; } 28%, 95% { opacity: 0; transform: translateX(6px); } 100% { opacity: 1; } }
+@keyframes svc-bad-2 { 0%, 38% { opacity: 1; transform: none; } 41%, 95% { opacity: 0; transform: translateX(6px); } 100% { opacity: 1; } }
+@keyframes svc-bad-3 { 0%, 51% { opacity: 1; transform: none; } 54%, 95% { opacity: 0; transform: translateX(6px); } 100% { opacity: 1; } }
+@keyframes svc-good-0 { 0%, 13% { opacity: 0; transform: translateX(-6px); } 16%, 95% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+@keyframes svc-good-1 { 0%, 26% { opacity: 0; transform: translateX(-6px); } 29%, 95% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+@keyframes svc-good-2 { 0%, 39% { opacity: 0; transform: translateX(-6px); } 42%, 95% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+@keyframes svc-good-3 { 0%, 52% { opacity: 0; transform: translateX(-6px); } 55%, 95% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+@keyframes svc-deploy { 0%, 60% { opacity: 0.15; transform: translateY(4px); } 65%, 95% { opacity: 1; transform: none; } 100% { opacity: 0.15; } }
+.svc-bad-0 { animation: svc-bad-0 7s linear infinite; }
+.svc-bad-1 { animation: svc-bad-1 7s linear infinite; }
+.svc-bad-2 { animation: svc-bad-2 7s linear infinite; }
+.svc-bad-3 { animation: svc-bad-3 7s linear infinite; }
+.svc-good-0 { animation: svc-good-0 7s linear infinite; }
+.svc-good-1 { animation: svc-good-1 7s linear infinite; }
+.svc-good-2 { animation: svc-good-2 7s linear infinite; }
+.svc-good-3 { animation: svc-good-3 7s linear infinite; }
+.svc-deploy { animation: svc-deploy 7s ease-out infinite; }
+
+/* Process rail: fills on reveal, a dot travels along it. */
+.svc-rail-fill { transform: scaleY(0); transform-origin: top; opacity: 0.5; transition: transform 1.8s cubic-bezier(0.6, 0, 0.2, 1) 0.2s; }
+.svc-rail.is-visible .svc-rail-fill { transform: none; }
+.svc-runner { left: -3.5px; top: 0; animation: svc-runner-y 6s linear infinite; }
+@media (min-width: 1024px) {
+  .svc-rail-fill { transform: scaleX(0); transform-origin: left; }
+  .svc-runner { top: -3.5px; left: 0; animation-name: svc-runner-x; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .svc-runner { display: none; }
+  .svc-rail-fill { transform: none; }
+}
+
+/* ---------- Agents ---------- */
+@keyframes agents-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes agents-out { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes agents-reveal { 0%, 70% { opacity: 0; transform: scale(0.6); } 100% { opacity: 1; transform: none; } }
+@keyframes agents-glow { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+@keyframes agents-timer { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes agents-q-pending { 0%, 12% { opacity: 1; } 16%, 88% { opacity: 0; } 92%, 100% { opacity: 1; } }
+@keyframes agents-q-done { 0%, 12% { opacity: 0; transform: scale(0.85); } 16%, 88% { opacity: 1; transform: none; } 92%, 100% { opacity: 0; } }
+@keyframes agents-q-card { 0%, 14% { border-color: var(--accent-text); box-shadow: 0 0 30px -12px var(--accent-text); } 22%, 100% { border-color: var(--border); box-shadow: none; } }
+
+.agents-spin-out { opacity: 0; animation: agents-out 0.9s ease-out both; }
+.agents-check-in { animation: agents-reveal 0.9s cubic-bezier(0.3, 1.6, 0.5, 1) both; }
+.agents-approve-out { opacity: 0; animation: agents-out 1.9s ease-out both; }
+.agents-approve-in { animation: agents-reveal 1.9s cubic-bezier(0.3, 1.6, 0.5, 1) both; }
+.agents-glow { animation: agents-glow 6s ease-in-out infinite; }
+.agents-tab-timer { animation: agents-timer 3.6s linear both; }
+.agents-panel-in { animation: svc-fade-up 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.agents-flow-step { animation: svc-fade-up 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.agents-q-card { animation: agents-q-card 9s ease-in-out infinite backwards; animation-delay: var(--q-delay, 0s); }
+.agents-q-pending { opacity: 0; animation: agents-q-pending 9s ease-in-out infinite backwards; animation-delay: var(--q-delay, 0s); }
+.agents-q-done { animation: agents-q-done 9s ease-in-out infinite backwards; animation-delay: var(--q-delay, 0s); }
+.agents-pulse { animation: svc-ping 3s ease-out infinite; }
+.agents-ring-a { animation: svc-spin 50s linear infinite; }
+.agents-ring-a-counter { animation: svc-spin-rev 50s linear infinite; }
+.agents-ring-b { animation: svc-spin-rev 80s linear infinite; }
+.agents-ring-b-counter { animation: svc-spin 80s linear infinite; }
+/* ==================== end Services + Agents area ==================== */
+
+/* ---------- company pages (about, culture, team, careers, how-we-work, security) ---------- */
+.company-spin { animation: company-spin var(--dur, 30s) linear infinite; }
+@keyframes company-spin { to { transform: rotate(360deg); } }
+
+/* outlined numerals / words */
+.company-year {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--border-strong);
+}
+.company-num {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--accent-text);
+}
+.group:hover .company-num { color: var(--accent-text); }
+.company-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--fg);
+  background: linear-gradient(90deg, var(--accent-text), var(--accent-text)) 0 0 / 0% 100% no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  transition: background-size 0.8s cubic-bezier(0.6, 0, 0.2, 1);
+}
+.group:hover .company-outline { background-size: 100% 100%; }
+
+/* map pins */
+.company-ping {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: company-ping 2.4s ease-out infinite;
+}
+@keyframes company-ping {
+  0% { transform: scale(0.6); opacity: 0.7; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+.company-ping-dot { animation: company-ping-dot 2s ease-out infinite; }
+@keyframes company-ping-dot {
+  0% { box-shadow: 0 0 0 0 rgb(52 211 153 / 0.6); }
+  100% { box-shadow: 0 0 0 10px rgb(52 211 153 / 0); }
+}
+
+/* small entrances */
+.company-pop { animation: company-pop 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+@keyframes company-pop {
+  from { opacity: 0; transform: translateY(8px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+.company-slide { animation: company-slide 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+@keyframes company-slide {
+  from { opacity: 0; transform: translateX(18px); }
+  to { opacity: 1; transform: none; }
+}
+.company-flip { animation: company-flip 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+@keyframes company-flip {
+  from { opacity: 0; transform: translateY(40%) rotateX(60deg); }
+  to { opacity: 1; transform: none; }
+}
+.company-row { animation: company-pop 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.company-check { animation: company-check 0.45s cubic-bezier(0.3, 1.6, 0.5, 1) both; }
+@keyframes company-check {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}
+
+/* day-at-VAUG scene */
+.company-talk { animation: company-talk 0.5s ease-in-out infinite alternate; transform-origin: left; }
+@keyframes company-talk { from { transform: scaleX(0.3); } to { transform: scaleX(1); } }
+.company-type { transform-origin: left; animation: company-type 0.7s steps(12, end) both; }
+@keyframes company-type { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.company-caret { animation: ill-blink 1s steps(1, end) infinite; }
+.company-click { left: 20%; top: 80%; animation: company-click 2.4s cubic-bezier(0.6, 0, 0.3, 1) infinite; }
+@keyframes company-click {
+  0% { left: 20%; top: 80%; }
+  45%, 60% { left: 78%; top: 70%; transform: scale(1); }
+  52% { transform: scale(0.8); }
+  100% { left: 20%; top: 80%; }
+}
+.company-drift { animation: company-drift 18s linear infinite; }
+@keyframes company-drift {
+  from { translate: -40px 0; }
+  to { translate: 240px 0; }
+}
+.company-sway { transform-origin: bottom center; animation: company-sway 4s ease-in-out infinite; }
+@keyframes company-sway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+.company-steam { animation: ill-steam 2.4s ease-in-out infinite; }
+.company-progress { width: 0; animation: company-progress 4.2s linear forwards; }
+@keyframes company-progress { to { width: 100%; } }
+
+/* culture collage + bento */
+.company-float { animation: company-float 6s ease-in-out infinite; }
+@keyframes company-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.company-rise { display: inline-block; animation: company-rise 2.7s ease-out infinite both; }
+@keyframes company-rise {
+  0% { opacity: 0; transform: translateY(10px) scale(0.6); }
+  20% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-70px) scale(1.1); }
+}
+.company-ring { animation: company-ring 3.2s ease-out infinite; }
+@keyframes company-ring {
+  from { transform: scale(0.3); opacity: 0.4; }
+  to { transform: scale(1); opacity: 0; }
+}
+.company-confetti { animation: company-confetti 3s ease-in-out infinite; }
+@keyframes company-confetti {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(14px) rotate(160deg); }
+}
+.company-bar { animation: ill-grow 3.2s cubic-bezier(0.6, 0, 0.2, 1) infinite; }
+.company-wave { animation: company-wave 6s linear infinite; }
+@keyframes company-wave { to { transform: translateX(-100px); } }
+
+/* growing bars, tied to scroll reveal */
+.company-grow { transition: transform 1.2s cubic-bezier(0.6, 0, 0.2, 1); }
+.js-ready [data-reveal]:not(.is-visible) .company-grow { transform: scaleX(0); }
+
+/* careers: fanned role cards */
+.company-fan {
+  translate: 0 calc(var(--i) * 30px);
+  scale: calc(1 - var(--i) * 0.05);
+  rotate: calc((var(--i) - 1) * -2.5deg);
+  animation: company-float 6s ease-in-out infinite;
+  animation-delay: calc(var(--i) * -1.4s);
+  transition: translate 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), rotate 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.company-fan-wrap:hover .company-fan { translate: 0 calc(var(--i) * 52px); rotate: calc((var(--i) - 1.5) * -5deg); }
+
+/* how-we-work: quality checklist ticks itself */
+.company-tick__fill { transform: scale(1); transition: transform 0.5s cubic-bezier(0.3, 1.5, 0.5, 1) calc(var(--reveal-delay, 0ms) + 350ms); }
+.company-tick__mark { transition: opacity 0.3s ease calc(var(--reveal-delay, 0ms) + 600ms), transform 0.4s cubic-bezier(0.3, 1.6, 0.5, 1) calc(var(--reveal-delay, 0ms) + 600ms); }
+.js-ready .company-tick:not(.is-visible) .company-tick__fill { transform: scale(0); }
+.js-ready .company-tick:not(.is-visible) .company-tick__mark { opacity: 0; transform: scale(0.4); }
+
+/* security */
+.company-scan { animation: company-scan 3.2s ease-in-out infinite; }
+@keyframes company-scan {
+  0% { transform: translateY(-30px); }
+  100% { transform: translateY(200px); }
+}
+.company-shackle { animation: ill-shackle 3s ease-in-out infinite; }
+.company-pulse { left: 10%; animation: company-pulse 3s cubic-bezier(0.5, 0, 0.5, 1) infinite; }
+@keyframes company-pulse {
+  0% { left: 4%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { left: 84%; opacity: 0; }
+}
+.company-gate { animation: company-gate 3s ease-in-out infinite; }
+@keyframes company-gate {
+  0%, 100% { background: var(--bg); box-shadow: none; }
+  8%, 20% { background: var(--accent-text); box-shadow: 0 0 0 6px var(--accent-soft); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .company-fan { animation: none; }
+  .company-rise, .company-ring { opacity: 0.8; }
+}
+/* ---------- end company pages ---------- */
+
+/* ---------- Theme switch (circular reveal, see ThemeToggle) ---------- */
+.theme-switching::view-transition-old(root),
+.theme-switching::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Only show focus rings for keyboard focus, never after a mouse click. */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* AgentStory: beat label swaps with a short, blur-free fade/slide. */
+@keyframes story-label-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+.story-label-in {
+  animation: story-label-in 260ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .story-label-in { animation: none; }
+}
+
+/* ---------- Case study dashboard mock (ScreenMockParts.tsx) ----------
+   The dashboard is a fixed design canvas; .mock-stage scales it to fit its box
+   (width first, allowing a little bottom crop in compact cards). */
+.mock-root { container: mock / size; }
+.mock-stage {
+  --mw: 620px; --mh: 372px; --pt: 42px; --pb: 14px; --px: 16px; --crop: 1; --s: 0.7;
+  position: absolute; left: 50%; width: var(--mw); height: var(--mh);
+  translate: -50% 0; transform-origin: top center; scale: var(--s);
+  top: max(var(--pt), calc(var(--pt) + (100cqh - var(--pt) - var(--pb) - var(--mh) * var(--s)) / 2));
+}
+.mock-stage.mock-compact { --mw: 480px; --mh: 320px; --pt: 40px; --crop: 1.28; }
+@supports (scale: tan(atan2(1px, 1px))) {
+  .mock-stage {
+    --s: min(1.15, tan(atan2(100cqw - 2 * var(--px), var(--mw))), tan(atan2((100cqh - var(--pt) - var(--pb)) * var(--crop), var(--mh))));
+  }
+}
+.mock-slot-tablet { position: absolute; top: 0; left: 20px; perspective: 1400px; }
+.mock-slot-phone { position: absolute; top: 122px; right: 4px; }
+.mock-slot-glass { position: absolute; bottom: 0; left: 0; }
+.mock-compact .mock-slot-tablet { left: 0; }
+@container mock (max-width: 600px) {
+  .mock-stage:not(.mock-compact) { --mw: 480px; --mh: 320px; }
+  .mock-stage .mock-slot-tablet { left: 0; }
+  .mock-slot-phone, .mock-slot-glass { display: none; }
+}
+.mock-fade { animation: mock-fade 0.8s ease-out 1.6s both; }
+.mock-pulse { animation: mock-pulse 1.8s ease-in-out infinite; }
+@keyframes mock-fade { from { opacity: 0; } }
+@keyframes mock-pulse { 50% { opacity: 0.35; } }
+@media (prefers-reduced-motion: reduce) {
+  .mock-tablet, .mock-phone { transition: none; }
+  .mock-fade, .mock-pulse, .mock-line, .mock-notify { animation: none; }
+  .mock-line { stroke-dashoffset: 0; }
+}
+
+/* ---------- Home: principles sequence line ---------- */
+.prin-line { transform: scaleX(0); transition: transform 0.7s cubic-bezier(0.6, 0, 0.2, 1); }
+.is-visible > .prin-line, :not(.js-ready) .prin-line { transform: scaleX(1); }
+@media (prefers-reduced-motion: reduce) { .prin-line { transform: none; transition: none; } }
+
+/* ---------- Open (rail-less) frame for full-bleed heroes ---------- */
+.frame.frame-open { border-inline-color: transparent; }
+
+/* ---------- Case study product scenes v2 (ScreenMockParts.tsx + sections/mocks/*) ----------
+   Each scene is a fixed design canvas (wide 640x380, narrow 400x270) that
+   .mock2-stage scales to fit its box. Narrow may crop its bottom ~30px. */
+.mock2-root { container: mock2 / size; }
+.mock2-stage {
+  --mw: 640px; --mh: 380px; --pt: 42px; --pb: 14px; --px: 16px; --crop: 1; --s: 0.7;
+  position: absolute; left: 50%; width: var(--mw); height: var(--mh);
+  translate: -50% 0; transform-origin: top center; scale: var(--s);
+  top: max(var(--pt), calc(var(--pt) + (100cqh - var(--pt) - var(--pb) - var(--mh) * var(--s)) / 2));
+}
+.mock2-stage.mock2-narrow { --mw: 400px; --mh: 270px; --pt: 40px; --pb: 10px; --crop: 1.18; }
+@supports (scale: tan(atan2(1px, 1px))) {
+  .mock2-stage {
+    --s: min(1.15, tan(atan2(100cqw - 2 * var(--px), var(--mw))), tan(atan2((100cqh - var(--pt) - var(--pb)) * var(--crop), var(--mh))));
+  }
+}
+@container mock2 (max-width: 600px) { .mock2-stage.mock2-wide { display: none; } }
+@container mock2 (min-width: 600.02px) { .mock2-stage.mock2-alt { display: none; } }
+.mock2-tilt { transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); transform-origin: 50% 50%; }
+.mock2-left { transform: perspective(1400px) rotateY(-9deg) rotateX(5deg) rotateZ(-1deg); }
+.mock2-right { transform: perspective(1400px) rotateY(9deg) rotateX(5deg) rotateZ(1deg); }
+.mock2-sink { transform: translateY(6px) scale(0.98); }
+.group:hover .mock2-left, .group:hover .mock2-right, .group:hover .mock2-sink { transform: none; }
+.group:hover .mock2-lift { transform: translateY(-8px); }
+.mock2-wave > span { animation: mock2-wave 1.1s ease-in-out infinite; transform-origin: center; }
+.mock2-wave > span:nth-child(3n + 1) { animation-delay: -0.35s; }
+.mock2-wave > span:nth-child(3n + 2) { animation-delay: -0.7s; }
+.mock2-typing > span { animation: mock2-typing 1.2s ease-in-out infinite; }
+.mock2-typing > span:nth-child(2) { animation-delay: 0.15s; }
+.mock2-typing > span:nth-child(3) { animation-delay: 0.3s; }
+.mock2-dash { animation: mock2-dash 1.6s linear infinite; }
+@keyframes mock2-wave { 50% { transform: scaleY(0.45); } }
+@keyframes mock2-typing { 0%, 60%, 100% { opacity: 0.3; } 30% { opacity: 1; } }
+@keyframes mock2-dash { to { stroke-dashoffset: -16; } }
+@media (prefers-reduced-motion: reduce) {
+  .mock2-tilt { transition: none; }
+  .mock2-wave > span, .mock2-typing > span, .mock2-dash { animation: none; }
+}
+
+/* ---------- Case study screenshots: a 640 x 400 design canvas scaled to its box width ---------- */
+.shot { container: shot / inline-size; position: relative; width: 100%; aspect-ratio: 640 / 400; }
+.shot-stage { position: absolute; left: 0; top: 0; width: 640px; height: 400px; transform-origin: top left; scale: 0.5; }
+@supports (scale: tan(atan2(1px, 1px))) {
+  .shot-stage { scale: tan(atan2(100cqw, 640px)); }
+}
+
+/* ---------- Footer wordmark: quiet outline, rising letters, glint, hover light-up ---------- */
+.footer-mark .vaug-logo__letters > span {
+  color: rgb(244 242 247 / 0.07);
+  -webkit-text-stroke: 1px rgb(244 242 247 / 0.16);
+  transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.35s ease, -webkit-text-stroke-color 0.35s ease;
+  transition-delay: calc(var(--i) * 90ms), 0ms, 0ms;
+  animation: footer-glint 6s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.18s + 1s);
+}
+.js-ready .footer-mark:not(.is-visible) .vaug-logo__letters > span {
+  transform: translateY(70%);
+}
+.footer-mark .vaug-logo__letters > span:hover {
+  color: rgb(244 242 247 / 0.85);
+  -webkit-text-stroke-color: transparent;
+  transform: translateY(-4%);
+  transition-delay: 0ms;
+  animation: none;
+}
+.footer-mark .vaug-logo__arrow { color: rgb(255 210 63 / 0.45); transition: color 0.3s ease; }
+.footer-mark:hover .vaug-logo__arrow { color: #ffd23f; }
+@keyframes footer-glint {
+  0%, 84%, 100% { color: rgb(244 242 247 / 0.07); }
+  90% { color: rgb(244 242 247 / 0.22); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .footer-mark .vaug-logo__letters > span { animation: none; transition: color 0.2s ease; }
+  .js-ready .footer-mark:not(.is-visible) .vaug-logo__letters > span { transform: none; }
+}
+
+/* ==================== Services + Agents area: completion bars (svc-/agents-) ==================== */
+/* Console tab bar: scale follows --p; each playback phase transitions it linearly. */
+.agents-bar { transform-origin: left; transform: scaleX(var(--p, 0)); transition-property: transform; transition-timing-function: linear; }
+@starting-style { .agents-bar { transform: scaleX(0); } }
+/* Agent-type tab bar: one linear fill per interval; the tab advances on animationend. */
+@keyframes agents-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.agents-type-bar { transform-origin: left; animation: agents-fill var(--dur, 6s) linear both; }
+.agents-type-bar[data-paused="true"] { animation-play-state: paused; }
+/* Chat feed: fade older lines out under the header instead of hard-clipping them. */
+.agents-feed { mask-image: linear-gradient(to bottom, transparent 0, #000 2.25rem); }
+
+/* ==================== Services + Agents area: "How we start" (svc-start-*, svc-promise) ==================== */
+@keyframes svc-start-step { 0%, 24%, 100% { box-shadow: 0 0 0 0 transparent; border-color: var(--border-strong); } 6%, 16% { box-shadow: 0 0 0 6px var(--accent-soft), 0 0 30px -6px var(--accent-text); border-color: var(--accent-text); } }
+@keyframes svc-promise { 0%, 20%, 100% { border-color: var(--border); background: transparent; } 6%, 14% { border-color: var(--accent-text); background: var(--accent-soft); } }
+.svc-start-runner { left: 0; animation: svc-runner-x 6s cubic-bezier(0.45, 0, 0.55, 1) infinite; }
+.svc-start-step { animation: svc-start-step 6s ease-in-out infinite backwards; animation-delay: var(--step-delay, 0s); }
+.svc-promise { animation: svc-promise 6s ease-in-out infinite backwards; animation-delay: var(--promise-delay, 0s); }
+@media (prefers-reduced-motion: reduce) { .svc-start-runner { display: none; } }
+/* svc: typing strip in the custom-development visual has 26 characters. */
+.svc-type { animation-timing-function: steps(26, end); }
+
+/* ---------- Wordmark: upward arrow + footer growth trajectory ---------- */
+/* The hover/intro arrow points up and to the right: growth, not a flat line. */
+.vaug-logo__arrow { transform-origin: 0.12em 50%; rotate: -34deg; }
+.vaug-logo__trend {
+  width: 0.9em;
+  height: 0.75em;
+  margin-left: 0.04em;
+  margin-bottom: 0.02em;
+  flex-shrink: 0;
+  color: rgb(255 210 63 / 0.5);
+  overflow: visible;
+  transition: color 0.3s ease;
+}
+.footer-mark:hover .vaug-logo__trend { color: #ffd23f; }
+.vaug-logo__trend-line,
+.vaug-logo__trend-head {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1.1s cubic-bezier(0.6, 0, 0.2, 1);
+}
+.vaug-logo__trend-head { transition-delay: 0.9s; transition-duration: 0.4s; }
+/* draw in when the footer appears */
+.js-ready .footer-mark:not(.is-visible) .vaug-logo__trend-line,
+.js-ready .footer-mark:not(.is-visible) .vaug-logo__trend-head { stroke-dashoffset: 1; }
+/* redraw on hover */
+.footer-mark:hover .vaug-logo__trend-line { animation: trend-draw 1.1s cubic-bezier(0.6, 0, 0.2, 1); }
+.footer-mark:hover .vaug-logo__trend-head { animation: trend-draw 0.45s ease-out 0.85s backwards; }
+@keyframes trend-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .vaug-logo__trend-line, .vaug-logo__trend-head { transition: none; animation: none !important; stroke-dashoffset: 0 !important; }
+}
+
+/* ---------- Engagement models: scroll-driven stepper (EngagementModels.tsx) ---------- */
+.models-stepper { display: none; }
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .models-stepper { display: block; }
+  .models-stack { display: none; }
+}
+.models-stage {
+  height: calc(100vh - 80px);
+  height: calc(100svh - 80px);
+}
+.models-progress {
+  transform: scaleX(var(--models-p, 0));
+}
+.models-tab-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.models-tab-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--accent-text, currentColor);
+  transform-origin: top;
+  transform: scaleY(var(--models-sp, 0));
+}
+.models-tab.is-active .models-tab-bar { opacity: 1; }
+.models-panel {
+  transition: opacity 0.4s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1), visibility 0s linear 0s;
+}
+.models-panel:not(.is-active) {
+  opacity: 0;
+  pointer-events: none;
+}
+.models-panel.is-before { transform: translateY(-28px); }
+.models-panel.is-after { transform: translateY(36px); }
+.models-panel:not(.is-active) { transition-duration: 0.25s; }
+.models-panel.is-active { transition-delay: 0.1s; }
+/* bullets stagger in with the incoming panel */
+.models-panel .models-bullet {
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), color 0.15s ease;
+}
+.models-panel:not(.is-active) .models-bullet { opacity: 0; transform: translateY(8px); }
+.models-panel.is-active .models-bullet { transition-delay: calc(0.14s + var(--i, 0) * 0.05s), calc(0.14s + var(--i, 0) * 0.05s), 0s; }
+/* illustration redraws each time its panel becomes active */
+.models-panel .models-ill :is(path, line, circle, rect, ellipse, polyline, polygon) {
+  transition-duration: 1.3s;
+}
+.models-panel:not(.is-active) .models-ill :is(path, line, circle, rect, ellipse, polyline, polygon) {
+  stroke-dashoffset: 1;
+  transition-duration: 0s;
+  transition-delay: 0.4s;
+}
+.models-panel:not(.is-active) .models-ill .ill-motion { opacity: 0; transition-delay: 0s; }
+.models-panel .models-ill .ill-grid { stroke-dashoffset: 0 !important; }
+
+/* TagPile: dust puff where a falling chip hits the ground (animated from JS). */
+.pile-dust {
+  position: absolute;
+  z-index: 0;
+  width: 44px;
+  height: 12px;
+  border-radius: 9999px;
+  pointer-events: none;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--fg) 22%, transparent), transparent);
+}
+
+/* ---------- ind-* sweep fixes (industries, who-we-serve, engineering) ---------- */
+/* Sequenced build-ups: slot n arrives at (4 + 7n)% of the cycle and every slot leaves together,
+   so chat threads / logs / ledgers never show later items with earlier ones missing. */
+.ind-q, .ind-qw { animation-duration: var(--q-d, 7s); animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); animation-iteration-count: infinite; animation-fill-mode: both; }
+.ind-q { opacity: 0; }
+.ind-qw { clip-path: inset(0 100% 0 0); }
+.ind-q-0 { animation-name: ind-q-0; }
+@keyframes ind-q-0 { 0%, 4% { opacity: 0; transform: translateY(6px); } 8%, 88% { opacity: 1; transform: none; } 94%, 100% { opacity: 0; transform: translateY(-3px); } }
+.ind-q-1 { animation-name: ind-q-1; }
+@keyframes ind-q-1 { 0%, 11% { opacity: 0; transform: translateY(6px); } 15%, 88% { opacity: 1; transform: none; } 94%, 100% { opacity: 0; transform: translateY(-3px); } }
+.ind-q-2 { animation-name: ind-q-2; }
+@keyframes ind-q-2 { 0%, 18% { opacity: 0; transform: translateY(6px); } 22%, 88% { opacity: 1; transform: none; } 94%, 100% { opacity: 0; transform: translateY(-3px); } }
+.ind-q-3 { animation-name: ind-q-3; }
+@keyframes ind-q-3 { 0%, 25% { opacity: 0; transform: translateY(6px); } 29%, 88% { opacity: 1; transform: none; } 94%, 100% { opacity: 0; transform: translateY(-3px); } }
+.ind-q-4 { animation-name: ind-q-4; }
+@keyframes ind-q-4 { 0%, 32% { opacity: 0; transform: translateY(6px); } 36%, 88% { opacity: 1; transform: none; } 94%, 100% { opacity: 0; transform: translateY(-3px); } }
+.ind-q-5 { animation-name: ind-q-5; }
+@keyframes ind-q-5 { 0%, 39% { opacity: 0; transform: translateY(6px); } 43%, 88% { opacity: 1; transform: none; } 94%, 100% { opacity: 0; transform: translateY(-3px); } }
+.ind-q-6 { animation-name: ind-q-6; }
+@keyframes ind-q-6 { 0%, 46% { opacity: 0; transform: translateY(6px); } 50%, 88% { opacity: 1; transform: none; } 94%, 100% { opacity: 0; transform: translateY(-3px); } }
+.ind-q-7 { animation-name: ind-q-7; }
+@keyframes ind-q-7 { 0%, 53% { opacity: 0; transform: translateY(6px); } 57%, 88% { opacity: 1; transform: none; } 94%, 100% { opacity: 0; transform: translateY(-3px); } }
+.ind-q-8 { animation-name: ind-q-8; }
+@keyframes ind-q-8 { 0%, 60% { opacity: 0; transform: translateY(6px); } 64%, 88% { opacity: 1; transform: none; } 94%, 100% { opacity: 0; transform: translateY(-3px); } }
+.ind-q-9 { animation-name: ind-q-9; }
+@keyframes ind-q-9 { 0%, 67% { opacity: 0; transform: translateY(6px); } 71%, 88% { opacity: 1; transform: none; } 94%, 100% { opacity: 0; transform: translateY(-3px); } }
+.ind-q-10 { animation-name: ind-q-10; }
+@keyframes ind-q-10 { 0%, 74% { opacity: 0; transform: translateY(6px); } 78%, 88% { opacity: 1; transform: none; } 94%, 100% { opacity: 0; transform: translateY(-3px); } }
+.ind-qw-0 { animation-name: ind-qw-0; }
+@keyframes ind-qw-0 { 0%, 4% { clip-path: inset(0 100% 0 0); } 9%, 88% { clip-path: inset(0 0 0 0); opacity: 1; } 94%, 100% { clip-path: inset(0 0 0 0); opacity: 0; } }
+.ind-qw-1 { animation-name: ind-qw-1; }
+@keyframes ind-qw-1 { 0%, 11% { clip-path: inset(0 100% 0 0); } 16%, 88% { clip-path: inset(0 0 0 0); opacity: 1; } 94%, 100% { clip-path: inset(0 0 0 0); opacity: 0; } }
+.ind-qw-2 { animation-name: ind-qw-2; }
+@keyframes ind-qw-2 { 0%, 18% { clip-path: inset(0 100% 0 0); } 23%, 88% { clip-path: inset(0 0 0 0); opacity: 1; } 94%, 100% { clip-path: inset(0 0 0 0); opacity: 0; } }
+.ind-qw-3 { animation-name: ind-qw-3; }
+@keyframes ind-qw-3 { 0%, 25% { clip-path: inset(0 100% 0 0); } 30%, 88% { clip-path: inset(0 0 0 0); opacity: 1; } 94%, 100% { clip-path: inset(0 0 0 0); opacity: 0; } }
+.ind-qw-4 { animation-name: ind-qw-4; }
+@keyframes ind-qw-4 { 0%, 32% { clip-path: inset(0 100% 0 0); } 37%, 88% { clip-path: inset(0 0 0 0); opacity: 1; } 94%, 100% { clip-path: inset(0 0 0 0); opacity: 0; } }
+.ind-qw-5 { animation-name: ind-qw-5; }
+@keyframes ind-qw-5 { 0%, 39% { clip-path: inset(0 100% 0 0); } 44%, 88% { clip-path: inset(0 0 0 0); opacity: 1; } 94%, 100% { clip-path: inset(0 0 0 0); opacity: 0; } }
+.ind-qw-6 { animation-name: ind-qw-6; }
+@keyframes ind-qw-6 { 0%, 46% { clip-path: inset(0 100% 0 0); } 51%, 88% { clip-path: inset(0 0 0 0); opacity: 1; } 94%, 100% { clip-path: inset(0 0 0 0); opacity: 0; } }
+.ind-qw-7 { animation-name: ind-qw-7; }
+@keyframes ind-qw-7 { 0%, 53% { clip-path: inset(0 100% 0 0); } 58%, 88% { clip-path: inset(0 0 0 0); opacity: 1; } 94%, 100% { clip-path: inset(0 0 0 0); opacity: 0; } }
+.ind-eng-type { animation-name: ind-eng-type; animation-timing-function: steps(20, end); }
+@keyframes ind-eng-type { 0% { max-width: 0; } 40%, 100% { max-width: 20ch; } }
+/* date-range highlight: label only shows while the range is drawn, so it never sits on the day numbers */
+.ind-sweep-label { opacity: 0; animation: ind-sweep-label 5s ease-in-out infinite; }
+@keyframes ind-sweep-label { 0%, 26% { opacity: 0; } 32%, 82% { opacity: 1; } 88%, 100% { opacity: 0; } }
+/* white-label toggle: off, then on, then back off smoothly before the loop restarts */
+@keyframes aud-toggle { 0%, 10% { transform: translateX(-18px); } 20%, 86% { transform: translateX(0); } 96%, 100% { transform: translateX(-18px); } }
+@media (prefers-reduced-motion: reduce) {
+  .ind-q, .ind-qw, .ind-sweep-label { animation: none !important; opacity: 1; clip-path: none; }
+  .ind-eng-type { animation: none !important; max-width: none; }
+}
+/* ---------- end ind-* sweep fixes ---------- */
+/* svc: venture chart pins appear as the line reaches them and leave with it (same 5s loop as svc-draw-loop). */
+@keyframes svc-pin-0 { 0%, 18% { transform: scale(0); } 24%, 92% { transform: scale(1); } 100% { transform: scale(0); } }
+@keyframes svc-pin-1 { 0%, 28% { transform: scale(0); } 34%, 92% { transform: scale(1); } 100% { transform: scale(0); } }
+@keyframes svc-pin-2 { 0%, 42% { transform: scale(0); } 48%, 92% { transform: scale(1); } 100% { transform: scale(0); } }
+.svc-pin { transform-box: fill-box; transform-origin: center; animation: 5s cubic-bezier(0.3, 1.6, 0.5, 1) infinite; }
+.svc-pin-0 { animation-name: svc-pin-0; }
+.svc-pin-1 { animation-name: svc-pin-1; }
+.svc-pin-2 { animation-name: svc-pin-2; }
+
+/* ---------- company pages: audit fixes ---------- */
+/* security pipeline: the pulse head and the gates share one 4s clock, so each gate
+   lights exactly as the pulse reaches it (the old 3s pulse and 0.6s-staggered gates drifted). */
+.company-pulse2 { left: 10%; translate: -100% -50%; animation: company-pulse2 4s linear infinite; }
+@keyframes company-pulse2 {
+  0% { left: 10%; opacity: 0; }
+  6% { opacity: 1; }
+  72% { opacity: 1; }
+  75% { left: 90%; opacity: 0; }
+  100% { left: 90%; opacity: 0; }
+}
+.company-gate2 { animation: company-gate2 4s ease-out infinite; }
+@keyframes company-gate2 {
+  0% { background: var(--bg); box-shadow: 0 0 0 0 var(--accent-soft); }
+  3%, 12% { background: var(--accent-text); box-shadow: 0 0 0 6px var(--accent-soft); }
+  26%, 100% { background: var(--bg); box-shadow: 0 0 0 0 var(--accent-soft); }
+}
+/* day-at-VAUG clouds: fade at both ends instead of popping back to the start */
+.company-drift2 { animation: company-drift2 18s linear infinite; }
+@keyframes company-drift2 {
+  0% { translate: -60px 0; opacity: 0; }
+  12% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { translate: 260px 0; opacity: 0; }
+}
+/* culture "waves" motif: shift by one full wavelength (200 units) so the loop is seamless */
+.company-wave2 { animation: company-wave2 8s linear infinite; }
+@keyframes company-wave2 { to { transform: translateX(-200px); } }
+@media (prefers-reduced-motion: reduce) {
+  .company-pulse2, .company-gate2, .company-drift2, .company-wave2 { animation: none; }
+  .company-pulse2 { opacity: 0; }
+}
+/* ---------- end company audit fixes ---------- */

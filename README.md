@@ -1,36 +1,31 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# VAUG
 
-## Getting Started
+Two independent projects, each pushable to its own Git repository:
 
-First, run the development server:
+| Folder | What it is | Stack | Default port |
+| --- | --- | --- | --- |
+| [`frontend/`](frontend) | The website | Next.js 16, React 19, Tailwind CSS 4 | 3000 |
+| [`backend/`](backend) | API for leads, newsletter and admin | Node 20+, Hono, Zod | 4000 |
+
+## Run both locally
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# terminal 1
+cd backend && cp .env.example .env && npm install && npm run dev
+
+# terminal 2
+cd frontend && cp .env.example .env.local && npm install && npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000. The browser only ever talks to the frontend; Next.js proxies
+`/api/*` to the backend (`API_URL`), so no CORS setup is needed.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deploying
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **backend**: any Node host (Railway, Render, Fly.io, a VPS). Set `PORT`, `ADMIN_API_TOKEN`,
+  `WEB_ORIGIN`, and optionally `LEAD_WEBHOOK_URL`. Leads are stored as JSON files in `data/`;
+  on hosts without a persistent disk, swap `src/lib/store.ts` for a database.
+- **frontend**: Vercel or any Node host. Set `API_URL` to the backend's public URL.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The lead form options exist in both projects (`frontend/src/lib/lead-options.ts` and
+`backend/src/lib/lead-options.ts`). Keep them in sync when you change them.
