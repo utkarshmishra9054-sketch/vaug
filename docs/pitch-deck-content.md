@@ -35,7 +35,7 @@ AI-first engineering teams that ship.
 
 Automate · Build · Scale
 
-vaug.ai · hello@vaug.ai
+vaug.in · hello@vaug.in
 
 ---
 
@@ -315,7 +315,7 @@ We optimised the website, created engaging content, built targeted lead-generati
 
 ## Slide 19: More work on the website
 
-These case studies are on vaug.ai/case-studies:
+These case studies are on vaug.in/case-studies:
 
 - **A WhatsApp and voice agent that answers every patient call**, Manchester diagnostics network (AI as a Service): 78% of contacts resolved without staff
 - **A broker platform that quotes freelancers in under a minute**, London insurtech (Custom Development): 52-second quotes, 3.4× more policies bound
@@ -346,5 +346,5 @@ These case studies are on vaug.ai/case-studies:
 
 Free 30-minute strategy call · NDA on request · Proposal within 48 hours
 
-hello@vaug.ai · vaug.ai
+hello@vaug.in · vaug.in
 Bengaluru · London · New York

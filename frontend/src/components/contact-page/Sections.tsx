@@ -147,7 +147,7 @@ export function Channels({ content, site }: { content: ContactPageContent["chann
           ? { href: `https://wa.me/${digits}`, detail: site.phone, external: true }
           : { href: "#contact", detail: "Free 30-minute strategy call", external: false };
       case "careers":
-        return { href: routes.careers, detail: "vaug.ai/careers", external: false };
+        return { href: routes.careers, detail: "vaug.in/careers", external: false };
       case "partners":
         return { href: routes.audience("agencies"), detail: "White-label partnerships", external: false };
     }

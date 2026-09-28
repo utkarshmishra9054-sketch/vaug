@@ -34,7 +34,7 @@ export interface Perk {
   icon: IconName;
 }
 
-export const careersEmail = "careers@vaug.ai";
+export const careersEmail = "careers@vaug.in";
 
 export const careers = {
   metaDescription:

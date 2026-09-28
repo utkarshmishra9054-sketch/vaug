@@ -33,7 +33,7 @@ export const legalDraftNotice =
   "Draft: to be reviewed by legal counsel. This text is a template and is not yet legally binding. Details in [square brackets] are placeholders.";
 
 const entity = "VAUG [legal entity name]";
-const contactEmail = "privacy@vaug.ai";
+const contactEmail = "privacy@vaug.in";
 
 export const privacyPolicy: LegalDoc = {
   slug: "privacy-policy",
@@ -55,7 +55,7 @@ export const privacyPolicy: LegalDoc = {
       id: "who-we-are",
       heading: "1. Who we are",
       body: [
-        `This policy explains how ${entity} ("VAUG", "we", "us") handles personal data when you visit vaug.ai, contact us, or work with us. We are registered in [country] under company number [number], with our registered office at [address].`,
+        `This policy explains how ${entity} ("VAUG", "we", "us") handles personal data when you visit vaug.in, contact us, or work with us. We are registered in [country] under company number [number], with our registered office at [address].`,
         `For the purposes of the UK General Data Protection Regulation (UK GDPR), the Data Protection Act 2018 and the EU General Data Protection Regulation (EU GDPR), we are the controller of the personal data described here. Where we process data on a client's behalf as part of a project, we act as a processor under a separate data processing agreement.`,
         `If you have any questions, email ${contactEmail}. [If appointed: our Data Protection Officer can be reached at the same address. Our EU representative is [name, address].]`,
       ],
@@ -216,7 +216,7 @@ export const terms: LegalDoc = {
       id: "about-these-terms",
       heading: "1. About these terms",
       body: [
-        `These terms apply to your use of vaug.ai (the "website"), operated by ${entity}, registered in [country] under company number [number], with its registered office at [address].`,
+        `These terms apply to your use of vaug.in (the "website"), operated by ${entity}, registered in [country] under company number [number], with its registered office at [address].`,
         "By using the website you agree to these terms. If you don't agree, please don't use it.",
       ],
     },
@@ -302,7 +302,7 @@ export const terms: LegalDoc = {
     {
       id: "contact",
       heading: "11. Contact us",
-      body: [`Questions about these terms? Email legal@vaug.ai or write to ${entity}, [registered address].`],
+      body: [`Questions about these terms? Email legal@vaug.in or write to ${entity}, [registered address].`],
     },
   ],
 };
@@ -328,7 +328,7 @@ export const cookiePolicy: LegalDoc = {
       heading: "1. What cookies are",
       body: [
         "Cookies are small text files a website stores on your device. Similar technologies, such as local storage and pixels, work in much the same way, and we call them all \"cookies\" in this policy.",
-        `This policy explains how ${entity} uses cookies on vaug.ai, in line with the UK Privacy and Electronic Communications Regulations (PECR), the EU ePrivacy Directive, and UK and EU GDPR.`,
+        `This policy explains how ${entity} uses cookies on vaug.in, in line with the UK Privacy and Electronic Communications Regulations (PECR), the EU ePrivacy Directive, and UK and EU GDPR.`,
       ],
     },
     {
