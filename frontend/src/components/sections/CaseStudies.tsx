@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
@@ -8,6 +9,38 @@ import type { CaseStudy } from "@/content/types";
 import { DemoBadge } from "@/components/ui/DemoBadge";
 import { Icon } from "@/components/ui/Icon";
 import { MockScene, MockTag, type MockStudy } from "@/components/sections/ScreenMockParts";
+import { BoardCarousel, boardsFor } from "@/components/sections/BoardCarousel";
+
+/**
+ * The client's real website, in a browser window on the study's tint. Used in
+ * place of the drawn scene whenever the study has a website screenshot.
+ */
+function WebsiteShot({ study, compact }: { study: MockStudy; compact: boolean }) {
+  const { url, image } = study.website!;
+  const host = new URL(url).hostname.replace(/^www\./, "");
+  return (
+    <div className={`site-shot absolute inset-x-0 bottom-0 flex flex-col overflow-hidden rounded-t-[10px] bg-white shadow-[0_30px_60px_-20px_rgb(0_0_0/0.55)] ${compact ? "top-6 mx-5" : "top-8 mx-6 sm:top-10 sm:mx-10 lg:mx-12"}`}>
+      <div className="flex h-7 shrink-0 items-center gap-3 border-b border-black/[0.08] bg-[#f3f3f1] px-3">
+        <span className="flex gap-1.5" aria-hidden="true">
+          <span className="size-2 rounded-full bg-[#ff5f57]" />
+          <span className="size-2 rounded-full bg-[#febc2e]" />
+          <span className="size-2 rounded-full bg-[#28c840]" />
+        </span>
+        <span className="mx-auto truncate rounded bg-white px-3 py-0.5 text-[10px] text-black/55">{host}</span>
+        <span className="w-10" aria-hidden="true" />
+      </div>
+      <div className="relative min-h-0 flex-1 overflow-hidden">
+        <Image
+          src={image.src}
+          alt={image.alt}
+          fill
+          sizes={compact ? "(min-width: 1024px) 400px, 90vw" : "(min-width: 1024px) 720px, 95vw"}
+          className="site-shot-img object-cover object-top"
+        />
+      </div>
+    </div>
+  );
+}
 
 /**
  * Product mock for each case study: a bespoke, domain-specific product scene
@@ -15,10 +48,12 @@ import { MockScene, MockTag, type MockStudy } from "@/components/sections/Screen
  * map...) in varied device frames, on the study's tint. Devices straighten or
  * lift on hover. Scenes are fixed design canvases scaled to fit (see
  * `.mock2-stage` in globals.css); `compact` (and any box under 600px wide)
- * uses the simpler narrow composition.
+ * uses the simpler narrow composition. Studies with product boards (drawn
+ * screens or real screenshots) cycle through those instead.
  */
 export function ScreenMock({ study, compact = false }: { study: MockStudy; compact?: boolean }) {
   const tint = study.tint;
+  const boards = boardsFor(study);
   return (
     <div
       className="mock2-root relative h-full overflow-hidden"
@@ -27,10 +62,17 @@ export function ScreenMock({ study, compact = false }: { study: MockStudy; compa
       <div className="absolute inset-0 bg-[radial-gradient(rgb(255_255_255/0.12)_1px,transparent_1px)] [background-size:18px_18px] [mask-image:linear-gradient(to_bottom,#000,transparent_85%)]" aria-hidden="true" />
       <div className="absolute -bottom-32 -left-20 size-80 rounded-full bg-black/20 blur-3xl" aria-hidden="true" />
 
-      {!compact && <MockScene study={study} v="wide" />}
-      <MockScene study={study} v="narrow" alt={!compact} />
-
-      <MockTag />
+      {boards ? (
+        <BoardCarousel boards={boards} labels={study.screenshots} compact={compact} />
+      ) : study.website ? (
+        <WebsiteShot study={study} compact={compact} />
+      ) : (
+        <>
+          {!compact && <MockScene study={study} v="wide" />}
+          <MockScene study={study} v="narrow" alt={!compact} />
+          <MockTag />
+        </>
+      )}
     </div>
   );
 }

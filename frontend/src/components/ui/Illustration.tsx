@@ -414,8 +414,8 @@ const map: Record<IllustrationName, () => React.JSX.Element> = {
   agents: Agents,
   developers: Developers,
   custom: Custom,
-  venture: Venture,
-  fixed: Fixed,
+  build: Venture,
+  retainer: Fixed,
   rescue: Rescue,
 };
 

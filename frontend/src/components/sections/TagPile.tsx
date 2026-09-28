@@ -66,7 +66,7 @@ export function TagPile({ tags }: { tags: string[] }) {
       if (cancelled) return;
       const { Engine, Bodies, Body, Composite, Events, Mouse, MouseConstraint } = M;
 
-      type Chip = { el: HTMLDivElement; pill: HTMLElement; i: number; w: number; h: number; body: Matter.Body; added: boolean; spawnAt: number; lastHit: number };
+      type Chip = { el: HTMLDivElement; pill: HTMLElement; i: number; w: number; h: number; body: Matter.Body; added: boolean; entered: boolean; spawnAt: number; lastHit: number };
       let engine: Matter.Engine | null = null;
       let chips: Chip[] = [];
       let walls: Matter.Body[] = [];
@@ -171,7 +171,6 @@ export function TagPile({ tags }: { tags: string[] }) {
           Bodies.rectangle(W / 2, H - GROUND_GAP + T / 2, W + 2 * T, T, wallOpts), // ground (index 0)
           Bodies.rectangle(-T / 2, H / 2 - 500, T, H + 1400, wallOpts),
           Bodies.rectangle(W + T / 2, H / 2 - 500, T, H + 1400, wallOpts),
-          Bodies.rectangle(W / 2, -1000 - T / 2, W + 2 * T, T, wallOpts), // far-off ceiling for flung chips
         ];
         Composite.add(engine.world, walls);
 
@@ -209,7 +208,7 @@ export function TagPile({ tags }: { tags: string[] }) {
           // over onto their backs (upside-down labels read badly).
           Body.setInertia(body, body.inertia * 3);
           Body.setAngularVelocity(body, spin);
-          chips.push({ el, pill, i, w, h, body, added: false, spawnAt: n * SPAWN_GAP, lastHit: -1e9 });
+          chips.push({ el, pill, i, w, h, body, added: false, entered: false, spawnAt: n * SPAWN_GAP, lastHit: -1e9 });
         });
 
         if (mouse) {
@@ -228,6 +227,32 @@ export function TagPile({ tags }: { tags: string[] }) {
           const b = c.body;
           if (!c.added || b.isSleeping) continue;
           c.el.style.transform = `translate3d(${b.position.x - c.w / 2}px, ${b.position.y - c.h / 2}px, 0) rotate(${b.angle}rad)`;
+        }
+      };
+
+      // Keep chips inside the visible box: a hard drag or fling can outrun the
+      // walls (or tunnel through them), so push any escaping chip back in and
+      // bounce it off the edge. The top only applies once a chip has dropped in.
+      const contain = () => {
+        const W = root.clientWidth;
+        const floor = root.clientHeight - GROUND_GAP;
+        for (const c of chips) {
+          if (!c.added) continue;
+          const b = c.body;
+          const { min, max } = b.bounds;
+          if (!c.entered && min.y >= 0) c.entered = true;
+          let dx = 0;
+          let dy = 0;
+          if (min.x < 0) dx = -min.x;
+          else if (max.x > W) dx = W - max.x;
+          if (max.y > floor) dy = floor - max.y;
+          else if (c.entered && min.y < 0) dy = -min.y;
+          if (!dx && !dy) continue;
+          Body.translate(b, { x: dx, y: dy });
+          Body.setVelocity(b, {
+            x: dx ? Math.abs(b.velocity.x) * Math.sign(dx) * 0.3 : b.velocity.x,
+            y: dy ? Math.abs(b.velocity.y) * Math.sign(dy) * 0.3 : b.velocity.y,
+          });
         }
       };
 
@@ -255,6 +280,7 @@ export function TagPile({ tags }: { tags: string[] }) {
             if (c.added && !c.body.isSleeping) Body.setAngularVelocity(c.body, c.body.angularVelocity * 0.95);
           }
           Engine.update(engine, STEP);
+          contain();
           simTime += STEP;
           acc -= STEP;
           steps++;

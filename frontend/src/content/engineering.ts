@@ -90,16 +90,16 @@ export const engineeringEngagements: EngineeringEngagement[] = [
   {
     service: "custom-development",
     title: "Hand us the whole build",
-    description: "A full squad with one accountable lead designs, builds and ships it, with weekly demos.",
+    description: "A full squad with one accountable lead designs, builds and ships it, at a fixed price or sprint by sprint.",
     bestFor: "New products and big rebuilds",
     icon: "code",
   },
   {
-    service: "fixed-price",
-    title: "Agree a fixed scope and price",
-    description: "One written scope, one agreed price, milestones you sign off. No surprises on the invoice.",
-    bestFor: "Clear, well-defined projects",
-    icon: "file-check",
+    service: "monthly-retainer",
+    title: "Keep it running and improving",
+    description: "Support, security updates and a set of improvements every month for a live product, for one monthly fee.",
+    bestFor: "Products already live",
+    icon: "refresh-cw",
   },
 ];
 
@@ -118,7 +118,7 @@ export const engineeringLabels = {
   industriesTitle: "Built for Regulated, Busy Industries.",
   industriesSubtitle: "The same engineering discipline, tuned to the rules and rhythms of your sector.",
   workTitle: "Work We're Proud Of.",
-  workSubtitle: "Anonymised projects where this discipline did the heavy lifting.",
+  workSubtitle: "Projects where this discipline did the heavy lifting.",
   othersTitle: "Explore Other Disciplines.",
   techTitle: "Tools We Know Well.",
   techSubtitle: "We choose boring, proven tools by default and reach for new ones when they earn it.",

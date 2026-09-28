@@ -17,7 +17,7 @@ import { getCaseStudies, getHomeContent } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "Six ways to work with VAUG: AI as a Service, Dedicated Developers, Custom Development, Venture Studio, Fixed-Price Projects and Launch & Rescue. Compare them and find your fit.",
+    "Six services from one AI-first team: AI as a Service, Dedicated Developers, Custom Development, Build With Us, Monthly Retainer and Launch & Rescue. Compare them and find your fit.",
 };
 
 export default async function ServicesPage() {
@@ -84,7 +84,7 @@ export default async function ServicesPage() {
       )}
 
       <FaqSection faqs={c.faqs} tone="dark" />
-      <ContactSection tone="light" defaultEngagement="Not sure yet" title="Tell us what you need." subtitle="Not sure which model fits? Describe the problem and we'll recommend one on the call." />
+      <ContactSection tone="light" defaultEngagement="Not sure yet" title="Tell us what you need." subtitle="Not sure which service fits? Describe the problem and we'll recommend one on the call." />
       <PageCta content={c.cta} />
     </>
   );

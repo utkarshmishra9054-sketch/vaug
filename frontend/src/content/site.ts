@@ -5,10 +5,10 @@ import type { FooterColumn, NavItem, SiteConfig } from "./types";
 // Empty phones and social hrefs are hidden on the site until they are filled in.
 export const site: SiteConfig = {
   name: "VAUG",
-  tagline: "AI agents and engineering teams that ship.",
+  tagline: "AI-first engineering teams that ship.",
   motto: "Automate · Build · Scale",
   description:
-    "VAUG builds AI agents that streamline your workflows, supplies dedicated developers, and delivers software end to end, from fixed-price builds to fully managed venture launches.",
+    "VAUG is an AI-first engineering company. We build AI agents, supply dedicated developers, deliver custom web and mobile products, launch businesses end to end, look after live products on a monthly retainer and rescue AI-built apps, with shorter timelines and leaner budgets.",
   url: "https://vaug.ai",
   email: "hello@vaug.ai",
   phone: "",

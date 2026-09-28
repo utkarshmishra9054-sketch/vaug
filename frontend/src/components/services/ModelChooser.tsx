@@ -250,7 +250,7 @@ export function ModelChooser({
               ))}
             </tbody>
           </table>
-          <p className="frame-pad py-4 font-mono text-[11px] text-subtle sm:hidden">Swipe the table sideways to see every model.</p>
+          <p className="frame-pad py-4 font-mono text-[11px] text-subtle sm:hidden">Swipe the table sideways to see every service.</p>
         </div>
       )}
     </div>

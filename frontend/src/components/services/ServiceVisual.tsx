@@ -180,13 +180,13 @@ function CustomVisual() {
   );
 }
 
-/* ---------------------------- Venture Studio ---------------------------- */
+/* ---------------------------- Build With Us ---------------------------- */
 
 const ventureSteps = ["Brand", "Website", "Product", "Google profile", "SEO", "Ads", "Agents"];
 
 function VentureVisual() {
   return (
-    <Frame label="A venture from idea to income">
+    <Frame label="From idea to income, end to end">
       <div className="flex items-end justify-between">
         <div>
           <p className="font-mono text-[11px] uppercase tracking-widest text-subtle">Monthly enquiries</p>
@@ -225,20 +225,20 @@ function VentureVisual() {
   );
 }
 
-/* ---------------------------- Fixed-Price ---------------------------- */
+/* ---------------------------- Monthly Retainer ---------------------------- */
 
-const milestones = ["Scope", "Design", "Build", "Launch"];
+const milestones = ["Monitor", "Fix", "Improve", "Report"];
 
-function FixedVisual() {
+function RetainerVisual() {
   return (
-    <Frame label="Milestones on a locked budget">
+    <Frame label="One month on a retainer">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="font-mono text-[11px] uppercase tracking-widest text-subtle">Agreed price</p>
-          <p className="mt-1 text-3xl font-semibold tracking-[-0.03em] text-fg">Fixed</p>
+          <p className="font-mono text-[11px] uppercase tracking-widest text-subtle">This month</p>
+          <p className="mt-1 text-3xl font-semibold tracking-[-0.03em] text-fg">1 fee</p>
         </div>
         <span className="svc-lock inline-flex items-center gap-2 rounded-md bg-accent px-3 py-2 font-mono text-xs font-bold text-accent-fg">
-          <Lock className="size-4" aria-hidden="true" /> Locked
+          <Lock className="size-4" aria-hidden="true" /> Same fee
         </span>
       </div>
       <div className="relative mt-8">
@@ -252,17 +252,17 @@ function FixedVisual() {
                 <Check className="size-4" aria-hidden="true" />
               </span>
               <span className="mt-2 text-xs font-semibold text-fg">{m}</span>
-              <span className="font-mono text-[10px] text-subtle">M{i + 1}</span>
+              <span className="font-mono text-[10px] text-subtle">W{i + 1}</span>
             </li>
           ))}
         </ol>
       </div>
       <div className="mt-6 rounded-md bg-surface-2/70 p-3">
         <p className="flex items-center justify-between font-mono text-[11px] text-muted">
-          <span>Budget over time</span>
+          <span>Monthly cost</span>
           <span className="flex items-center gap-3">
-            <span className="flex items-center gap-1"><span className="h-0.5 w-3 bg-accent-text" /> VAUG</span>
-            <span className="flex items-center gap-1"><span className="h-0.5 w-3 border-t border-dashed border-muted" /> Typical</span>
+            <span className="flex items-center gap-1"><span className="h-0.5 w-3 bg-accent-text" /> Retainer</span>
+            <span className="flex items-center gap-1"><span className="h-0.5 w-3 border-t border-dashed border-muted" /> Ad-hoc fixes</span>
           </span>
         </p>
         <svg viewBox="0 0 300 70" className="mt-2 w-full" aria-hidden="true">
@@ -329,8 +329,8 @@ const visuals: Record<ServiceSlug, () => React.ReactElement> = {
   "ai-as-a-service": AgentsVisual,
   "dedicated-developers": DevelopersVisual,
   "custom-development": CustomVisual,
-  "venture-studio": VentureVisual,
-  "fixed-price": FixedVisual,
+  "build-with-us": VentureVisual,
+  "monthly-retainer": RetainerVisual,
   "launch-and-rescue": RescueVisual,
 };
 

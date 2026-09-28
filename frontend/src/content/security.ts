@@ -111,7 +111,7 @@ export const security = {
   ] satisfies Feature[],
 
   caseStudiesTitle: "Compliance in practice.",
-  caseStudiesSubtitle: "Anonymised projects where data residency and compliance shaped the build.",
+  caseStudiesSubtitle: "Projects where data residency and compliance shaped the build.",
 
   /** Case studies whose content mentions any of these are shown on the page. */
   caseStudyKeywords: ["residen", "gdpr", "complian", "regulat", "audit", "pci", "data protection", "encrypt"],

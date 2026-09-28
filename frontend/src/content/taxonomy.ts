@@ -6,12 +6,12 @@ import type { AudienceSlug, ClientType, EngineeringSlug, IconName, SectorSlug, S
  */
 
 export const services: { slug: ServiceSlug; label: string; short: string; icon: IconName }[] = [
-  { slug: "ai-as-a-service", label: "AI as a Service", short: "Custom AI agents that run your repetitive workflows", icon: "bot" },
-  { slug: "dedicated-developers", label: "Dedicated Developers", short: "Vetted engineers who join your team by the month", icon: "users" },
-  { slug: "custom-development", label: "Custom Development", short: "Bespoke web, mobile and SaaS builds, custom-quoted", icon: "code" },
-  { slug: "venture-studio", label: "Venture Studio", short: "We run product, website, marketing and Google listings", icon: "rocket" },
-  { slug: "fixed-price", label: "Fixed-Price Projects", short: "One agreed scope, one agreed price", icon: "file-check" },
-  { slug: "launch-and-rescue", label: "Launch & Rescue", short: "Fix and deploy Lovable, Bolt or v0 builds", icon: "wrench" },
+  { slug: "ai-as-a-service", label: "AI as a Service", short: "AI agents that take repetitive work off your team", icon: "bot" },
+  { slug: "dedicated-developers", label: "Dedicated Developers", short: "AI-assisted engineers who join your team monthly", icon: "users" },
+  { slug: "custom-development", label: "Custom Development", short: "Web, mobile and SaaS builds, at a fixed price or by sprint", icon: "code" },
+  { slug: "build-with-us", label: "Build With Us", short: "Idea to launched business: product, brand and growth", icon: "rocket" },
+  { slug: "monthly-retainer", label: "Monthly Retainer", short: "Support, fixes and upgrades for your live product", icon: "refresh-cw" },
+  { slug: "launch-and-rescue", label: "Launch & Rescue", short: "Fix and ship Lovable, Bolt or v0 builds", icon: "wrench" },
 ];
 
 export const sectors: { slug: SectorSlug; label: string; short: string; icon: IconName }[] = [
@@ -41,7 +41,7 @@ export const engineering: { slug: EngineeringSlug; label: string; short: string;
   { slug: "quality-assurance", label: "Quality Assurance", short: "Manual, automated and performance testing", icon: "shield" },
 ];
 
-export const regions = ["UK", "Europe", "UAE"] as const;
+export const regions = ["UK", "Europe", "UAE", "India", "Canada", "Singapore", "Australia", "USA", "Brazil"] as const;
 
 export const routes = {
   home: "/",
@@ -73,4 +73,4 @@ export const serviceBySlug = (slug: ServiceSlug) => services.find((s) => s.slug 
 export const sectorBySlug = (slug: SectorSlug) => sectors.find((s) => s.slug === slug)!;
 
 /** The contact form's "I'm interested in" option for a service. */
-export const engagementOption = (slug: ServiceSlug) => (slug === "fixed-price" ? "Fixed-Price Project" : serviceBySlug(slug).label);
+export const engagementOption = (slug: ServiceSlug) => serviceBySlug(slug).label;

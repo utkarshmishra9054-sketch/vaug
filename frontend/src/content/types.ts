@@ -38,9 +38,10 @@ export type IconName =
   | "cpu"
   | "cloud"
   | "smartphone"
-  | "heart";
+  | "heart"
+  | "refresh-cw";
 
-export type IllustrationName = "agents" | "developers" | "custom" | "venture" | "fixed" | "rescue";
+export type IllustrationName = "agents" | "developers" | "custom" | "build" | "retainer" | "rescue";
 
 export interface Link {
   label: string;
@@ -176,6 +177,8 @@ export interface CaseStudy {
   tint: string;
   /** Rows shown on the mock dashboard in the visual. */
   screen: { label: string; value: string }[];
+  /** Full-colour client logo (`public/logos/`), shown on the home client grid. */
+  logo?: string;
   placeholder?: boolean;
 }
 
@@ -230,13 +233,17 @@ export interface FooterColumn {
   links: Link[];
 }
 
-/** An anonymised client shown on the home page, linking to its case study. */
+/** A client tile on the home page: a case study (with `href`) or a logo-only client. */
 export interface ClientItem {
   label: string;
   sector: string;
-  city: string;
+  city?: string;
   icon: IconName;
-  href: string;
+  href?: string;
+  /** Client logo shown in place of the icon, e.g. `/logos/brandless.webp`. */
+  logoSrc?: string;
+  /** Logo-only clients: their website, previewed in a lightbox when the tile is clicked. */
+  website?: ClientWebsite;
 }
 
 /** A result pulled from a case study, shown instead of quotes until real testimonials exist. */
@@ -303,9 +310,18 @@ export interface ApproachPhase {
   description: string;
 }
 
+/** A real screenshot from a case study, served from `public/`. */
+export interface CaseImage {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+}
+
 /** Full case study: the card fields plus everything the detail page needs. */
 export interface CaseStudyDetail extends CaseStudy {
-  sector: SectorSlug;
+  /** Optional: sectors outside the six we have pages for show `industry` as plain text. */
+  sector?: SectorSlug;
   service: ServiceSlug;
   clientType: ClientType;
   region: Region;
@@ -322,15 +338,27 @@ export interface CaseStudyDetail extends CaseStudy {
   results: { metrics: Metric[]; narrative: string };
   testimonial?: { quote: string; name: string; role: string };
   screenshots: string[];
+  /** Real screenshots, in the order of `screenshots`. Used instead of the drawn screens when present. */
+  images?: CaseImage[];
+  /** The client's live website, shown after the screens (and linked in the facts panel). */
+  website?: ClientWebsite;
+  /** Marketing work (ads, SEO, social): the screens gallery is titled for a campaign, not a product. */
+  campaign?: boolean;
   ctaHeading: string;
+}
+
+/** A client's public website and a homepage screenshot of it (`public/sites/`). */
+export interface ClientWebsite {
+  url: string;
+  image: CaseImage;
 }
 
 export type ServiceSlug =
   | "ai-as-a-service"
   | "dedicated-developers"
   | "custom-development"
-  | "venture-studio"
-  | "fixed-price"
+  | "build-with-us"
+  | "monthly-retainer"
   | "launch-and-rescue";
 
 export type SectorSlug =
@@ -354,4 +382,4 @@ export type EngineeringSlug =
   | "quality-assurance";
 
 export type ClientType = "Startup" | "Enterprise" | "HNI" | "Agency";
-export type Region = "UK" | "Europe" | "UAE";
+export type Region = "UK" | "Europe" | "UAE" | "India" | "Canada" | "Singapore" | "Australia" | "USA" | "Brazil";

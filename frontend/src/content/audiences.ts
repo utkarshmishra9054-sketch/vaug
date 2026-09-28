@@ -81,7 +81,7 @@ export const whoWeServeIndex: WhoWeServeIndex = {
     { question: "Do you sign NDAs before the first call?", answer: "Yes, on request. Send yours or ask for ours and it's signed before you share anything sensitive." },
     { question: "Who owns the code and IP?", answer: "You do, once invoices are paid. It's written into every contract, and code lives in repositories you control." },
     { question: "How do you price work?", answer: "Monthly for dedicated developers and AI as a Service, fixed for scoped projects, and custom-quoted for bigger builds and ventures. You get a written proposal within 48 hours of our call." },
-    { question: "Where are your teams?", answer: "We work with clients across the UK, Europe and the UAE, with engineering teams across time zones so there's always overlap with your day." },
+    { question: "Where are your teams?", answer: "We work with clients across the UK, Europe, the UAE, India and Canada, with engineering teams across time zones so there's always overlap with your day." },
   ],
   cta: {
     title: { light: "Whoever you are,", bold: "start with a conversation." },
@@ -114,10 +114,10 @@ export const audiencePages: AudiencePage[] = [
     servicesTitle: "How we work with founders.",
     servicesSubtitle: "Pick the model that matches where you are. Most founders start with one and move to another as they grow.",
     services: [
-      { service: "fixed-price", headline: "An MVP at an agreed price", description: "We scope the smallest product worth launching and build it for one fixed price.", points: ["Scope and price agreed up front", "Weekly demos", "Launch support included"] },
+      { service: "custom-development", headline: "An MVP at a fixed price", description: "We scope the smallest product worth launching and build it for one fixed price.", points: ["Scope and price agreed up front", "Weekly demos", "Launch support included"] },
       { service: "launch-and-rescue", headline: "Fix the AI-built prototype", description: "We take your Lovable, Bolt or v0 build, fix what's risky and put it live.", points: ["Code and security review", "Auth, payments and data done properly", "Deployed with monitoring"] },
-      { service: "custom-development", headline: "A product built to grow", description: "For products with real complexity: marketplaces, platforms and apps with many moving parts.", points: ["Architecture that scales", "Web and mobile", "Custom-quoted"] },
-      { service: "dedicated-developers", headline: "Engineers after launch", description: "Keep momentum with developers who join your team by the month.", points: ["Vetted and senior", "Your tools and sprints", "Scale up or down"] },
+      { service: "build-with-us", headline: "The product and the launch", description: "Need brand, website and launch marketing too? We build the whole business with you, end to end.", points: ["Product, brand and launch", "One team, one plan", "Retainer or partnership"] },
+      { service: "monthly-retainer", headline: "Care after launch", description: "Fixes, updates and new features every month for one fee, without hiring a team yet.", points: ["One predictable monthly fee", "Monitoring and security updates", "Improvements every month"] },
     ],
     journeyTitle: "From idea to growth.",
     journey: [
@@ -131,13 +131,13 @@ export const audiencePages: AudiencePage[] = [
     termsSubtitle: "No lock-in, no surprises and nothing that scares an investor in due diligence.",
     terms: [
       { title: "You own the IP", description: "Code, designs and accounts belong to you, in repositories you control.", icon: "file-check", href: routes.terms },
-      { title: "Fixed prices for fixed scope", description: "Agree the scope and the price once. Changes are quoted before they're built.", icon: "briefcase", href: routes.service("fixed-price") },
+      { title: "Fixed prices for fixed scope", description: "Agree the scope and the price once. Changes are quoted before they're built.", icon: "briefcase", href: routes.service("custom-development") },
       { title: "NDA on request", description: "Share your idea safely. We'll sign before you tell us the details.", icon: "shield", href: routes.contact },
       { title: "Investor-ready handover", description: "Documentation, architecture notes and clean repos for technical due diligence.", icon: "search", href: routes.howWeWork },
-      { title: "Monthly after launch", description: "Keep a developer or two on monthly terms, with notice you can live with.", icon: "users", href: routes.service("dedicated-developers") },
+      { title: "Monthly after launch", description: "A monthly retainer or a dedicated developer, with notice you can live with.", icon: "users", href: routes.service("monthly-retainer") },
       { title: "Honest advice", description: "If an off-the-shelf tool does the job, we'll tell you before you spend money.", icon: "message-square", href: routes.about },
     ],
-    snapshot: { firstStep: "Scope the MVP", usualModel: "Fixed price or Launch & Rescue", keyTerm: "You own the IP" },
+    snapshot: { firstStep: "Scope the MVP", usualModel: "Custom Development or Launch & Rescue", keyTerm: "You own the IP" },
     faqs: [
       { question: "How much does an MVP cost?", answer: "It depends on scope, which is why we start with a short discovery and then give you one fixed price. You'll get a written proposal within 48 hours of our call." },
       { question: "How long until we're live?", answer: "Most MVPs launch in six to ten weeks. Rescues of AI-built prototypes are often faster." },
@@ -147,7 +147,7 @@ export const audiencePages: AudiencePage[] = [
       { question: "Can we hire our own team later?", answer: "Yes. We document as we go and help you hire and hand over when you're ready." },
     ],
     cta: { title: { light: "Your idea deserves a launch date.", bold: "Let's set one." }, subtitle: cta, button: "Book a founder call" },
-    engagement: "Fixed-Price Project",
+    engagement: "Custom Development",
   },
 
   /* ---------------------------------------------------------------- */
@@ -158,7 +158,7 @@ export const audiencePages: AudiencePage[] = [
       title: { light: "Private ventures, fully managed and", bold: "kept quiet." },
       subtitle:
         "You have the idea, the capital and no time to run a tech team. We build and run the whole venture: brand, product, website, marketing and listings, with one senior contact and complete discretion.",
-      tags: ["Discretion", "Venture Studio", "One point of contact", "Monthly reporting"],
+      tags: ["Discretion", "Build With Us", "One point of contact", "Monthly reporting"],
     },
     promise: "Your venture, run properly, without the noise.",
     painsTitle: "What we usually hear first.",
@@ -171,9 +171,9 @@ export const audiencePages: AudiencePage[] = [
       { title: "Quality over speed", description: "It carries your name, even privately. It has to feel premium from day one.", icon: "crown" },
     ],
     servicesTitle: "How we work with private clients.",
-    servicesSubtitle: "Most private clients use our Venture Studio, with AI and engineering added as the venture grows.",
+    servicesSubtitle: "Most private clients choose Build With Us, with AI agents and a monthly retainer added as the business grows.",
     services: [
-      { service: "venture-studio", headline: "The whole venture, run for you", description: "Brand, product, website, marketing and Google listings, delivered and run by one team.", points: ["One senior point of contact", "Monthly report and review", "You own every asset"] },
+      { service: "build-with-us", headline: "The whole business, built with you", description: "Brand, product, website, marketing and Google listings, delivered and run end to end by one team.", points: ["One senior point of contact", "Monthly report and review", "You own every asset"] },
       { service: "custom-development", headline: "A bespoke product", description: "When the venture needs its own platform or app, built to a premium standard.", points: ["Premium design and build", "Security-first", "Custom-quoted"] },
       { service: "ai-as-a-service", headline: "Agents that run operations", description: "Enquiries, bookings and admin handled by agents, so the venture runs lean.", points: ["Answers enquiries around the clock", "Hands over to your team", "Monthly fee"] },
       { service: "dedicated-developers", headline: "A team for your family office", description: "Engineers who build internal tools, reporting and portfolio dashboards.", points: ["Discreet, vetted people", "Monthly terms", "Works with your advisers"] },
@@ -196,17 +196,17 @@ export const audiencePages: AudiencePage[] = [
       { title: "Clear monthly reporting", description: "A plain-English report of what was done, what it cost and what it achieved.", icon: "trending-up", href: routes.howWeWork },
       { title: "Secure by default", description: "Restricted access, encrypted data and devices, and a record of who touched what.", icon: "shield", href: routes.security },
     ],
-    snapshot: { firstStep: "Private brief under NDA", usualModel: "Venture Studio", keyTerm: "Complete discretion" },
+    snapshot: { firstStep: "Private brief under NDA", usualModel: "Build With Us", keyTerm: "Complete discretion" },
     faqs: [
       { question: "Will you mention us as a client?", answer: "No. Private clients are never named or shown in our work unless you ask us to in writing. Our case studies are anonymised as standard." },
       { question: "Can we work through our family office or advisers?", answer: "Yes. We regularly work with family office staff, lawyers and advisers, and report in whatever format suits them." },
-      { question: "How is a Venture Studio engagement priced?", answer: "Usually a set-up fee for brand and launch, then a monthly fee to run and grow the venture. The proposal lists both clearly." },
+      { question: "How is Build With Us priced?", answer: "Usually a set-up fee for brand and launch, then a monthly fee to run and grow the venture. The proposal lists both clearly." },
       { question: "Who owns the brand and accounts?", answer: "You or your entity, from day one. We work in accounts registered to you, never the other way round." },
       { question: "Can you work in the UAE?", answer: "Yes. Many of our private clients are in the UAE, and we build Arabic and English brands and products." },
       { question: "What if we want to step back further?", answer: "That's the point. We run the day-to-day and bring you decisions, not tasks." },
     ],
     cta: { title: { light: "A private conversation,", bold: "under NDA." }, subtitle: cta, button: "Arrange a private call" },
-    engagement: "Venture Studio",
+    engagement: "Build With Us",
   },
 
   /* ---------------------------------------------------------------- */
@@ -235,7 +235,7 @@ export const audiencePages: AudiencePage[] = [
       { service: "ai-as-a-service", headline: "Agent pilots that reach production", description: "We pick one workflow, build the agent, measure it against a baseline and scale what works.", points: ["Clear baseline and success metrics", "Runs in your cloud if required", "Human approval where it matters"] },
       { service: "dedicated-developers", headline: "Extend your teams", description: "Senior engineers join your squads, tools and ceremonies, managed by one VAUG lead.", points: ["Vetted, senior people", "Your process and tooling", "Monthly, flexible capacity"] },
       { service: "custom-development", headline: "Modernise without the big bang", description: "New products and API layers around legacy systems, delivered in safe increments.", points: ["Strangler-pattern modernisation", "Documented architecture", "Tested releases"] },
-      { service: "fixed-price", headline: "Scoped projects for clear budgets", description: "Well-defined deliverables with one agreed price, easy to approve.", points: ["Fixed scope and cost", "Milestone sign-off", "Warranty period"] },
+      { service: "monthly-retainer", headline: "Managed care for live systems", description: "Internal tools and customer platforms kept secure, patched and improving, with agreed response times.", points: ["Agreed response times", "Security patching and monitoring", "Monthly reporting"] },
     ],
     journeyTitle: "From audit to scale.",
     journey: [
@@ -292,7 +292,7 @@ export const audiencePages: AudiencePage[] = [
     servicesSubtitle: "Plug us in where you need us: one project, a monthly team or the AI capability you don't have in-house.",
     services: [
       { service: "dedicated-developers", headline: "A white-label team", description: "Developers who work as part of your agency, under your name, month by month.", points: ["Your email and Slack if you like", "Your process and tools", "Flexible monthly capacity"] },
-      { service: "fixed-price", headline: "Projects at a price you can mark up", description: "We scope and price the build so you can quote your client with confidence.", points: ["Fixed cost for fixed scope", "Protects your margin", "Weekly demos you can forward"] },
+      { service: "custom-development", headline: "Projects at a price you can mark up", description: "We scope and price the build so you can quote your client with confidence.", points: ["Fixed cost for fixed scope", "Protects your margin", "Weekly demos you can forward"] },
       { service: "ai-as-a-service", headline: "AI agents under your brand", description: "Offer AI agents to your clients. We build and run them; you own the relationship.", points: ["White-label dashboards", "Monthly recurring revenue for you", "We handle the ops"] },
       { service: "launch-and-rescue", headline: "Rescue a client project", description: "A build went wrong or a prototype needs to go live. We fix it quietly.", points: ["Fast code audit", "Stabilise and deploy", "No client contact unless you want it"] },
     ],
@@ -311,7 +311,7 @@ export const audiencePages: AudiencePage[] = [
       { title: "NDAs as standard", description: "Mutual NDA before any brief, and per-project NDAs if your client requires them.", icon: "shield", href: routes.contact },
       { title: "Non-solicitation", description: "We never approach your clients, during the project or after it.", icon: "file-check", href: routes.terms },
       { title: "IP passes to you", description: "Everything we build is assigned to you or your client, as you decide.", icon: "briefcase", href: routes.terms },
-      { title: "Partner pricing", description: "Rates that leave room for your margin, agreed per project or per month.", icon: "trending-up", href: routes.service("fixed-price") },
+      { title: "Partner pricing", description: "Rates that leave room for your margin, agreed per project or per month.", icon: "trending-up", href: routes.service("custom-development") },
       { title: "Your process, your tools", description: "We work in your Jira, Slack and Git, and follow your QA and release steps.", icon: "workflow", href: routes.howWeWork },
     ],
     snapshot: { firstStep: "Match on a live brief", usualModel: "Dedicated Developers or Fixed price", keyTerm: "White-label + NDAs" },

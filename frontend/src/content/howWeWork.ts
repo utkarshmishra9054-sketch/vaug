@@ -112,15 +112,15 @@ export const howWeWork = {
     },
   },
 
-  modelsTitle: "Six ways to engage.",
-  modelsSubtitle: "The same way of working, whichever model fits. Pick one, or combine them.",
+  modelsTitle: "Six services. One way of working.",
+  modelsSubtitle: "The same AI-first delivery, whichever service fits. Pick one, or combine them.",
 
   contactTitle: "Tell us what you're planning.",
 
   faqs: [
     { question: "How quickly can you start?", answer: "Most projects kick off within one to two weeks of the first call. Dedicated developers can often start within days." },
     { question: "Who will I talk to day to day?", answer: "One accountable lead, who is senior, technical enough to answer real questions, and responsible for your project from kickoff to after launch." },
-    { question: "What happens if my requirements change?", answer: "We scope the change, tell you the effect on time and cost, and only start once you agree. On fixed-price work the original scope and price never move." },
+    { question: "What happens if my requirements change?", answer: "We scope the change, tell you the effect on time and cost, and only start once you agree. On a fixed-price build the original scope and price never move." },
     { question: "Do you use AI to write the code?", answer: "We use AI tools to move faster, then review every line. Architecture, security and anything sensitive is designed and checked by senior engineers." },
     { question: "Who owns the code and IP?", answer: "You do. Our contracts assign IP to you, and the code lives in your repositories from the first week." },
     { question: "How do you report progress?", answer: "A live demo every week and a short written update every Friday: shipped, next, risks and decisions needed. You also get access to the board and repository." },

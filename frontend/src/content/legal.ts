@@ -224,7 +224,7 @@ export const terms: LegalDoc = {
       id: "our-services",
       heading: "2. Our services and client contracts",
       body: [
-        "The website describes our services, including AI as a Service, dedicated developers, custom development, venture studio, fixed-price projects, and launch and rescue work.",
+        "The website describes our services, including AI as a Service, dedicated developers, custom development, Build With Us, monthly retainers, and launch and rescue work.",
         "Nothing on the website is an offer capable of acceptance. Every engagement is governed by a separate written agreement, such as a master services agreement and statement of work, which sets out the scope, fees, intellectual property, confidentiality and liability for that project. If that agreement conflicts with these terms, the agreement wins.",
         "Proposals, estimates and timelines we share before a contract is signed are given in good faith but are not binding until agreed in writing.",
       ],
@@ -251,7 +251,7 @@ export const terms: LegalDoc = {
       heading: "4. Intellectual property",
       body: [
         "We, or our licensors, own all intellectual property rights in the website, including its design, text, graphics, code and the VAUG name and logo. You may view and print pages for your own reference, but you may not reuse them commercially without our permission.",
-        "Case studies on the website are anonymised. Nothing on the website grants you any right to use a client's or a third party's trade marks.",
+        "Case studies on the website are anonymised unless the client has agreed to be named. Nothing on the website grants you any right to use a client's or a third party's trade marks.",
       ],
     },
     {

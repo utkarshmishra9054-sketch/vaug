@@ -3,8 +3,8 @@ export const engagementOptions = [
   "AI as a Service",
   "Dedicated Developers",
   "Custom Development",
-  "Venture Studio",
-  "Fixed-Price Project",
+  "Build With Us",
+  "Monthly Retainer",
   "Launch & Rescue",
   "Not sure yet",
 ] as const;

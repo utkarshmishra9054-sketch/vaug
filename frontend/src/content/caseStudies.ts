@@ -1,7 +1,9 @@
+import { clientStudies } from "./clientStudies";
 import type { ApproachPhase, CaseStudyDetail, Feature } from "./types";
 
 /**
- * The 12 VAUG case studies. Clients are anonymised by agreement.
+ * The VAUG case studies. Every client is named.
+ * TODO(content): confirm written consent to name each client and show its logo.
  *
  * Card fields (title, summary, metrics, screen …) feed the listing and the
  * home page; the rest feeds `/case-studies/[slug]`. Testimonials render only
@@ -15,7 +17,7 @@ export const caseStudies: CaseStudyDetail[] = [
   // ------------------------------------------------------------------ 1
   {
     slug: "reconciliation-agent-frankfurt-payments",
-    client: "A Frankfurt payments processor",
+    client: "Traxpay",
     city: "Frankfurt, Germany",
     stage: "Enterprise",
     industry: "Fintech & Insurance",
@@ -35,6 +37,7 @@ export const caseStudies: CaseStudyDetail[] = [
       { label: "Open exceptions", value: "38" },
       { label: "Avg. match time", value: "1.4s" },
     ],
+    logo: "/logos/traxpay.webp",
     sector: "fintech-insurance",
     service: "ai-as-a-service",
     clientType: "Enterprise",
@@ -44,7 +47,7 @@ export const caseStudies: CaseStudyDetail[] = [
     duration: "10 weeks",
     team: "4 people: PM, 2 AI engineers, designer",
     about:
-      "A Frankfurt-based payments processor serving mid-sized e-commerce merchants across the DACH region. The company processes card, SEPA and wallet payments through several PSPs and settles to merchants daily. Its finance team of six handled reconciliation across three banks, four payment providers and an internal ledger, mostly in spreadsheets. As volumes grew past 400,000 transactions a month, the close process became the slowest part of the business.",
+      "Traxpay is a Frankfurt-based payments processor serving mid-sized e-commerce merchants across the DACH region. The company processes card, SEPA and wallet payments through several PSPs and settles to merchants daily. Its finance team of six handled reconciliation across three banks, four payment providers and an internal ledger, mostly in spreadsheets. As volumes grew past 400,000 transactions a month, the close process became the slowest part of the business.",
     problems: [
       f("Three days to close.", "Month-end reconciliation took the full finance team three working days, delaying reporting to management and auditors."),
       f("Formats that never match.", "Each bank and PSP exported data in a different format, with different references, fee treatments and settlement timing."),
@@ -88,13 +91,14 @@ export const caseStudies: CaseStudyDetail[] = [
       "Transaction detail drawer with the agent's plain-language explanation",
       "Audit log export view",
     ],
+    website: { url: "https://www.traxpay.com", image: { src: "/sites/traxpay.webp", alt: "Traxpay website home page", width: 1440, height: 900 } },
     ctaHeading: "Want an agent that closes your books faster?",
   },
 
   // ------------------------------------------------------------------ 2
   {
     slug: "freelancer-insurance-platform-london",
-    client: "A London insurtech for freelancers",
+    client: "Collective Benefits (now Onsi)",
     city: "London, UK",
     stage: "Seed",
     industry: "Fintech & Insurance",
@@ -114,6 +118,7 @@ export const caseStudies: CaseStudyDetail[] = [
       { label: "Policies bound", value: "41" },
       { label: "Renewals due", value: "12" },
     ],
+    logo: "/logos/onsi.webp",
     sector: "fintech-insurance",
     service: "custom-development",
     clientType: "Startup",
@@ -123,7 +128,7 @@ export const caseStudies: CaseStudyDetail[] = [
     duration: "14 weeks",
     team: "5 people: PM, designer, 2 full-stack devs, QA",
     about:
-      "A seed-stage London insurtech offering professional indemnity and public liability cover to freelancers and small consultancies. Founded by two former Lloyd's brokers, the company works with two capacity providers and sold policies through a phone-and-email process backed by a spreadsheet. Demand from freelance designers, developers and consultants was growing, but every quote took a broker 20 minutes. They needed a product that could scale without hiring a larger broking team.",
+      "Collective Benefits (now Onsi) is a seed-stage London insurtech offering professional indemnity and public liability cover to freelancers and small consultancies. Founded by two former Lloyd's brokers, the company works with two capacity providers and sold policies through a phone-and-email process backed by a spreadsheet. Demand from freelance designers, developers and consultants was growing, but every quote took a broker 20 minutes. They needed a product that could scale without hiring a larger broking team.",
     problems: [
       f("Slow quoting.", "Every quote needed a broker to collect details by email and key them into insurer portals."),
       f("Lost leads.", "Freelancers who didn't get a price the same day often bought elsewhere."),
@@ -167,17 +172,113 @@ export const caseStudies: CaseStudyDetail[] = [
       "Policy detail page with payment history and documents",
       "Admin screen for editing insurer rating rules",
     ],
+    website: { url: "https://onsi.com", image: { src: "/sites/onsi.webp", alt: "Onsi (formerly Collective Benefits) website home page", width: 1440, height: 900 } },
     ctaHeading: "Need a platform your customers can buy from in a minute?",
+  },
+
+  // ------------------------------------------------------------------ proposal · C2H
+  // Source: 2023 VAUG proposal. TODO(content): confirm written consent to name this client.
+  {
+    slug: "seo-cbd-ecommerce-canada",
+    client: "CBD2Heal",
+    city: "Canada",
+    stage: "Online retailer",
+    industry: "E-commerce & Retail",
+    model: "SEO & Growth",
+    icon: "trending-up",
+    title: "From Position 62 to 6: SEO That Put a CBD Store on Google's First Page",
+    summary:
+      "A full SEO programme for a Canadian CBD e-commerce brand: technical fixes, site structure, content and clean link building that moved its average Google position from 62 to 6.",
+    metrics: [
+      { value: "62 → 6", label: "average Google position" },
+      { value: "+90%", label: "traffic" },
+      { value: "+95%", label: "conversions" },
+    ],
+    tint: "#15803d",
+    screen: [
+      { label: "Avg. position", value: "6" },
+      { label: "Organic share", value: "79%" },
+      { label: "Spam score", value: "<0.5" },
+    ],
+    sector: "ecommerce-retail",
+    service: "build-with-us",
+    // TODO(content): confirm client type.
+    clientType: "Startup",
+    region: "Canada",
+    domain: "SEO (technical, on-page and off-page)",
+    // TODO(content): confirm the full tool list for this engagement.
+    techStack: ["Google Search Console", "Google Analytics"],
+    // TODO(content): engagement length and team.
+    duration: "",
+    team: "",
+    about:
+      "CBD2Heal (C2H) sells CBD wellness products online in Canada, from oil tinctures and gel capsules to healing salves and bath bombs. Its secondary keywords already ranked on Google's first page, but its primary keywords sat below page three, and the site wasn't generating the traffic, and so the sales, the team was looking for.",
+    problems: [
+      f("Primary keywords out of sight.", "The product searches that matter most ranked below Google's third page."),
+      f("Bad and broken links.", "The audit found harmful backlinks and broken internal links."),
+      f("Crawl errors.", "Search engines hit errors crawling the site, so pages weren't fully indexed."),
+      f("Traffic without sales.", "The site wasn't optimised to turn the visitors it did get into buyers."),
+    ],
+    solution:
+      "We started, as on every SEO campaign, with a full website audit to show why the site wasn't producing traffic or sales. We fixed the technical issues, improved the sitemap and site flow, and reworked the link structure so search engines could crawl every product. We then ran keyword research, optimised every key page, built a content strategy and earned relevant backlinks while keeping the spam score below 0.5. Effort split across off-page link building (30.3%), content strategy (19.7%), advanced SEO (15.2%), speed optimisation (15.2%), tracking and analysis (12.1%) and data study (7.6%). Rankings are tracked continuously.",
+    features: [
+      f("Technical audit", "Bad links, broken links and crawl errors found and fixed."),
+      f("Sitemap and site flow", "A cleaner structure so every product page can be crawled and reached."),
+      f("Keyword research and on-page SEO", "Product pages optimised for the searches buyers actually use."),
+      f("Content strategy", "Content planned around primary and secondary keywords."),
+      f("Clean link building", "Relevant backlinks, with the spam score kept below 0.5."),
+    ],
+    challenges: [
+      f("Starting below page three", "Primary keywords began below Google's third page, so every gain had to be earned."),
+      f("Cleaning up before building", "Harmful links and crawl errors had to be fixed before new links could count."),
+      f("Growth without risk", "Link building had to stay clean enough to keep the spam score under 0.5."),
+    ],
+    // TODO(content): add dates to each phase.
+    approach: [
+      p("Audit", "Phase 1", "Full website audit: search visibility, links, crawl errors and on-page gaps."),
+      p("Fix the foundations", "Phase 2", "Technical fixes, sitemap, site flow and link structure."),
+      p("Optimise", "Phase 3", "Keyword research and on-page optimisation of the key product pages."),
+      p("Grow authority", "Phase 4", "Content strategy and relevant backlinks."),
+      p("Track and adjust", "Ongoing", "Continuous rank tracking and analysis."),
+    ],
+    results: {
+      metrics: [
+        { value: "62 → 6", label: "average Google position" },
+        { value: "+90%", label: "traffic" },
+        { value: "+95%", label: "conversions" },
+        { value: "+80%", label: "revenue" },
+      ],
+      narrative:
+        "C2H's average Google position moved from 62 to 6, and 79% of its traffic now comes from organic search. It ranks #1 for \"pure CBD oil tincture in Canada\", \"pure CBD gel capsules 500mg\", \"CBD healing salve cream\" and \"CBD2HEAL broad spectrum\", and #2 for \"best CBD detox bath bomb\". Traffic is up 90%, conversions 95% and revenue 80%, and we continue to monitor rankings.",
+    },
+    testimonial: {
+      quote: "We have seen a significant increase in our sales and brand awareness. Their SEO services are top-notch!",
+      name: "Richard Sanchez",
+      role: "CEO, CBD2Heal",
+    },
+    screenshots: [
+      "The CBD2Heal storefront",
+      "Primary keyword rankings: position 1 for four of five primary keywords",
+      "Position tracking: average Google position climbing from 62 to 6",
+      "Search Console queries: the primary product searches at positions 1 to 2",
+      "Google Analytics traffic acquisition: Organic Search brings 79% of sessions",
+      "The optimised product page for the pure CBD oil tincture",
+    ],
+    images: [
+      { src: "/case-studies/seo-cbd-ecommerce-canada/storefront.webp", alt: "CBD2Heal storefront home page promoting 5000mg CBD oil tinctures", width: 863, height: 447 },
+      { src: "/case-studies/seo-cbd-ecommerce-canada/keyword-rankings.webp", alt: "Keyword ranking table for five primary CBD keywords with their positions and URLs", width: 882, height: 201 },
+    ],
+    ctaHeading: "Want your store on Google's first page?",
   },
 
   // ------------------------------------------------------------------ 3
   {
     slug: "physio-booking-app-dubai",
-    client: "A Dubai physiotherapy startup",
+    client: "PhysioFit Sports & Rehab",
     city: "Dubai, UAE",
     stage: "Seed",
     industry: "Healthcare",
-    model: "Fixed-Price Project",
+    model: "Custom Development",
     icon: "heart",
     title: "A Booking App That Filled a Physio Clinic's Calendar in 90 Days",
     summary:
@@ -193,8 +294,9 @@ export const caseStudies: CaseStudyDetail[] = [
       { label: "Home visits", value: "74" },
       { label: "Slots open", value: "19" },
     ],
+    logo: "/logos/physiofit.webp",
     sector: "healthcare",
-    service: "fixed-price",
+    service: "custom-development",
     clientType: "Startup",
     region: "UAE",
     domain: "Patient booking app (web + iOS + Android)",
@@ -202,7 +304,7 @@ export const caseStudies: CaseStudyDetail[] = [
     duration: "12 weeks",
     team: "4 people: PM, designer, Flutter dev, backend dev",
     about:
-      "A Dubai-based physiotherapy startup with two clinics and a growing home-visit service covering Dubai Marina, JLT and Downtown. Its therapists treat sports injuries, post-surgery rehab and back pain. Bookings came through WhatsApp and phone, managed by one receptionist and a shared calendar. With therapists travelling between clinics and homes, gaps and double bookings were common, and the founders wanted patients to book, pay and rebook on their own.",
+      "PhysioFit Sports & Rehab is a Dubai-based physiotherapy startup with two clinics and a growing home-visit service covering Dubai Marina, JLT and Downtown. Its therapists treat sports injuries, post-surgery rehab and back pain. Bookings came through WhatsApp and phone, managed by one receptionist and a shared calendar. With therapists travelling between clinics and homes, gaps and double bookings were common, and the founders wanted patients to book, pay and rebook on their own.",
     problems: [
       f("Manual booking.", "Every appointment was arranged through WhatsApp messages, taking hours of reception time each day."),
       f("Empty slots.", "Therapist calendars had gaps that were never filled because patients couldn't see availability."),
@@ -245,13 +347,14 @@ export const caseStudies: CaseStudyDetail[] = [
       "Admin calendar showing all therapists and utilisation",
       "Patient exercise plan screen",
     ],
+    website: { url: "https://physiofitdxb.com", image: { src: "/sites/physiofit.webp", alt: "PhysioFit Sports & Rehab website home page", width: 1440, height: 900 } },
     ctaHeading: "Want a booking app delivered at a fixed price?",
   },
 
   // ------------------------------------------------------------------ 4
   {
     slug: "patient-whatsapp-voice-agent-manchester",
-    client: "A Manchester diagnostics network",
+    client: "Summerhill Health",
     city: "Manchester, UK",
     stage: "Enterprise",
     industry: "Healthcare",
@@ -271,6 +374,7 @@ export const caseStudies: CaseStudyDetail[] = [
       { label: "Scans booked by agent", value: "214" },
       { label: "Handed to staff", value: "61" },
     ],
+    logo: "/logos/summerhill-health.webp",
     sector: "healthcare",
     service: "ai-as-a-service",
     clientType: "Enterprise",
@@ -280,7 +384,7 @@ export const caseStudies: CaseStudyDetail[] = [
     duration: "12 weeks",
     team: "5 people: PM, 2 AI engineers, integration engineer, QA",
     about:
-      "A private diagnostic imaging network with nine centres across Greater Manchester and Cheshire, offering MRI, CT, ultrasound and X-ray to self-paying patients and through insurers and NHS referrals. Its central booking team of fourteen handled over 1,500 calls and messages a day. Long hold times meant patients abandoned calls, and many scans were delayed because pre-scan safety questionnaires weren't completed in time.",
+      "Summerhill Health is a private diagnostic imaging network with nine centres across Greater Manchester and Cheshire, offering MRI, CT, ultrasound and X-ray to self-paying patients and through insurers and NHS referrals. Its central booking team of fourteen handled over 1,500 calls and messages a day. Long hold times meant patients abandoned calls, and many scans were delayed because pre-scan safety questionnaires weren't completed in time.",
     problems: [
       f("Long waits.", "Patients waited an average of six minutes on hold, and a quarter hung up."),
       f("Repetitive questions.", "Most calls were about prices, preparation, directions or moving an appointment."),
@@ -324,17 +428,113 @@ export const caseStudies: CaseStudyDetail[] = [
       "Analytics dashboard: contacts, resolution rate and bookings by centre",
       "Flagged questionnaire review screen",
     ],
+    website: { url: "https://www.summerhillhealth.co.uk", image: { src: "/sites/summerhill-health.webp", alt: "Summerhill Health website home page", width: 1440, height: 900 } },
     ctaHeading: "Want an agent that answers every patient in seconds?",
+  },
+
+  // ------------------------------------------------------------------ proposal · CareerNaksha
+  // Source: 2023 VAUG proposal. TODO(content): confirm written consent to name this client.
+  {
+    slug: "local-seo-career-counselling-india",
+    client: "CareerNaksha",
+    city: "India",
+    stage: "Startup",
+    industry: "Education",
+    model: "SEO & Growth",
+    icon: "search",
+    title: "Local SEO That Took a Career-Counselling Startup From Map Rank 20 to 1.4",
+    summary:
+      "SEO and local SEO for a career-counselling startup expanding into new cities: indexing fixes, site structure, content and backlinks that took its average map rank from 20.2 to 1.4.",
+    metrics: [
+      { value: "20.2 → 1.4", label: "average map rank" },
+      { value: "+300%", label: "organic traffic" },
+      { value: "+72%", label: "session bookings, month on month" },
+    ],
+    tint: "#0f766e",
+    screen: [
+      { label: "Avg. map rank", value: "1.4" },
+      { label: "High-ranking grid points", value: "25/25" },
+      { label: "Organic traffic", value: "+300%" },
+    ],
+    logo: "/logos/careernaksha.webp",
+    service: "build-with-us",
+    clientType: "Startup",
+    region: "India",
+    domain: "SEO and local SEO",
+    // TODO(content): confirm the full tool list for this engagement.
+    techStack: ["Google Search Console", "Google Analytics"],
+    // TODO(content): engagement length (the proposal says 6 months; the map-rank data covers 28 Jan to 3 May 2022) and team.
+    duration: "",
+    team: "",
+    about:
+      "CareerNaksha is a career-counselling startup offering psychometric career tests and counselling for school students, graduates and professionals, online and offline across India. As a newer brand, it was up against competitors that had been in the market longer with more resources, and it was rolling out into several new cities at once.",
+    problems: [
+      f("Older, better-funded competitors.", "Established brands dominated the searches CareerNaksha needed to win."),
+      f("Not built for SEO.", "The site was originally developed without SEO best practices."),
+      f("A site change that cost traffic.", "A change in early 2022 altered the URL structure and slowed organic traffic."),
+      f("New cities, new competitors.", "Each new city page needed local traffic, and each city had different local competitors."),
+    ],
+    solution:
+      "We began with an SEO audit, which traced the drop in traffic to indexing issues caused by the URL structure change. We improved site flow and link structure for crawlability and user experience, researched high-potential keywords for each city, and optimised pages for better click-through rates. A content strategy produced engaging content on and off the site, and high-quality backlinks raised domain authority. Effort split across competitor analysis (23.1%), analytics monitoring (20%), backlinks (18.5%), site speed (15.4%), technical fixes (12.3%) and user experience (10.8%), with A/B testing along the way.",
+    features: [
+      f("Indexing recovery", "Indexing issues from the URL change identified and fixed."),
+      f("Site flow and link structure", "Rebuilt for crawlability and a better user experience."),
+      f("City-by-city keyword targeting", "High-potential keywords for each new city page."),
+      f("On-page optimisation", "Titles and pages tuned for higher click-through rates."),
+      f("Content and backlinks", "Engaging content on and off the site, and high-quality backlinks."),
+    ],
+    challenges: [
+      f("A hidden cause", "The traffic drop came from indexing issues after a URL change, not from content."),
+      f("Many local markets", "Every new city had its own local competitors, so each city page needed its own plan."),
+      f("A young domain", "Competing with established brands meant building domain authority from a lower base."),
+    ],
+    approach: [
+      p("Audit", "Step 1", "SEO audit that identified indexing issues from the URL structure change."),
+      p("Structure", "Step 2", "Improved site flow and link structure for crawlability and user experience."),
+      p("Keywords", "Step 3", "Keyword research for high-potential targets."),
+      p("On-page", "Step 4", "On-page optimisation for better click-through rates."),
+      p("Content", "Step 5", "A content strategy for engaging content on and off the site."),
+      p("Authority", "Step 6", "High-quality backlinks for higher domain authority."),
+    ],
+    results: {
+      metrics: [
+        { value: "20.2 → 1.4", label: "average map rank" },
+        { value: "25/25", label: "high-ranking grid points (from 1)" },
+        { value: "+300%", label: "organic traffic" },
+        { value: "+72%", label: "session bookings, month on month" },
+      ],
+      narrative:
+        "Between 28 January and 3 May 2022, CareerNaksha's average map rank moved from 20.2 to 1.4, and all 25 points on the local rank grid went from low to high ranking. Better site flow, link structure, keyword targeting and on-page work raised its visibility in search, while content and backlinks built domain authority. Organic traffic grew 300% and session bookings rose 72% month on month.",
+    },
+    testimonial: {
+      quote: "Their comprehensive strategy and execution led to significant improvements in my website's rankings.",
+      name: "Nimish Gopal",
+      role: "CEO, CareerNaksha",
+    },
+    screenshots: [
+      "Local rank grid on 28 January 2022: average map rank 20.2, 24 of 25 points ranking low",
+      "Local rank grid on 3 May 2022: average map rank 1.4, all 25 points ranking high",
+      "Rank grid maps side by side: 28 January vs 3 May 2022, every grid point now in the top 3",
+      "Google local results for \"career counselling near me\" with CareerNaksha first in the map pack",
+      "Search Console, January to May 2022: organic clicks growing across the city pages",
+      "Business Profile performance: interactions and the searches that found CareerNaksha",
+    ],
+    images: [
+      { src: "/case-studies/local-seo-career-counselling-india/map-rank-jan-2022.webp", alt: "Rank tracker on 28 January 2022 showing an average map rank of 20.2", width: 942, height: 232 },
+      { src: "/case-studies/local-seo-career-counselling-india/map-rank-may-2022.webp", alt: "Rank tracker on 3 May 2022 showing an average map rank of 1.4", width: 942, height: 232 },
+    ],
+    website: { url: "https://careernaksha.com", image: { src: "/sites/careernaksha.webp", alt: "CareerNaksha website home page", width: 1440, height: 900 } },
+    ctaHeading: "Expanding to new cities? Let's get you found in each one.",
   },
 
   // ------------------------------------------------------------------ 5
   {
     slug: "family-office-property-brand-dubai",
-    client: "A Dubai family office",
+    client: "La Boutique Real Estate",
     city: "Dubai, UAE",
     stage: "Private venture",
     industry: "Real Estate",
-    model: "Venture Studio",
+    model: "Build With Us",
     icon: "building",
     title: "From Idea to 400 Qualified Buyer Leads: A Property Brand Built in 16 Weeks",
     summary:
@@ -350,8 +550,9 @@ export const caseStudies: CaseStudyDetail[] = [
       { label: "Viewings booked", value: "12" },
       { label: "Pipeline", value: "AED 38M" },
     ],
+    logo: "/logos/la-boutique-real-estate.webp",
     sector: "real-estate",
-    service: "venture-studio",
+    service: "build-with-us",
     clientType: "HNI",
     region: "UAE",
     domain: "Brand + website + Google listings + lead engine",
@@ -359,7 +560,7 @@ export const caseStudies: CaseStudyDetail[] = [
     duration: "16 weeks",
     team: "6 people: venture lead, brand designer, 2 devs, performance marketer, content writer",
     about:
-      "A Dubai-based family office with interests in trading and hospitality wanted to enter residential real estate. Rather than invest passively, the principals chose to build their own boutique advisory focused on off-plan and ready apartments for international buyers from Europe and India. They had capital, relationships with three developers and a clear market view, but no brand, no digital presence and no team to build one.",
+      "La Boutique Real Estate was founded by a Dubai-based family office with interests in trading and hospitality that wanted to enter residential real estate. Rather than invest passively, the principals chose to build their own boutique advisory focused on off-plan and ready apartments for international buyers from Europe and India. They had capital, relationships with three developers and a clear market view, but no brand, no digital presence and no team to build one.",
     problems: [
       f("Starting from zero.", "No name, brand, website or listings existed."),
       f("Crowded market.", "Dubai has thousands of agencies, so the brand had to stand out quickly."),
@@ -367,7 +568,7 @@ export const caseStudies: CaseStudyDetail[] = [
       f("Lead quality.", "The principals wanted serious, qualified international buyers, not high volumes of casual enquiries."),
     ],
     solution:
-      "As a venture studio, we acted as the founding team's product, brand and growth function. We ran positioning workshops with the principals, then created the name, identity and tone of voice. We built a fast, bilingual website with project pages, a buyer's guide and a ROI calculator, and set up and optimised the Google Business Profile. The lead engine combined Google and Meta campaigns targeted at UK, German and Indian investors, WhatsApp follow-up, and a HubSpot pipeline that scores leads by budget, timeline and nationality. Principals get a weekly one-page report of leads, viewings and pipeline value.",
+      "Working end to end with the principals, we acted as the founding team's product, brand and growth function. We ran positioning workshops with the principals, then created the name, identity and tone of voice. We built a fast, bilingual website with project pages, a buyer's guide and a ROI calculator, and set up and optimised the Google Business Profile. The lead engine combined Google and Meta campaigns targeted at UK, German and Indian investors, WhatsApp follow-up, and a HubSpot pipeline that scores leads by budget, timeline and nationality. Principals get a weekly one-page report of leads, viewings and pipeline value.",
     features: [
       f("Brand identity", "Name, logo, colour system, photography direction and sales collateral."),
       f("Website with investor tools", "Project pages, ROI calculator and downloadable guides."),
@@ -400,16 +601,17 @@ export const caseStudies: CaseStudyDetail[] = [
     screenshots: [
       "Website home page with brand identity and featured projects",
       "ROI calculator on a project page",
-      "CRM pipeline showing leads scored by budget and market",
+      "HubSpot deal pipeline with leads scored by budget, timeline and market",
       "Weekly principal report (one page)",
     ],
+    website: { url: "https://laboutiquerealestate.com", image: { src: "/sites/la-boutique-real-estate.webp", alt: "La Boutique Real Estate website home page", width: 1440, height: 900 } },
     ctaHeading: "Have capital and an idea? Let's build the business together.",
   },
 
   // ------------------------------------------------------------------ 6
   {
     slug: "rental-prototype-rescue-lisbon",
-    client: "A Lisbon rental-tech startup",
+    client: "Unlockit",
     city: "Lisbon, Portugal",
     stage: "Pre-seed",
     industry: "Real Estate",
@@ -429,6 +631,7 @@ export const caseStudies: CaseStudyDetail[] = [
       { label: "Applications this week", value: "132" },
       { label: "Uptime", value: "99.95%" },
     ],
+    logo: "/logos/unlockit.webp",
     sector: "real-estate",
     service: "launch-and-rescue",
     clientType: "Startup",
@@ -438,7 +641,7 @@ export const caseStudies: CaseStudyDetail[] = [
     duration: "6 weeks",
     team: "3 people: tech lead, full-stack dev, QA",
     about:
-      "A pre-seed Lisbon startup connecting remote workers and relocating professionals with furnished apartments for one to six months. The solo, non-technical founder built the first version with Lovable in a few weekends and signed up 60 landlords. Early users liked the idea, but the app broke often, loaded slowly and had no real payment flow. With an accelerator demo day approaching, the product needed to be ready for paying tenants.",
+      "Unlockit is a pre-seed Lisbon startup connecting remote workers and relocating professionals with furnished apartments for one to six months. The solo, non-technical founder built the first version with Lovable in a few weekends and signed up 60 landlords. Early users liked the idea, but the app broke often, loaded slowly and had no real payment flow. With an accelerator demo day approaching, the product needed to be ready for paying tenants.",
     problems: [
       f("Security gaps.", "Database rules were open, so any logged-in user could read other users' data."),
       f("Slow and fragile.", "Pages took seven seconds to load, and many features failed under real data."),
@@ -479,15 +682,101 @@ export const caseStudies: CaseStudyDetail[] = [
       "Before/after comparison of the listing page",
       "Tenant application flow with document upload",
       "Landlord dashboard with payouts",
-      "Security audit summary (issues found vs fixed)",
+      "Security audit tracked as issues: 31 found, 30 fixed before launch",
     ],
+    website: { url: "https://unlockit.io", image: { src: "/sites/unlockit.webp", alt: "Unlockit website home page", width: 1440, height: 900 } },
     ctaHeading: "Built a prototype with AI? Let's make it ready for real users.",
+  },
+
+  // ------------------------------------------------------------------ proposal · Think3D
+  // Source: 2023 VAUG proposal. TODO(content): confirm written consent to name this client.
+  {
+    slug: "seo-3d-printing-india",
+    client: "Think3D",
+    city: "India",
+    stage: "Established",
+    industry: "Additive Manufacturing",
+    model: "SEO & Growth",
+    icon: "cpu",
+    title: "SEO and Campaigns That Bring a 3D Printing Firm 1,250+ Leads a Month",
+    summary:
+      "SEO, content and targeted campaigns for one of India's leading 3D printing firms, taking it to Google's first page and generating more than 1,250 leads a month.",
+    metrics: [
+      { value: "1,250+", label: "leads per month" },
+      { value: "+843%", label: "landing-page interaction in 6 months" },
+      { value: "Page 1", label: "for high-traffic keywords" },
+    ],
+    tint: "#1d4e89",
+    screen: [
+      { label: "Leads this month", value: "1,250+" },
+      { label: "Landing-page interaction", value: "+843%" },
+      { label: "\"best 3d printing in ahmedabad\"", value: "#1" },
+    ],
+    logo: "/logos/think3d.webp",
+    service: "build-with-us",
+    // TODO(content): confirm client type.
+    clientType: "Enterprise",
+    region: "India",
+    domain: "SEO, content and lead-generation campaigns",
+    // TODO(content): tools used on this engagement.
+    techStack: [],
+    duration: "Since July 2020",
+    // TODO(content): team.
+    team: "",
+    about:
+      "Think3D is one of India's leading 3D printing and additive manufacturing companies, with a team of experienced engineers, designers and technologists. It offers 3D printing, rapid prototyping and 3D modelling services.",
+    problems: [
+      f("Low rankings.", "The website wasn't performing well in search engine rankings."),
+      f("Low visibility.", "Buyers searching for 3D printing services weren't finding Think3D."),
+      f("Lost opportunities.", "Low visibility meant the company was losing out on potential business."),
+    ],
+    solution:
+      "We implemented an SEO strategy that optimised the website and created engaging content, so Think3D ranked for the high-traffic searches its buyers use. Alongside it, we ran targeted campaigns to generate leads and improved the landing pages those visitors arrive on.",
+    features: [
+      f("Website optimisation", "Pages optimised to rank for high-traffic 3D printing searches."),
+      f("Engaging content", "Content that answers what buyers search for."),
+      f("Targeted campaigns", "Lead-generation campaigns aimed at the right buyers."),
+      f("Landing pages", "Landing pages improved to turn visits into interactions and enquiries."),
+    ],
+    challenges: [
+      f("A technical niche", "3D printing buyers search in specific terms, so keyword targeting had to be precise."),
+      f("Visibility first", "Nothing else worked until the site ranked for the searches that matter."),
+      f("From visits to leads", "Traffic had to become enquiries, which put the focus on landing pages."),
+    ],
+    approach: [
+      p("Optimise and create content", "From July 2020", "Website optimisation and engaging content to lift rankings."),
+      p("Campaigns", "Ongoing", "Targeted campaigns to generate leads every month."),
+      p("Landing pages", "First 6 months", "Landing-page improvements that lifted customer interaction by 843%."),
+    ],
+    results: {
+      metrics: [
+        { value: "1,250+", label: "leads per month" },
+        { value: "+843%", label: "landing-page interaction in 6 months" },
+        { value: "Page 1", label: "for several high-traffic keywords" },
+        { value: "#1", label: "for \"best 3d printing in ahmedabad\"" },
+      ],
+      narrative:
+        "After we implemented the SEO strategy, Think3D started ranking on the first page of Google for several high-traffic keywords, which brought more organic traffic to its website. Targeted campaigns now generate more than 1,250 leads a month, and customer interaction on landing pages rose 843% in the first six months.",
+    },
+    screenshots: [
+      "Google results for \"best 3d printing in ahmedabad\" with Think3D ranking first",
+      "Google results for \"think 3d\" with site links to services, careers and contact pages",
+      "Search Console queries: 3D printing searches ranking on Google's first page",
+      "Google Analytics conversions: more than 1,250 leads in a month",
+      "The Ahmedabad 3D printing landing page with the quote form",
+    ],
+    images: [
+      { src: "/case-studies/seo-3d-printing-india/serp-local.webp", alt: "Google search results for best 3d printing in ahmedabad with Think3D as the first result", width: 800, height: 549 },
+      { src: "/case-studies/seo-3d-printing-india/serp-brand.webp", alt: "Google search results for think 3d showing Think3D with site links", width: 792, height: 475 },
+    ],
+    website: { url: "https://www.think3d.in", image: { src: "/sites/think3d.webp", alt: "Think3D website home page", width: 1440, height: 900 } },
+    ctaHeading: "Want more leads from search?",
   },
 
   // ------------------------------------------------------------------ 7
   {
     slug: "modest-fashion-marketplace-abu-dhabi",
-    client: "An Abu Dhabi modest-fashion marketplace",
+    client: "Fantasy Abaya",
     city: "Abu Dhabi, UAE",
     stage: "Seed",
     industry: "E-commerce & Retail",
@@ -507,6 +796,7 @@ export const caseStudies: CaseStudyDetail[] = [
       { label: "Active sellers", value: "140" },
       { label: "GMV this month", value: "AED 612K" },
     ],
+    logo: "/logos/fantasy-abaya.webp",
     sector: "ecommerce-retail",
     service: "launch-and-rescue",
     clientType: "Startup",
@@ -516,7 +806,7 @@ export const caseStudies: CaseStudyDetail[] = [
     duration: "8 weeks",
     team: "4 people: tech lead, 2 full-stack devs, QA",
     about:
-      "A seed-stage Abu Dhabi startup building an online home for independent modest-fashion designers from the GCC. Buyers can shop abayas, kaftans and occasion wear from dozens of small labels in one place. The founders had paid a previous agency for nine months of work, but the marketplace never launched: checkout failed, seller payouts didn't work and the codebase had no documentation. They had designers waiting and Ramadan, their biggest sales season, was ten weeks away.",
+      "Fantasy Abaya is a seed-stage Abu Dhabi startup building an online home for independent modest-fashion designers from the GCC. Buyers can shop abayas, kaftans and occasion wear from dozens of small labels in one place. The founders had paid a previous agency for nine months of work, but the marketplace never launched: checkout failed, seller payouts didn't work and the codebase had no documentation. They had designers waiting and Ramadan, their biggest sales season, was ten weeks away.",
     problems: [
       f("Broken checkout.", "Orders failed at payment roughly one time in three."),
       f("No seller payouts.", "Split payments between the platform and designers had never been finished."),
@@ -554,18 +844,19 @@ export const caseStudies: CaseStudyDetail[] = [
         "The marketplace launched in time for Ramadan and processed more orders in its first month than the founders had planned for the first quarter. Designers get paid automatically, and the founders now have a documented codebase and a team they can call on for new features.",
     },
     screenshots: [
-      "Storefront home in Arabic and English",
+      "Storefront home in Arabic, with an English switch",
       "Checkout with Tabby and Apple Pay options",
       "Seller portal with orders and earnings",
       "Admin GMV dashboard",
     ],
+    website: { url: "https://fantasyabaya.me", image: { src: "/sites/fantasy-abaya.webp", alt: "Fantasy Abaya website home page", width: 1440, height: 900 } },
     ctaHeading: "Is your store stuck? Let's get it launched.",
   },
 
   // ------------------------------------------------------------------ 8
   {
     slug: "headless-storefront-team-stockholm",
-    client: "A Stockholm Shopify agency",
+    client: "Iggy Agency",
     city: "Stockholm, Sweden",
     stage: "SME",
     industry: "E-commerce & Retail",
@@ -585,6 +876,7 @@ export const caseStudies: CaseStudyDetail[] = [
       { label: "Open tickets", value: "14" },
       { label: "Avg. Lighthouse score", value: "96" },
     ],
+    logo: "/logos/iggy.webp",
     sector: "ecommerce-retail",
     service: "dedicated-developers",
     clientType: "Agency",
@@ -594,7 +886,7 @@ export const caseStudies: CaseStudyDetail[] = [
     duration: "9 months (ongoing)",
     team: "4 people: tech lead, 2 frontend devs, QA",
     about:
-      "A design-led Shopify agency in Stockholm working with Nordic fashion, beauty and lifestyle brands. Its team of 18 is strong in brand, UX and strategy, but it had only three in-house developers. As clients moved from standard Shopify themes to faster headless storefronts, the agency was turning away work because it couldn't hire experienced Hydrogen developers quickly enough in Stockholm.",
+      "Iggy is a design-led Shopify agency in Stockholm working with Nordic fashion, beauty and lifestyle brands. Its team of 18 is strong in brand, UX and strategy, but it had only three in-house developers. As clients moved from standard Shopify themes to faster headless storefronts, the agency was turning away work because it couldn't hire experienced Hydrogen developers quickly enough in Stockholm.",
     problems: [
       f("Lost projects.", "The agency declined two large projects in one quarter due to lack of developers."),
       f("Hard to hire.", "Senior headless Shopify developers were scarce and expensive locally."),
@@ -636,13 +928,102 @@ export const caseStudies: CaseStudyDetail[] = [
       "Sprint board showing work across client projects",
       "Before/after performance scores",
     ],
+    website: { url: "https://iggy.agency", image: { src: "/sites/iggy.webp", alt: "Iggy website home page", width: 1440, height: 900 } },
     ctaHeading: "Need more developers under your brand? Let's talk.",
+  },
+
+  // ------------------------------------------------------------------ proposal · Vivin Design
+  // Source: 2023 VAUG proposal. TODO(content): confirm written consent to name this client.
+  // TODO(content): verify clicks vs impressions in Google Ads (a 44% CTR is unusually high), then remove `placeholder`.
+  {
+    slug: "google-ads-interior-design-noida",
+    client: "Vivin Design",
+    city: "Noida, India",
+    stage: "Established",
+    industry: "Interior Design",
+    model: "Google Ads",
+    icon: "building",
+    title: "Google Ads That Keep an Interior Design Studio at the Top of Search",
+    summary:
+      "Search campaigns for an interior design studio in Noida: keyword research, ad copy, bid management and testing that held the top ad position and brought in 2,000 direct enquiries.",
+    metrics: [
+      { value: "2,000", label: "direct enquiries" },
+      { value: "12,000", label: "website clicks" },
+      { value: "Top", label: "ad position" },
+    ],
+    tint: "#9a3412",
+    screen: [
+      { label: "Paid impressions", value: "27,000" },
+      { label: "Website clicks", value: "12,000" },
+      { label: "Direct enquiries", value: "2,000" },
+    ],
+    logo: "/logos/vivin-design.webp",
+    service: "build-with-us",
+    // TODO(content): confirm client type.
+    clientType: "Enterprise",
+    region: "India",
+    domain: "Google Ads (search)",
+    techStack: ["Google Ads"],
+    // TODO(content): campaign length and team.
+    duration: "",
+    team: "",
+    about:
+      "Vivin Design, a division of VC Design, provides interior design for homes, offices and commercial spaces. Its team of architects, interior designers, supervisors and craftsmen has delivered projects across India, from corporate offices to retail stores, hotels and high-end homes.",
+    problems: [
+      f("A crowded search page.", "Searches like \"best interior designers in Noida\" show several competing ads."),
+      f("Cost control.", "Prime placements had to be won without overspending."),
+      f("Clicks that become enquiries.", "Traffic only mattered if it turned into enquiries from potential clients."),
+    ],
+    solution:
+      "We researched and targeted high-volume, relevant keywords, then wrote engaging, persuasive ad copy around Vivin Design's selling points. We managed bids strategically to secure prime placements while keeping costs efficient, and A/B tested ad variations, landing-page elements and targeting to keep improving the campaign.",
+    features: [
+      f("Keyword research", "High-volume, relevant keywords for interior design searches."),
+      f("Ad copy", "Ads built around Vivin Design's selling points."),
+      f("Bid management", "Prime placements at an efficient cost."),
+      f("A/B testing", "Ads, landing-page elements and targeting tested and refined."),
+    ],
+    challenges: [
+      f("Winning the top slot", "Competing advertisers bid on the same searches, so position had to be earned through bids and quality."),
+      f("Efficiency", "Top placement had to come without runaway cost per click."),
+      f("Enquiry quality", "Targeting had to bring potential clients, not just visitors."),
+    ],
+    approach: [
+      p("Keyword research", "Step 1", "Identified and targeted high-volume, relevant keywords."),
+      p("Ad copy", "Step 2", "Wrote ads that showcase Vivin Design's selling points."),
+      p("Bidding", "Step 3", "Managed bids for prime placements at an efficient cost."),
+      p("Testing", "Ongoing", "A/B tested ads, landing pages and targeting."),
+    ],
+    results: {
+      metrics: [
+        { value: "27,000", label: "paid impressions" },
+        { value: "12,000", label: "website clicks" },
+        { value: "2,000", label: "direct enquiries" },
+        { value: "Top", label: "ad position" },
+      ],
+      narrative:
+        "Through strategic bidding and optimisation, Vivin Design's ads consistently held the top position. The campaign generated 27,000 impressions and brought a substantial increase in website traffic, and that targeted traffic produced 2,000 direct enquiries from potential clients.",
+    },
+    screenshots: [
+      "Vivin Design's ad in the top position for \"best interior designers in noida\"",
+      "The VC Design website that campaign traffic lands on",
+      "Google Ads campaigns: 27,000 impressions, 12,000 clicks and 2,000 enquiries",
+      "Search keywords by match type, with Quality Score and top-of-page rate",
+      "Responsive search ads and their ad strength",
+      "The enquiry sheet the sales team works from",
+    ],
+    images: [
+      { src: "/case-studies/google-ads-interior-design-noida/search-ad.webp", alt: "Google search for best interior designers in noida with the Vivin Design ad first", width: 648, height: 469 },
+      { src: "/case-studies/google-ads-interior-design-noida/website.webp", alt: "VC Design website home page with the headline Best Ideas and Solutions for Your Home Interiors", width: 864, height: 540 },
+    ],
+    website: { url: "https://www.vivindesign.com", image: { src: "/sites/vivin-design.webp", alt: "Vivin Design website home page", width: 1440, height: 900 } },
+    ctaHeading: "Want your ads at the top of search?",
+    placeholder: true,
   },
 
   // ------------------------------------------------------------------ 9
   {
     slug: "route-planning-pod-rotterdam",
-    client: "A Rotterdam freight forwarder",
+    client: "EGS Customs & Logistic",
     city: "Rotterdam, Netherlands",
     stage: "Enterprise",
     industry: "Logistics",
@@ -662,6 +1043,7 @@ export const caseStudies: CaseStudyDetail[] = [
       { label: "Shipments tracked", value: "1,874" },
       { label: "On-time rate", value: "94.6%" },
     ],
+    logo: "/logos/egs-rotterdam.webp",
     sector: "logistics",
     service: "dedicated-developers",
     clientType: "Enterprise",
@@ -671,7 +1053,7 @@ export const caseStudies: CaseStudyDetail[] = [
     duration: "11 months (ongoing)",
     team: "5 people: tech lead, 2 backend devs, frontend dev, data engineer",
     about:
-      "A Rotterdam-based freight forwarder moving containers and general cargo by road between the Port of Rotterdam, Antwerp and inland hubs across the Netherlands, Belgium and Germany. It runs a mixed fleet of about 250 own and subcontracted trucks. Its small internal IT team maintained the core transport management system but had no capacity for new products. Planners built routes by hand, and customers called constantly for shipment updates.",
+      "EGS Customs & Logistic is a Rotterdam-based freight forwarder moving containers and general cargo by road between the Port of Rotterdam, Antwerp and inland hubs across the Netherlands, Belgium and Germany. It runs a mixed fleet of about 250 own and subcontracted trucks. Its small internal IT team maintained the core transport management system but had no capacity for new products. Planners built routes by hand, and customers called constantly for shipment updates.",
     problems: [
       f("Manual planning.", "Planners built daily routes in spreadsheets, leaving trucks returning empty."),
       f("No live visibility.", "Customers had no self-service tracking and phoned for every update."),
@@ -714,13 +1096,14 @@ export const caseStudies: CaseStudyDetail[] = [
       "Customer tracking portal with ETA",
       "Route KPI dashboard (empty km, loads per truck)",
     ],
+    website: { url: "https://egsrotterdam.com", image: { src: "/sites/egs-rotterdam.webp", alt: "EGS Customs & Logistic website home page", width: 1440, height: 900 } },
     ctaHeading: "Need an engineering team that works like your own?",
   },
 
   // ------------------------------------------------------------------ 10
   {
     slug: "courier-driver-app-birmingham",
-    client: "A Birmingham same-day courier network",
+    client: "City Quick Logistics",
     city: "Birmingham, UK",
     stage: "Enterprise",
     industry: "Logistics",
@@ -740,6 +1123,7 @@ export const caseStudies: CaseStudyDetail[] = [
       { label: "Drivers active", value: "284" },
       { label: "Delivered", value: "1,902" },
     ],
+    logo: "/logos/city-quick.webp",
     sector: "logistics",
     service: "custom-development",
     clientType: "Enterprise",
@@ -749,7 +1133,7 @@ export const caseStudies: CaseStudyDetail[] = [
     duration: "16 weeks",
     team: "5 people: PM, designer, 2 mobile/full-stack devs, QA",
     about:
-      "A Birmingham-based same-day courier network delivering parcels, medical samples and B2B documents across the Midlands. It works with around 300 self-employed drivers on vans, cars and bikes. Jobs were dispatched by phone and WhatsApp, and proof of delivery was captured on paper. As large retail and healthcare clients demanded real-time updates and digital proof, the manual process could no longer keep up.",
+      "City Quick Logistics is a Birmingham-based same-day courier network delivering parcels, medical samples and B2B documents across the Midlands. It works with around 300 self-employed drivers on vans, cars and bikes. Jobs were dispatched by phone and WhatsApp, and proof of delivery was captured on paper. As large retail and healthcare clients demanded real-time updates and digital proof, the manual process could no longer keep up.",
     problems: [
       f("Phone-based dispatch.", "Controllers spent the day calling drivers to assign and confirm jobs."),
       f("Paper proof of delivery.", "Lost or illegible sheets led to disputes and delayed invoices."),
@@ -789,21 +1173,111 @@ export const caseStudies: CaseStudyDetail[] = [
     screenshots: [
       "Driver app job screen with navigation and proof of delivery",
       "Live dispatch map with drivers and jobs",
-      "Client tracking page with live ETA",
+      "Client SMS update and tracking page with live ETA",
       "Daily operations dashboard",
     ],
+    website: { url: "https://cityquick.co.uk", image: { src: "/sites/city-quick.webp", alt: "City Quick Logistics website home page", width: 1440, height: 900 } },
     ctaHeading: "Still dispatching by phone? Let's build your app.",
+  },
+
+  // ------------------------------------------------------------------ proposal · Phoenix Institute
+  // Source: 2023 VAUG proposal. TODO(content): confirm written consent to name this client.
+  // TODO(content): verify clicks vs impressions in Google Ads (a 50% CTR is unusually high), then remove `placeholder`.
+  {
+    slug: "google-ads-scholarship-test-gujarat",
+    client: "Phoenix Institute",
+    city: "Vadodara, India",
+    stage: "Established",
+    industry: "Education",
+    model: "Google Ads",
+    icon: "zap",
+    title: "A Google Ads Campaign That Drove 5,000+ Enquiries for a Scholarship Test",
+    summary:
+      "Search campaigns and dedicated landing pages for PETEX, Phoenix Institute's scholarship and admission test in Gujarat, generating more than 5,000 enquiries.",
+    metrics: [
+      { value: "5,000+", label: "enquiries" },
+      { value: "20,000+", label: "website clicks" },
+      { value: "40,000+", label: "paid impressions" },
+    ],
+    tint: "#be123c",
+    screen: [
+      { label: "Paid impressions", value: "40,000+" },
+      { label: "Website clicks", value: "20,000+" },
+      { label: "Enquiries", value: "5,000+" },
+    ],
+    logo: "/logos/phoenix-institute.webp",
+    service: "build-with-us",
+    // TODO(content): confirm client type.
+    clientType: "Enterprise",
+    region: "India",
+    domain: "Google Ads (search) and landing pages",
+    techStack: ["Google Ads"],
+    // TODO(content): campaign length and team.
+    duration: "",
+    team: "",
+    about:
+      "Phoenix Institute is a coaching institute in Vadodara. PETEX, its eligibility and talent search exam, is billed as Gujarat's biggest scholarship test, with scholarships of up to 90%. The institute needed registrations for the test, which took place on 11 December 2022.",
+    problems: [
+      f("A fixed test date.", "Registrations had to come in before the exam day."),
+      f("The right students.", "Ads needed to reach students and parents in the right locations."),
+      f("Capturing interest.", "Every click had to have somewhere to register."),
+    ],
+    solution:
+      "We identified relevant keywords with high search volume and low competition around admission tests, and wrote ads that emphasised the institute's comprehensive study materials and experienced faculty. We set up targeted campaigns, ad groups and ad extensions focused on specific locations, and sent traffic to dedicated landing pages with registration forms. Throughout the campaign we refined keywords and ad copy to lift click-through rates and conversions.",
+    features: [
+      f("Keyword targeting", "High-volume, low-competition keywords around admission tests."),
+      f("Ad copy", "Ads highlighting study materials and experienced faculty."),
+      f("Geo-targeted campaigns", "Campaigns, ad groups and ad extensions focused on specific locations."),
+      f("Dedicated landing pages", "Registration pages and forms that capture every enquiry."),
+      f("Continuous optimisation", "Keywords and ad copy refined to lift CTR and conversions."),
+    ],
+    challenges: [
+      f("A deadline", "The campaign had to peak before the 11 December 2022 exam."),
+      f("Local focus", "Spend had to stay on the locations the institute serves."),
+      f("Conversion", "Clicks had to become registrations, not just visits."),
+    ],
+    approach: [
+      p("Keywords", "Step 1", "Found high-volume, low-competition keywords related to admission tests."),
+      p("Messaging", "Step 2", "Built ads around study materials and experienced faculty."),
+      p("Campaign setup", "Step 3", "Set up geo-targeted campaigns, ad groups and ad extensions."),
+      p("Optimise", "Ongoing", "Refined keywords and ad copy to improve CTR and conversions."),
+    ],
+    results: {
+      metrics: [
+        { value: "40,000+", label: "paid impressions" },
+        { value: "20,000+", label: "website clicks" },
+        { value: "5,000+", label: "enquiries" },
+        { value: "11 Dec 2022", label: "PETEX exam day" },
+      ],
+      narrative:
+        "The campaign generated more than 40,000 impressions, giving PETEX wide visibility, and brought a substantial increase in website traffic. More than 5,000 enquiries were captured through dedicated landing pages and contact forms, a high conversion rate that shows the ad copy and targeting worked.",
+    },
+    screenshots: [
+      "Phoenix Institute's ad in the top position on Google",
+      "The PETEX scholarship test landing page with registration form",
+      "Google Ads campaigns by city in the run-up to the 11 December exam",
+      "Search keywords around scholarship tests and coaching, with Quality Score",
+      "Enquiries by targeted location across Gujarat",
+      "PETEX search ads on mobile, with location and sitelink assets",
+    ],
+    images: [
+      { src: "/case-studies/google-ads-scholarship-test-gujarat/search-ad.webp", alt: "Google search results with the Phoenix Institute Vadodara ad at the top", width: 810, height: 581 },
+      { src: "/case-studies/google-ads-scholarship-test-gujarat/landing-page.webp", alt: "PETEX landing page announcing Gujarat's biggest scholarship test on 11 December 2022 with a registration form", width: 864, height: 433 },
+    ],
+    website: { url: "https://phoenixinstitute.co", image: { src: "/sites/phoenix-institute.webp", alt: "Phoenix Institute website home page", width: 1440, height: 900 } },
+    ctaHeading: "Need enquiries before a deadline?",
+    placeholder: true,
   },
 
   // ------------------------------------------------------------------ 11
   // Draft: the source document was cut off before #11. Replace with the real write-up.
   {
     slug: "boutique-desert-retreat-ras-al-khaimah",
-    client: "A UAE private investor",
+    client: "RAK Glamping",
     city: "Ras Al Khaimah, UAE",
     stage: "Private venture",
     industry: "Hospitality & Travel",
-    model: "Venture Studio",
+    model: "Build With Us",
     icon: "globe",
     title: "A Boutique Desert Retreat Launched From Brand to First Booking in 14 Weeks",
     summary:
@@ -819,8 +1293,9 @@ export const caseStudies: CaseStudyDetail[] = [
       { label: "Occupancy", value: "78%" },
       { label: "Direct share", value: "62%" },
     ],
+    logo: "/logos/rak-glamping.webp",
     sector: "hospitality-travel",
-    service: "venture-studio",
+    service: "build-with-us",
     clientType: "HNI",
     region: "UAE",
     domain: "Brand + direct-booking website + listings + guest messaging",
@@ -828,7 +1303,7 @@ export const caseStudies: CaseStudyDetail[] = [
     duration: "14 weeks",
     team: "6 people: venture lead, brand designer, 2 devs, performance marketer, content writer",
     about:
-      "A UAE-based private investor built 24 villas at the edge of the Ras Al Khaimah desert, an hour from Dubai. The property was nearly finished, but there was no name, no brand, no booking system and no team to run marketing. The investor wanted a retreat that could sell directly to guests from the UAE, Europe and the UK rather than depend on travel agencies and booking sites.",
+      "The owner of RAK Glamping, a UAE-based private investor, built 24 villas at the edge of the Ras Al Khaimah desert, an hour from Dubai. The property was nearly finished, but there was no name, no brand, no booking system and no team to run marketing. The investor wanted a retreat that could sell directly to guests from the UAE, Europe and the UK rather than depend on travel agencies and booking sites.",
     problems: [
       f("No brand or presence.", "The property had no name, identity, website or listings."),
       f("OTA dependence.", "Without a direct channel, most bookings would come through commission-heavy booking sites."),
@@ -869,8 +1344,9 @@ export const caseStudies: CaseStudyDetail[] = [
       "Direct-booking website home page",
       "Villa page with live availability and pricing",
       "WhatsApp concierge conversation",
-      "Weekly owner report",
+      "Weekly owner report, as it arrives by email",
     ],
+    website: { url: "https://www.rakglamping.com", image: { src: "/sites/rak-glamping.webp", alt: "RAK Glamping website home page", width: 1440, height: 900 } },
     ctaHeading: "Building a hospitality venture? Let's launch it together.",
     placeholder: true,
   },
@@ -879,11 +1355,11 @@ export const caseStudies: CaseStudyDetail[] = [
   // Draft: the source document was cut off before #12. Replace with the real write-up.
   {
     slug: "whatsapp-concierge-barcelona",
-    client: "A Barcelona boutique hotel group",
+    client: "EnjoyBCN Group",
     city: "Barcelona, Spain",
     stage: "Seed",
     industry: "Hospitality & Travel",
-    model: "Fixed-Price Project",
+    model: "Custom Development",
     icon: "message-square",
     title: "A WhatsApp Concierge That Answers Guests Around the Clock",
     summary:
@@ -899,8 +1375,9 @@ export const caseStudies: CaseStudyDetail[] = [
       { label: "Upsells booked", value: "37" },
       { label: "Handed to desk", value: "24" },
     ],
+    logo: "/logos/enjoybcn.webp",
     sector: "hospitality-travel",
-    service: "fixed-price",
+    service: "custom-development",
     clientType: "Startup",
     region: "Europe",
     domain: "WhatsApp concierge (guest messaging + upsells)",
@@ -908,7 +1385,7 @@ export const caseStudies: CaseStudyDetail[] = [
     duration: "8 weeks",
     team: "3 people: PM, AI engineer, full-stack dev",
     about:
-      "A young Barcelona hotel group running three boutique properties in the Gothic Quarter, Eixample and Gràcia. Guests messaged the front desk on WhatsApp at all hours about check-in times, luggage, restaurants and transfers, in several languages. The small desk teams couldn't keep up at busy times, and upsells like late check-out or airport transfers were rarely offered.",
+      "EnjoyBCN Group is a young Barcelona hotel group running three boutique properties in the Gothic Quarter, Eixample and Gràcia. Guests messaged the front desk on WhatsApp at all hours about check-in times, luggage, restaurants and transfers, in several languages. The small desk teams couldn't keep up at busy times, and upsells like late check-out or airport transfers were rarely offered.",
     problems: [
       f("Busy front desks.", "Staff answered the same WhatsApp questions all day, often while checking guests in."),
       f("Slow night replies.", "Messages sent overnight waited until morning."),
@@ -946,12 +1423,16 @@ export const caseStudies: CaseStudyDetail[] = [
         "Guests now get answers in seconds at any hour, and front desks focus on the guests in front of them. Timely offers turned WhatsApp into a revenue channel, and the group owns a system it can extend to new hotels.",
     },
     screenshots: [
-      "WhatsApp conversation with a late check-out upsell",
+      "WhatsApp conversations: a late check-out upsell, and a transfer booked in Spanish",
       "Hotel dashboard for editing answers and offers",
       "Front-desk handover queue",
       "Upsell revenue report",
     ],
+    website: { url: "https://hotellapau.com", image: { src: "/sites/enjoybcn.webp", alt: "Hotel La Pau (EnjoyBCN Group) website home page", width: 1440, height: 900 } },
     ctaHeading: "Want a concierge that never sleeps, at a fixed price?",
     placeholder: true,
   },
+
+  // Growth-marketing studies for the rest of the home page client wall.
+  ...clientStudies,
 ];

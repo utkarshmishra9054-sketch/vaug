@@ -104,9 +104,9 @@ export const contactPage: ContactPageContent = {
   needs: [
     { engagement: "AI as a Service", service: "ai-as-a-service", icon: "bot", title: "AI as a Service", blurb: "Agents that take repetitive work off your team." },
     { engagement: "Dedicated Developers", service: "dedicated-developers", icon: "users", title: "Dedicated Developers", blurb: "Vetted engineers who join your team by the month." },
-    { engagement: "Custom Development", service: "custom-development", icon: "code", title: "Custom Development", blurb: "Web, mobile or SaaS, built end to end." },
-    { engagement: "Venture Studio", service: "venture-studio", icon: "rocket", title: "Venture Studio", blurb: "We run product, site, marketing and listings." },
-    { engagement: "Fixed-Price Project", service: "fixed-price", icon: "file-check", title: "Fixed-Price Project", blurb: "One agreed scope, one agreed price." },
+    { engagement: "Custom Development", service: "custom-development", icon: "code", title: "Custom Development", blurb: "Web, mobile or SaaS, at a fixed price or by sprint." },
+    { engagement: "Build With Us", service: "build-with-us", icon: "rocket", title: "Build With Us", blurb: "Idea to launched business: product, brand and growth." },
+    { engagement: "Monthly Retainer", service: "monthly-retainer", icon: "refresh-cw", title: "Monthly Retainer", blurb: "Support, fixes and upgrades for a live product." },
     { engagement: "Launch & Rescue", service: "launch-and-rescue", icon: "wrench", title: "Launch & Rescue", blurb: "Fix and ship a Lovable, Bolt or v0 build." },
     { engagement: "Not sure yet", icon: "sparkles", title: "Not sure yet", blurb: "Tell us the problem. We'll suggest the right model." },
   ],
@@ -125,7 +125,7 @@ export const contactPage: ContactPageContent = {
     eyebrow: "Where we are",
     title: { light: "Three offices.", bold: "Clients across three regions." },
     subtitle:
-      "Engineering from India, client teams in the UK and USA, working with founders and companies across the UK, Europe and the UAE. Overlapping hours, every working day.",
+      "Engineering from India, client teams in the UK and USA, working with founders and companies across the UK, Europe, the UAE, India and Canada. Overlapping hours, every working day.",
     legendOffice: "VAUG office",
     legendClient: "Client region",
   },
@@ -174,14 +174,14 @@ export const contactPage: ContactPageContent = {
         "A few lines is plenty: what you want to build or fix, who it's for, and any deadline. Links to a prototype, deck or existing product help, but aren't required.",
     },
     {
-      question: "I'm not sure which engagement model fits. Is that a problem?",
+      question: "I'm not sure which service fits. Is that a problem?",
       answer:
-        "Not at all. Pick \"Not sure yet\" and describe the problem. We'll recommend a model on the call, and explain why.",
+        "Not at all. Pick \"Not sure yet\" and describe the problem. We'll recommend a service on the call, and explain why.",
     },
     {
       question: "Do you work with clients outside the UK, Europe and the UAE?",
       answer:
-        "Yes. Most of our clients are in those regions, but we work with teams anywhere with a few hours of overlap.",
+        "Yes. Most of our engineering clients are in those regions, and we also work with clients in India and Canada. We work with teams anywhere with a few hours of overlap.",
     },
   ],
   closing: {

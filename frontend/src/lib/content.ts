@@ -41,7 +41,7 @@ export async function getCaseStudy(slug: string): Promise<CaseStudyDetail | unde
   return caseStudies.find((c) => c.slug === slug);
 }
 
-/** Case studies matching every given tag, e.g. `{ service: "fixed-price" }`. */
+/** Case studies matching every given tag, e.g. `{ service: "custom-development" }`. */
 export async function getCaseStudiesBy(filter: {
   service?: ServiceSlug;
   sector?: SectorSlug;

@@ -2,8 +2,9 @@ import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 
 import type { FooterColumn, Link as LinkItem, SiteConfig } from "@/content/types";
-import { Logo, Wordmark } from "@/components/ui/Logo";
+import { Logo } from "@/components/ui/Logo";
 import { SocialIcon } from "@/components/ui/SocialIcon";
+import { FooterWordmark } from "./FooterWordmark";
 import { SubscribeForm } from "./SubscribeForm";
 
 export function Footer({ site, columns, legal }: { site: SiteConfig; columns: FooterColumn[]; legal: LinkItem[] }) {
@@ -79,9 +80,9 @@ export function Footer({ site, columns, legal }: { site: SiteConfig; columns: Fo
           </div>
         </div>
 
-        {/* Oversized wordmark: rises into view, arrow shoots on hover */}
-        <div data-reveal className="footer-mark group overflow-hidden border-b border-border px-4 pt-8 text-center sm:px-8">
-          <Wordmark animated={false} trajectory className="translate-y-[12%] text-[24vw] transition-transform duration-700 ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:translate-y-[6%] xl:text-[17rem]" />
+        {/* Oversized wordmark: writes itself, then a growth line rises from the dot */}
+        <div className="border-b border-border px-4 pt-10 sm:px-8 lg:px-10">
+          <FooterWordmark />
         </div>
 
         {/* Bottom bar */}

@@ -112,13 +112,13 @@ export interface Discipline {
 
 export const about = {
   metaDescription:
-    "VAUG builds AI agents and supplies senior engineering teams for startups, family offices, enterprises and agencies across the UK, Europe and the UAE. Operating since 2019.",
+    "VAUG builds AI agents and supplies senior engineering teams for startups, family offices, enterprises and agencies across the UK, Europe, the UAE, India and Canada. Operating since 2019.",
   hero: {
     eyebrow: "About VAUG",
     title: { light: "We build the agents and software", bold: "that keep businesses moving." },
     subtitle:
-      "VAUG is a team of engineers, designers and AI specialists. Since 2019 we have shipped products, rescued prototypes and put agents to work for clients in the UK, Europe and the UAE.",
-    tags: ["Since 2019", "Registered 2021", "UK · Europe · UAE", "Automate · Build · Scale"],
+      "VAUG is a team of engineers, designers and AI specialists. Since 2019 we have shipped products, rescued prototypes and put agents to work for clients in the UK, Europe, the UAE, India and Canada.",
+    tags: ["Since 2019", "Registered 2021", "UK · Europe · UAE · India", "Automate · Build · Scale"],
   } satisfies CompanyHero,
 
   intro: [
@@ -135,7 +135,7 @@ export const about = {
       label: "What we do",
       title: "Agents, products and the people to run them.",
       description:
-        "We build AI agents that take repetitive work off your team, and we design, build and look after web, mobile and SaaS products, from fixed-price builds to full ventures.",
+        "An AI-first team across six services: AI agents, dedicated developers, custom builds, end-to-end launches, monthly retainers and rescues of AI-built apps.",
       icon: "layers",
       href: routes.services,
       cta: "See our services",
@@ -214,10 +214,10 @@ export const about = {
     },
     {
       year: "2025",
-      title: "Venture Studio and Launch & Rescue",
+      title: "End-to-end launches and Launch & Rescue",
       description:
         "We start running whole ventures for founders and family offices, and launch a practice for fixing and shipping Lovable, Bolt and v0 prototypes.",
-      tags: ["Venture Studio", "Launch & Rescue", "Family offices"],
+      tags: ["Build With Us", "Launch & Rescue", "Family offices"],
       icon: "rocket",
     },
     {
@@ -225,7 +225,7 @@ export const about = {
       title: "Today",
       description:
         "A multi-disciplinary team shipping agents and products for clients across three regions, with more than 60 projects delivered.",
-      tags: ["60+ projects", "3 regions", "6 engagement models"],
+      tags: ["60+ projects", "3 regions", "6 services"],
       icon: "sparkles",
       placeholder: true,
     },
@@ -262,22 +262,22 @@ export const about = {
     {
       word: "Build",
       title: "Products engineered to last",
-      description: "Web, mobile and SaaS products built by senior engineers, custom-quoted or fixed-price, with launch and rescue when you need it.",
+      description: "Web, mobile and SaaS products built by senior engineers at a fixed price or by sprint, looked after monthly, and rescued when you need it.",
       icon: "code",
       links: [
         { label: "Custom Development", href: routes.service("custom-development") },
-        { label: "Fixed-Price Projects", href: routes.service("fixed-price") },
+        { label: "Monthly Retainer", href: routes.service("monthly-retainer") },
         { label: "Launch & Rescue", href: routes.service("launch-and-rescue") },
       ],
     },
     {
       word: "Scale",
-      title: "Teams and ventures that grow with you",
-      description: "Dedicated developers who join your team, or a studio that runs product, website and growth for your venture.",
+      title: "Teams and businesses that grow with you",
+      description: "Dedicated developers who join your team, or one team that builds and launches your whole business with you.",
       icon: "trending-up",
       links: [
         { label: "Dedicated Developers", href: routes.service("dedicated-developers") },
-        { label: "Venture Studio", href: routes.service("venture-studio") },
+        { label: "Build With Us", href: routes.service("build-with-us") },
         { label: "Who we serve", href: routes.whoWeServe },
       ],
     },
@@ -292,7 +292,7 @@ export const about = {
   ] satisfies CountStat[],
 
   officesTitle: "Where to find us.",
-  officesSubtitle: "Remote-first, with bases in three countries and clients across the UK, Europe and the UAE.",
+  officesSubtitle: "Remote-first, with bases in three countries and clients across the UK, Europe, the UAE, India and Canada.",
   /** Points on the offices map. `hub` is where the connecting arcs start. */
   mapPins: [
     { label: "Bengaluru", lon: 77.6, lat: 13, kind: "office", hub: true },
@@ -405,12 +405,12 @@ export const team = {
   leadershipTitle: "Leadership.",
   leadershipSubtitle: "The people accountable for how VAUG works, and for every project we take on.",
   leadership: [
-    { name: "Aarav Mehta", role: "Founder & CEO", initials: "AM", gradient: ["#7c3aed", "#ffd23f"], bio: "Started VAUG in 2019 building MVPs for founders. Still sits in on every new client's first call.", focus: ["Strategy", "Partnerships", "Venture Studio"], placeholder: true },
+    { name: "Aarav Mehta", role: "Founder & CEO", initials: "AM", gradient: ["#7c3aed", "#ffd23f"], bio: "Started VAUG in 2019 building MVPs for founders. Still sits in on every new client's first call.", focus: ["Strategy", "Partnerships", "Build With Us"], placeholder: true },
     { name: "Priya Nair", role: "CTO", initials: "PN", gradient: ["#4c1d95", "#8b5cf6"], bio: "Owns architecture and engineering standards across every squad. Reviews more code than she admits.", focus: ["Architecture", "Cloud", "Code quality"], placeholder: true },
     { name: "Daniel Brooks", role: "Head of AI", initials: "DB", gradient: ["#8b5cf6", "#22d3ee"], bio: "Leads our agents practice, from workflow audits to evaluation and monitoring in production.", focus: ["Agents", "RAG", "Evaluation"], placeholder: true },
     { name: "Sana Qureshi", role: "Head of Delivery", initials: "SQ", gradient: ["#ffd23f", "#f97316"], bio: "Keeps every project on its weekly rhythm. The reason Friday updates arrive on Fridays.", focus: ["Delivery", "Scoping", "Client success"], placeholder: true },
     { name: "Luca Romano", role: "Head of Design", initials: "LR", gradient: ["#ec4899", "#7c3aed"], bio: "Leads research, product design and design systems. Believes every screen should earn its place.", focus: ["Product design", "Research", "Design systems"], placeholder: true },
-    { name: "Hannah Clarke", role: "Head of Growth", initials: "HC", gradient: ["#10b981", "#ffd23f"], bio: "Runs websites, listings and campaigns for Venture Studio clients, and for VAUG itself.", focus: ["Growth", "SEO", "Performance marketing"], placeholder: true },
+    { name: "Hannah Clarke", role: "Head of Growth", initials: "HC", gradient: ["#10b981", "#ffd23f"], bio: "Runs websites, listings and campaigns for Build With Us clients, and for VAUG itself.", focus: ["Growth", "SEO", "Performance marketing"], placeholder: true },
   ] satisfies Person[],
 
   disciplinesTitle: "The wider team, by discipline.",
@@ -421,7 +421,7 @@ export const team = {
     { name: "Design", count: 4, icon: "pen-tool", description: "Researchers and product designers who turn fuzzy ideas into clear flows.", roles: ["Product design", "UX research", "Design systems"], href: routes.engineeringPage("ui-ux-design"), placeholder: true },
     { name: "QA", count: 4, icon: "shield", description: "Testers who automate the boring checks and hunt the edge cases.", roles: ["Automation", "Manual", "Performance"], href: routes.engineeringPage("quality-assurance"), placeholder: true },
     { name: "Delivery", count: 5, icon: "workflow", description: "Leads who scope, plan and keep the weekly rhythm, and the single point of contact for clients.", roles: ["Delivery leads", "Scrum", "Business analysis"], href: routes.howWeWork, placeholder: true },
-    { name: "Growth", count: 3, icon: "trending-up", description: "Marketers who run websites, listings and campaigns for studio ventures.", roles: ["SEO", "Paid media", "Content"], href: routes.service("venture-studio"), placeholder: true },
+    { name: "Growth", count: 3, icon: "trending-up", description: "Marketers who run websites, listings and campaigns for the businesses we launch.", roles: ["SEO", "Paid media", "Content"], href: routes.service("build-with-us"), placeholder: true },
   ] satisfies Discipline[],
 
   quote: {

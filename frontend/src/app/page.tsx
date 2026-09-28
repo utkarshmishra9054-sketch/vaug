@@ -95,7 +95,7 @@ export default async function HomePage() {
       <Band tone="light" id="results" label="Client results">
         <SectionTitle
           title={c.outcomesTitle}
-          subtitle="Real results from anonymised case studies. Pick one to read how we got there."
+          subtitle="Real results from real case studies. Pick one to read how we got there."
           align="center"
           className="frame-pad py-16 lg:py-20"
         />

@@ -1,10 +1,14 @@
+import Image from "next/image";
+
+import type { CaseImage } from "@/content/types";
 import { SCREENS } from "./screens";
 import { ShotCanvas } from "./screens/kit";
 import { ShotZoom } from "./ShotZoom";
 
 /**
- * One product screen on a case study page. Studies with bespoke screens (see
- * `./screens`) render the real screen, click-to-enlarge. Otherwise a tinted
+ * One product screen on a case study page. A real screenshot (`image`) wins;
+ * studies with bespoke screens (see `./screens`) render the drawn screen.
+ * Both are click-to-enlarge. Otherwise a tinted
  * device frame with a skeleton UI stands in; the skeleton is picked from the
  * caption (chat, map, dashboard, table, board, detail, site, form) so every
  * screen in the gallery reads as a different view.
@@ -166,9 +170,31 @@ function Body({ kind, tint, phone }: { kind: Kind; tint: string; phone: boolean 
   }
 }
 
-export function ScreenFrame({ slug, caption, tint, index }: { slug: string; caption: string; tint: string; index: number }) {
-  const Screen = SCREENS[slug]?.[index];
-  if (Screen) {
+/** `screenIndex` picks the drawn screen; studies with real `images` list them first, so drawn screens start after them. */
+export function ScreenFrame({
+  slug,
+  caption,
+  tint,
+  index,
+  screenIndex = index,
+  image,
+}: {
+  slug: string;
+  caption: string;
+  tint: string;
+  index: number;
+  screenIndex?: number;
+  image?: CaseImage;
+}) {
+  const Screen = SCREENS[slug]?.[screenIndex];
+  const shot = image ? (
+    <Image src={image.src} alt={image.alt} width={image.width} height={image.height} sizes="(min-width: 640px) 50vw, 100vw" className="block h-auto w-full bg-white" />
+  ) : Screen ? (
+    <ShotCanvas>
+      <Screen tint={tint} />
+    </ShotCanvas>
+  ) : null;
+  if (shot) {
     return (
       <figure data-reveal style={{ "--reveal-delay": `${(index % 2) * 90}ms` } as React.CSSProperties} className="group flex h-full flex-col border-b border-border bg-surface p-6 sm:border-r lg:p-8">
         <div className="relative overflow-hidden rounded-md p-4 sm:p-6" style={{ background: `linear-gradient(135deg, ${tint}, color-mix(in oklab, ${tint} 72%, #000))` }}>
@@ -177,18 +203,10 @@ export function ScreenFrame({ slug, caption, tint, index }: { slug: string; capt
             <ShotZoom
               caption={caption}
               large={
-                <div className="overflow-hidden rounded-[10px] shadow-2xl">
-                  <ShotCanvas>
-                    <Screen tint={tint} />
-                  </ShotCanvas>
-                </div>
+                <div className="overflow-hidden rounded-[10px] shadow-2xl">{shot}</div>
               }
             >
-              <div className="overflow-hidden rounded-[10px] shadow-[0_30px_60px_-24px_rgb(0_0_0/0.6)]">
-                <ShotCanvas>
-                  <Screen tint={tint} />
-                </ShotCanvas>
-              </div>
+              <div className="overflow-hidden rounded-[10px] shadow-[0_30px_60px_-24px_rgb(0_0_0/0.6)]">{shot}</div>
             </ShotZoom>
           </div>
         </div>

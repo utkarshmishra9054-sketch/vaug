@@ -13,7 +13,7 @@ import { getCaseStudies } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Case Studies",
   description:
-    "AI agents, platforms, apps and ventures VAUG has shipped for startups, enterprises, agencies and family offices across the UK, Europe and the UAE.",
+    "AI agents, platforms, apps, ventures and growth campaigns VAUG has delivered for startups, enterprises, agencies and family offices across the UK, Europe, the UAE, India and Canada.",
 };
 
 export default async function CaseStudiesPage() {
@@ -29,7 +29,7 @@ export default async function CaseStudiesPage() {
         ]}
         eyebrow="Our work"
         title={{ light: "Results our clients", bold: "can count." }}
-        subtitle="Agents that close the books in hours, apps that fill calendars, rescued prototypes and ventures built from zero. Every client is anonymised; every number is real."
+        subtitle="Agents that close the books in hours, apps that fill calendars, rescued prototypes and ventures built from zero, plus the search and ads work that fills pipelines. Every number comes from the client's own data."
         primary={{ label: "Discuss your project", href: "#contact" }}
         secondary={{ label: "How we work", href: routes.howWeWork }}
         aside={<ResultsStack studies={studies} />}
@@ -41,7 +41,7 @@ export default async function CaseStudiesPage() {
             { value: String(studies.length), label: "detailed case studies" },
             { value: String(count("sector")), label: "sectors" },
             { value: String(count("service")), label: "ways of working with us" },
-            { value: String(count("region")), label: "regions: UK, Europe, UAE" },
+            { value: String(count("region")), label: "regions, from the UK to Australia" },
           ]}
         />
       </Band>

@@ -3,75 +3,70 @@ import type { HomePageContent } from "./types";
 
 /**
  * Home page content.
- * Clients, stats and results come from the real (anonymised) case studies.
- * Testimonials stay empty until real, approved quotes exist.
+ * Clients, stats and results come from the real case studies. Client logos and
+ * testimonials come from the 2023 VAUG proposal.
  */
-/** Short, anonymised client names for tiles and result cards. */
+/** Short client names for tiles and result cards, where the full name is long. */
 const shortClient: Record<string, string> = {
-  "reconciliation-agent-frankfurt-payments": "Payments processor",
-  "freelancer-insurance-platform-london": "Freelancer insurtech",
-  "physio-booking-app-dubai": "Physiotherapy clinics",
-  "patient-whatsapp-voice-agent-manchester": "Diagnostics network",
-  "family-office-property-brand-dubai": "Family office",
-  "rental-prototype-rescue-lisbon": "Rental marketplace",
-  "modest-fashion-marketplace-abu-dhabi": "Fashion marketplace",
-  "headless-storefront-team-stockholm": "Shopify agency",
-  "route-planning-pod-rotterdam": "Freight forwarder",
-  "courier-driver-app-birmingham": "Courier network",
-  "boutique-desert-retreat-ras-al-khaimah": "Desert retreat",
-  "whatsapp-concierge-barcelona": "Boutique hotel group",
+  "freelancer-insurance-platform-london": "Collective Benefits",
+  "physio-booking-app-dubai": "PhysioFit",
+  "family-office-property-brand-dubai": "La Boutique",
+  "route-planning-pod-rotterdam": "EGS Rotterdam",
+  "courier-driver-app-birmingham": "City Quick",
+  "seo-cbd-ecommerce-canada": "CBD2Heal",
 };
 
 export const home: HomePageContent = {
   hero: {
     title: {
-      light: "AI agents and engineers that",
-      words: ["ship your product.", "answer your customers.", "qualify your leads.", "close your books.", "launch your venture."],
+      light: "AI-first teams that",
+      words: ["build your product.", "automate your workflows.", "extend your team.", "launch your business.", "keep your app running.", "rescue your prototype."],
     },
-    subtitle: "Rent developers, fix the price, or hand us the whole venture. We build the agents and the software around them.",
-    ticker: ["AI Agents", "Dedicated Developers", "Custom Development", "Venture Studio", "Fixed-Price Projects", "Launch & Rescue"],
+    subtitle: "Agents, developers, custom builds, end-to-end launches, monthly care and rescues. One team uses AI in every service, so you get shorter timelines and leaner budgets.",
+    ticker: ["AI as a Service", "Dedicated Developers", "Custom Development", "Build With Us", "Monthly Retainer", "Launch & Rescue"],
     cta: { label: "Book a strategy call", href: "#contact" },
     badgeWords: ["automate", "build", "scale"],
   },
 
-  // Clients are anonymised by agreement; each tile links to its case study.
+  // Every client on the wall links to its case study.
   clients: caseStudies.map((c) => ({
     label: shortClient[c.slug] ?? c.client,
     sector: c.industry,
     city: c.city.split(",")[0],
     icon: c.icon,
     href: `/case-studies/${c.slug}`,
+    logoSrc: c.logo,
   })),
 
   manifesto: {
-    title: "Every repetitive task is a job an agent could do today.",
-    highlight: "an agent could do today.",
-    subtitle: "Workflows get **automated**. Products get **shipped**. We handle **both**.",
+    title: "AI is how we work, in every service we sell.",
+    highlight: "in every service we sell.",
+    subtitle: "Products get **built faster**. Workflows get **automated**. Budgets go **further**.",
     tags: [
-      "AI Agents", "Automation", "Workflows", "Integrations", "Web Apps", "Mobile Apps", "WhatsApp Agents",
-      "Voice AI", "CRM Sync", "Dashboards", "SaaS", "APIs", "Cloud", "DevOps", "UI/UX", "QA", "Security",
-      "Scalability", "Growth", "SEO", "Branding", "Launch",
+      "AI Agents", "Web Apps", "Mobile Apps", "SaaS", "Dedicated Teams", "Automation", "Integrations",
+      "WhatsApp Agents", "Dashboards", "APIs", "Cloud", "DevOps", "UI/UX", "QA", "Security", "Maintenance",
+      "Support", "Branding", "SEO", "Growth", "Launch", "Rescue",
     ],
   },
 
   aiSpotlight: {
     wordmark: "VAUG Agents",
     badge: "AI",
-    title: "AI as a Service, built around your workflows",
+    title: "AI as a Service: agents that do the repetitive work",
     description:
-      "We find where your team loses hours, then build, host and improve agents that do that work inside your CRM, inbox and WhatsApp.",
+      "One of our six services. We find where your team loses hours, then build, host and improve agents that do that work inside your CRM, inbox and WhatsApp.",
     cta: { label: "Meet VAUG Agents", href: "/agents" },
     story: [
-      { lead: "Your team answers the same questions", punch: "A Hundred Times a Day", caption: "Order status, refunds, opening hours. Every message needs a human, every time." },
-      { lead: "Leads wait in the inbox while everyone is", punch: "Busy Copy-Pasting", caption: "Hot leads go cold while your team moves data between tabs." },
-      { lead: "A VAUG agent handles it", punch: "In Seconds, 24/7", caption: "It answers, qualifies and updates your CRM, and hands edge cases to a person." },
-      { lead: "Your people get back to", punch: "The Work That Matters", caption: "Hours come back every week for strategy, clients and craft." },
+      { lead: "Your team answers the same questions", punch: "A Hundred Times a Day", caption: "Where's my order? Can I get a refund? Every reply pulls someone off real work, and tomorrow they type it again." },
+      { lead: "While they reply, new leads", punch: "Go Cold in the Queue", caption: "A demo request sits unanswered for hours while your team copies leads into a spreadsheet. By the time someone replies, the buyer has moved on." },
+      { lead: "A VAUG agent works the whole inbox", punch: "In Seconds, 24/7", caption: "It answers customers, qualifies leads, updates your CRM and hands anything unusual to a person." },
+      { lead: "Your people get back to", punch: "The Work That Matters", caption: "No queue and no copy-paste. Your team only sees the conversations that need them." },
     ],
   },
 
   modelsIntro: {
-    title: "Six Ways to Build With VAUG.",
-    subtitle: "One senior team, six ways to engage. Add AI agents to any of them.",
+    title: "Six Services. One AI-First Team.",
+    subtitle: "Each one solves a different problem. All of them use AI to ship faster and stretch your budget further.",
   },
 
   engagementModels: [
@@ -79,68 +74,69 @@ export const home: HomePageContent = {
       slug: "ai-as-a-service",
       title: "AI as a Service",
       description:
-        "Agents that answer customers, qualify leads and reconcile data. We host, monitor and improve them for a monthly fee.",
+        "AI agents that answer customers, qualify leads and move data between your tools. We build them, host them and improve them every month.",
       illustration: "agents",
       services: ["Workflow Audit & ROI Map", "Custom AI Agents", "CRM & WhatsApp Integrations", "Human-in-the-Loop Approvals", "Hosting & Monitoring", "Monthly Improvements"],
-      bestFor: "Teams drowning in repetitive work",
-      pricing: "Built, hosted and improved monthly",
+      bestFor: "Teams losing hours to repetitive work",
+      pricing: "Built once, then one monthly fee",
     },
     {
       slug: "dedicated-developers",
       title: "Dedicated Developers",
       description:
-        "Vetted engineers and AI specialists who join your stand-ups and your repo. Billed monthly, scaled as you need.",
+        "Vetted engineers who work in your repo, join your stand-ups and take direction from you. They use AI tools daily, so each month ships more.",
       illustration: "developers",
       services: ["Full-Stack Engineers", "Mobile Engineers", "AI / ML Engineers", "Designers & QA", "Replacement Guarantee", "Monthly Scaling"],
-      bestFor: "Teams that need capacity fast",
+      bestFor: "Teams with a roadmap that need more hands",
       pricing: "Month by month, scale any time",
     },
     {
       slug: "custom-development",
       title: "Custom Development",
-      description: "Web, mobile, SaaS and internal tools, scoped with you and delivered build by build.",
+      description:
+        "Tell us the product you need and we design, build and launch it. Choose one fixed price for a clear scope, or sprint by sprint when it will evolve.",
       illustration: "custom",
-      services: ["Discovery & Scoping", "Product Design", "Web & Mobile Apps", "SaaS Platforms", "Internal Tools", "QA, Launch & Handover"],
-      bestFor: "Products with evolving requirements",
-      pricing: "Scoped with you, sprint by sprint",
+      services: ["Discovery & Scoping", "Product Design", "Web & Mobile Apps", "SaaS Platforms", "Fixed Price or Sprints", "QA, Launch & Handover"],
+      bestFor: "A defined product you want built",
+      pricing: "Fixed price or sprint by sprint",
     },
     {
-      slug: "venture-studio",
-      title: "Venture Studio",
+      slug: "build-with-us",
+      title: "Build With Us",
       description:
-        "You bring the idea. We build the product and run the rest: brand, website, Google Business Profile, SEO and growth.",
-      illustration: "venture",
-      services: ["Product & Tech", "Branding & Website", "SEO & Google Business Profile", "Performance Marketing", "Social Media", "Analytics & Growth Ops"],
-      bestFor: "Founders and HNIs launching a venture",
+        "Bring the idea and we act as your whole team: product, brand, website, launch and growth, managed end to end with AI agents built in.",
+      illustration: "build",
+      services: ["Validation & Strategy", "Product & Tech", "Brand & Website", "SEO & Google Business Profile", "Launch Campaigns", "AI Agents & Growth Ops"],
+      bestFor: "Founders and investors launching something new",
       pricing: "Retainer or partnership",
     },
     {
-      slug: "fixed-price",
-      title: "Fixed-Price Projects",
+      slug: "monthly-retainer",
+      title: "Monthly Retainer",
       description:
-        "One agreed scope, one fixed price. Anything new is quoted separately, so your budget never moves.",
-      illustration: "fixed",
-      services: ["Locked Scope & Timeline", "Milestone Payments", "Weekly Demos", "Change Requests Quoted Separately", "Warranty Period", "Clean Handover"],
-      bestFor: "Well-defined projects with a set budget",
-      pricing: "One agreed scope and budget",
+        "Your product is live and needs looking after. For one monthly fee we fix bugs, keep it secure and up to date, and ship improvements every month.",
+      illustration: "retainer",
+      services: ["Bug Fixes & Support", "Security & Updates", "Monitoring & Uptime", "Small Features Each Month", "AI Upgrades", "Monthly Report"],
+      bestFor: "Live products that need steady care",
+      pricing: "One fee, every month",
     },
     {
       slug: "launch-and-rescue",
       title: "Launch & Rescue",
       description:
-        "Built on Lovable, Bolt or v0 and almost working? We fix it, secure it and ship it to production.",
+        "Built on Lovable, Bolt or v0 and almost working? We fix it, secure it and ship it to production in days.",
       illustration: "rescue",
       services: ["Code Review & Clean-up", "Bug Fixing", "Auth & Database Security", "Payments & Domains", "Deployment & Hosting", "Performance Pass"],
       bestFor: "AI-built and no-code apps that need a finish",
-      pricing: "Audit first, then a fixed plan",
+      pricing: "Review first, then a fixed fee",
     },
   ],
 
   stats: [
     { value: 7, suffix: "+", label: "Years building", detail: "Operating since 2019, registered in 2021", icon: "rocket" },
-    { value: caseStudies.length, suffix: "", label: "Detailed case studies", detail: "Every client anonymised, every number real", icon: "file-check" },
+    { value: caseStudies.length, suffix: "", label: "Detailed case studies", detail: "Every number from the client's own data", icon: "file-check" },
     { value: 6, suffix: "", label: "Sectors served", detail: "Finance, health, property, retail, logistics, travel", icon: "layers" },
-    { value: 3, suffix: "", label: "Client regions", detail: "The UK, mainland Europe and the UAE", icon: "globe" },
+    { value: 5, suffix: "", label: "Client regions", detail: "The UK, mainland Europe, the UAE, India and Canada", icon: "globe" },
   ],
 
   caseStudiesTitle: "Results Our Clients Can Count.",
@@ -159,9 +155,9 @@ export const home: HomePageContent = {
   principlesTitle: "How Every VAUG Project Runs.",
   principles: [
     { title: "We diagnose first.", description: "We map your workflows first and start with the work that pays back fastest.", icon: "search" },
-    { title: "AI speed, engineering discipline.", description: "AI makes us fast. Tests, reviews and solid architecture keep it safe.", icon: "cpu" },
+    { title: "AI speed, engineering discipline.", description: "AI shortens timelines and trims budgets. Tests, reviews and solid architecture keep it safe.", icon: "cpu" },
     { title: "One accountable lead.", description: "One person owns your project, with weekly demos and a Friday update.", icon: "handshake" },
-    { title: "We stay after launch.", description: "We host, monitor and improve, or hand over cleanly. Your call.", icon: "heart" },
+    { title: "We stay after launch.", description: "A monthly retainer keeps your product improving, or we hand over cleanly. Your call.", icon: "heart" },
   ],
 
   audiencesTitle: "Built for Founders, Investors and Enterprises.",
@@ -199,15 +195,15 @@ export const home: HomePageContent = {
       slug: "which-model",
       href: "/services#chooser",
       type: "Guide",
-      title: "Fixed price, custom quote or dedicated team: which fits?",
-      excerpt: "Answer four questions and get a recommendation, or compare all six models.",
+      title: "Build, extend, launch or look after: which service fits?",
+      excerpt: "Answer four questions and get a recommendation, or compare all six services.",
       cover: { bg: "#6d28d9", fg: "#ffd23f", motif: "bars" },
     },
     {
       slug: "results",
       href: "/case-studies",
       type: "Article",
-      title: "Twelve builds, six sectors: see the work and the numbers",
+      title: `${caseStudies.length} case studies: see the work and the numbers`,
       excerpt: "Filter real case studies by sector, service, client type and region.",
       cover: { bg: "#131116", fg: "#ffd23f", motif: "dots" },
     },
@@ -227,11 +223,45 @@ export const home: HomePageContent = {
       href: `/case-studies/${c.slug}`,
     })),
   testimonialsTitle: "What Clients Say After Working With Us.",
-  testimonials: [],
+  // From the 2023 proposal. TODO(content): confirm each person's approval of the edited wording.
+  testimonials: [
+    {
+      quote: "VAUG has been a great partner for our business. They helped us improve our website's ranking in Google search results, and we've seen a significant increase in traffic and leads, exceeding expectations.",
+      name: "Kunal Kapoor",
+      role: "Co-founder",
+      company: "Ketto",
+    },
+    {
+      quote: "They have a deep understanding of SEO and are always up to date on Google's latest changes. We've worked with VAUG for four years and have been very pleased with the results.",
+      name: "Ariba Khan",
+      role: "CEO",
+      company: "Jumping Minds",
+    },
+    {
+      quote: "Their expertise in 360° digital marketing has improved our search rankings and online visibility. The team is creative, passionate and always willing to go the extra mile.",
+      name: "Tejal Bajla",
+      role: "CEO",
+      company: "allthingsbaby.com",
+    },
+    {
+      quote: "We have seen a significant increase in our sales and brand awareness. Their SEO services are top-notch!",
+      name: "Richard Sanchez",
+      role: "CEO",
+      company: "CBD2Heal",
+    },
+    {
+      quote: "Their comprehensive strategy and execution led to significant improvements in my website's rankings.",
+      name: "Nimish Gopal",
+      role: "CEO",
+      company: "CareerNaksha",
+    },
+  ],
 
   faqs: [
-    { question: "What does AI as a Service include?", answer: "We audit your workflows, build custom AI agents, connect them to your tools, and host, monitor and improve them for a monthly fee." },
-    { question: "How does fixed-price work if my requirements change?", answer: "The agreed scope stays at the agreed price. Any new requirement is scoped and quoted as a separate piece of work, so your original budget never moves." },
+    { question: "What does \"AI-first\" mean if I'm not buying an AI agent?", answer: "Our engineers, designers and QA use AI tools in every step of the work, with human review on everything. You see it as shorter timelines and leaner budgets on custom builds, retainers and dedicated teams alike." },
+    { question: "Can you build my product at a fixed price?", answer: "Yes. Custom Development can run at one fixed price when the scope is clear, or sprint by sprint when it will evolve. Any new requirement is quoted separately, so the agreed budget never moves." },
+    { question: "What's the difference between a Monthly Retainer and Dedicated Developers?", answer: "With Dedicated Developers, named engineers join your team and you direct their work. With a Monthly Retainer, we manage the work for you: support, fixes, updates and a set of improvements each month for a live product." },
+    { question: "What does Build With Us cover?", answer: "Everything a new business needs from us: validating the idea, building the product, brand and website, Google listings, launch campaigns and the AI agents that answer your first customers." },
     { question: "Can you fix an app I built on Lovable, Bolt or v0?", answer: "Yes. We review the code, fix bugs and security gaps, set up hosting, domain and payments, and deploy it to production." },
     { question: "Do you work with individuals as well as companies?", answer: "Yes. We work with founders, HNIs and family offices as well as enterprises and agencies that need an outsourcing partner." },
   ],

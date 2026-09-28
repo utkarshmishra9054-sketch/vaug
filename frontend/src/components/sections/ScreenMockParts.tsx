@@ -21,7 +21,7 @@ import { CourierMock, RoutePlanningMock } from "@/components/sections/mocks/logi
  * client renders match.
  */
 
-export type MockStudy = CaseStudy & Partial<Pick<CaseStudyDetail, "features" | "domain" | "techStack">>;
+export type MockStudy = CaseStudy & Partial<Pick<CaseStudyDetail, "features" | "domain" | "techStack" | "website" | "images" | "screenshots">>;
 
 type Status = "Done" | "Review" | "Live" | "Flagged";
 

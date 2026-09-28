@@ -9,7 +9,7 @@ import { ArrowLink } from "@/components/ui/Button";
 
 const links = [
   { label: "Home", description: "Start from the top", href: routes.home, icon: House },
-  { label: "Services", description: "Six ways to work with us", href: routes.services, icon: Layers },
+  { label: "Services", description: "Six services, one AI-first team", href: routes.services, icon: Layers },
   { label: "Case studies", description: "Twelve products we shipped", href: routes.caseStudies, icon: BriefcaseBusiness },
   { label: "Contact", description: "Tell us what you need", href: routes.contact, icon: MessageSquare },
 ];

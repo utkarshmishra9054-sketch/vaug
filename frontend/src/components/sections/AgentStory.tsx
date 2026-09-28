@@ -1,26 +1,25 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type ReactNode } from "react";
-import { Check, Clock, Copy, Flame, Snowflake, Thermometer, UserRound } from "lucide-react";
+import { ArrowDown, Check, Clock, Copy, Flame, Snowflake, Thermometer, UserRound } from "lucide-react";
 
 import { IllustrativeTag } from "@/components/ui/IllustrativeTag";
 import type { StoryBeat } from "@/content/types";
 
 /*
- * Pinned, scroll-scrubbed story. Overall progress P runs 0 → 4 across four beats,
- * and every beat makes its headline visible on the stage:
- *   0–1  the same four questions keep arriving; repeat counters climb to 100 and
- *        one person types the same reply again
- *   1–2  leads arrive while that person copies rows into a spreadsheet by hand;
- *        wait clocks tick and each lead cools from hot to warm to cold
- *   2–3  the agent works the queue card by card: answers, qualifies, syncs the
- *        CRM, and hands the one unusual lead to a person
- *   3–4  the inbox clears and a before/after view shows where the team's day goes
- * Every element's position is a pure function of P, so scrolling back rewinds it.
+ * Pinned, step-by-step story in four scenes. One scroll gesture (wheel, swipe or
+ * arrow key) moves exactly one scene; the panel releases the page after the last
+ * scene going down, or the first going up.
+ *   0  The problem  the same four questions, answered by hand again and again
+ *   1  The cost     new leads sit unanswered and cool from hot to cold
+ *   2  The agent    the agent works the inbox item by item, then syncs the CRM
+ *   3  The outcome  before/after numbers and where the team's day goes
+ * Each scene plays its intro once, the first time it is reached. Scenes already
+ * seen (or skipped past) show their finished state, so scrolling back never replays.
  */
 
 const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
-const seg = (P: number, from: number, to: number) => clamp((P - from) / (to - from));
+const seg = (t: number, from: number, to: number) => clamp((t - from) / (to - from));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const easeOut = (x: number) => 1 - Math.pow(1 - x, 3);
 const easeInOut = (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
@@ -38,79 +37,76 @@ const tone = {
   cold: "#3b82f6",
 };
 
+/** Fade + lift in, as a pure function of the scene clock. */
+function rise(t: number, at: number, span = 0.14, dy = 10): CSSProperties {
+  const e = easeOut(seg(t, at, at + span));
+  return { opacity: e, transform: `translateY(${(1 - e) * dy}px)` };
+}
+
 /* ---------- story data ---------- */
 
-// Repeat counts add up to the "hundred times a day" in beat 1.
+// Repeat counts add up to the "hundred times a day" in scene 1.
 const questions = [
-  { who: "EM", text: "Where is my order #4471?", repeats: 38, reply: "Out for delivery, arrives today" },
-  { who: "JB", text: "Can I change my delivery address?", repeats: 14, reply: "Address updated, confirmation sent" },
-  { who: "LK", text: "Is the blue one back in stock?", repeats: 21, reply: "Back Friday · restock alert set" },
-  { who: "TR", text: "How do I get a refund?", repeats: 27, reply: "Return label sent · refund in 3–5 days" },
+  { who: "EM", text: "Where's my order #4471?", repeats: 38, reply: "Tracking link sent" },
+  { who: "JB", text: "Can I change my address?", repeats: 14, reply: "Address updated" },
+  { who: "LK", text: "Is the blue one in stock?", repeats: 21, reply: "Back Friday · alert set" },
+  { who: "TR", text: "How do I get a refund?", repeats: 27, reply: "Return label sent" },
 ];
 const leads = [
-  { who: "Maya R.", text: "Demo request · 40 seats", wait: [2, 190], result: "Qualified · demo booked Thu 10:00", crm: ["Maya R.", "Demo · 40 seats", "Demo booked"] },
-  { who: "Oliver P.", text: "Pricing for the Pro plan", wait: [1, 1500], result: "Pricing sent · follow-up set", crm: ["Oliver P.", "Pro pricing", "Pricing sent"] },
-  { who: "Hana K.", text: "Partnership enquiry", wait: [1, 300], result: "Summarised · handed to you", crm: ["Hana K.", "Partnership", "With you"], handoff: true },
+  { who: "Maya R.", initials: "MR", text: "Demo request · 40 seats", wait: [2, 116], result: "Qualified · demo booked Thu", crm: ["Maya R.", "Demo · 40 seats"] },
+  { who: "Oliver P.", initials: "OP", text: "Pricing for the Pro plan", wait: [1, 802], result: "Pricing sent · follow-up set", crm: ["Oliver P.", "Pro pricing"] },
+  { who: "Hana K.", initials: "HK", text: "Partnership enquiry", wait: [1, 185], result: "Summarised · handed to you", crm: ["Hana K.", "Partnership"], handoff: true },
 ];
 
-/* ---------- stage layout (fixed 540×460 canvas) ---------- */
-
-const COL_Q = { x: 16, w: 246 };
-const COL_L = { x: 278, w: 246 };
-const Q_H = 62;
-const L_H = 72;
-const qY = (i: number) => 89 + i * (Q_H + 6);
-const lY = (i: number) => 89 + i * (L_H + 6);
-const COMPOSER = { y: qY(4), h: 444 - qY(4) };
-const CRM = { y: lY(3), h: 444 - lY(3) };
-const crmRowY = (i: number) => CRM.y + 52 + i * 22;
-
-/* ---------- timeline ---------- */
-
-const qAppear = (i: number) => 0.08 + i * 0.14;
-const lAppear = (i: number) => 1.05 + i * 0.15;
-/** When the typist copies lead i into the spreadsheet (only the first two make it). */
-const copyAt = (i: number) => 1.3 + i * 0.3;
-
-// The agent visits every card, then the CRM. `t` is the moment it resolves that stop.
-const stops = [
-  ...questions.map((_, i) => ({ kind: "q" as const, i, x: COL_Q.x + COL_Q.w, y: qY(i) + Q_H / 2, t: 2.15 + i * 0.1 })),
-  ...leads.map((_, i) => ({ kind: "l" as const, i, x: COL_L.x + COL_L.w - 2, y: lY(i) + L_H / 2, t: 2.55 + i * 0.1 })),
-  { kind: "crm" as const, i: 0, x: COL_L.x + COL_L.w - 2, y: CRM.y + 20, t: 2.85 },
-];
-const stopFor = (kind: "q" | "l", i: number) => stops.find((s) => s.kind === kind && s.i === i)!;
-const handledBy = (P: number) => stops.filter((s) => s.kind !== "crm" && P >= s.t).length;
-const HANDLED_TOTAL = questions.length + leads.length;
-
-const repeatsAt = (P: number, i: number) => Math.round(questions[i].repeats * easeOut(seg(P, qAppear(i) + 0.02, 1.0)));
-const questionWaitAt = (P: number, i: number) => Math.round(1 + seg(P, qAppear(i) + 0.1, 2.0) * (135 - i * 12));
-const leadWaitAt = (P: number, i: number) => {
-  const [a, b] = leads[i].wait;
-  return Math.round(lerp(a, b, seg(P, lAppear(i), 2.0)));
-};
 const heat = (min: number) => (min < 30 ? "hot" : min < 120 ? "warm" : "cold");
+const heatColor = { hot: tone.hot, warm: tone.amber, cold: tone.cold };
+const heatIcon = { hot: Flame, warm: Thermometer, cold: Snowflake };
 
 function fmtWait(min: number) {
   if (min < 1) return "just now";
   if (min < 60) return `${min}m`;
-  if (min < 1440) return `${Math.floor(min / 60)}h ${String(min % 60).padStart(2, "0")}m`;
-  return `${Math.floor(min / 1440)}d ${Math.floor((min % 1440) / 60)}h`;
+  return `${Math.floor(min / 60)}h ${String(min % 60).padStart(2, "0")}m`;
 }
 
-/** The live line under each beat's caption: the same number the stage is showing. */
-function beatMeter(i: number, P: number): { text: string; color: string } {
+function ordinal(n: number) {
+  const tens = n % 100;
+  const suffix = tens >= 11 && tens <= 13 ? "th" : ["th", "st", "nd", "rd"][n % 10] ?? "th";
+  return `${n}${suffix}`;
+}
+
+/* ---------- scene clocks ---------- */
+
+/** How long each scene's intro plays, in ms. */
+const DURATIONS = [3200, 3200, 3400, 2600];
+
+const repeatsAt = (t: number, i: number) => Math.round(questions[i].repeats * easeOut(seg(t, 0.12 + i * 0.08, 0.8)));
+const leadAppear = (i: number) => 0.06 + i * 0.1;
+const leadWaitAt = (t: number, i: number) => Math.round(lerp(leads[i].wait[0], leads[i].wait[1], easeInOut(seg(t, leadAppear(i) + 0.05, 0.85))));
+
+// Scene 3: the agent works every item in order.
+const agentItems = [
+  ...questions.map((q) => ({ who: q.who, text: q.text, doing: "Replying", result: q.reply, handoff: false })),
+  ...leads.map((l) => ({ who: l.initials, text: `${l.who} · ${l.text}`, doing: l.handoff ? "Summarising" : "Qualifying", result: l.result, handoff: !!l.handoff })),
+];
+const itemStart = (i: number) => 0.08 + i * 0.1;
+const ITEM_SPAN = 0.08;
+const CRM_AT = itemStart(agentItems.length) + 0.02;
+const handledAt = (t: number) => agentItems.filter((_, i) => t >= itemStart(i) + ITEM_SPAN).length;
+
+/** The line under each beat's caption: the same number the stage is showing. */
+function beatMeter(i: number, t: number): { text: string; color: string } {
   if (i === 0) {
-    const n = questions.reduce((s, _, k) => s + repeatsAt(P, k), 0);
+    const n = questions.reduce((s, _, k) => s + repeatsAt(t, k), 0);
     return { text: `${n} repeat questions answered by hand today`, color: tone.red };
   }
   if (i === 1) {
-    const oldest = Math.max(0, ...leads.map((_, k) => (P > lAppear(k) ? leadWaitAt(P, k) : 0)));
-    return { text: `Oldest lead waiting · ${fmtWait(oldest)}`, color: heat(oldest) === "cold" ? tone.cold : tone.hot };
+    const oldest = Math.max(...leads.map((_, k) => leadWaitAt(t, k)));
+    return { text: `Oldest lead waiting · ${fmtWait(oldest)}`, color: tone.cold };
   }
   if (i === 2) {
-    const n = handledBy(P);
+    const n = handledAt(t);
     return {
-      text: n < HANDLED_TOTAL ? `${n} of ${HANDLED_TOTAL} handled by the agent` : `${HANDLED_TOTAL - 1} answered · 1 passed to a person`,
+      text: n < agentItems.length ? `${n} of ${agentItems.length} handled by the agent` : `${agentItems.length - 1} answered · 1 passed to a person`,
       color: tone.green,
     };
   }
@@ -135,191 +131,27 @@ function useReducedMotion() {
 }
 
 /**
- * Chases a scroll-driven value with a short exponential ease, so a big wheel
- * jump glides instead of cutting. Still a pure function of scroll once settled.
+ * One clock (0 → 1) per scene. The scene at `reached` plays its intro once;
+ * every scene before it is pinned at 1, so going back shows it finished.
  */
-function useSmoothed(target: number, reduced: boolean, tau = 110) {
-  const [value, setValue] = useState(target);
-  const current = useRef(target);
+function useScenePlayback(reached: number, reduced: boolean) {
+  const [ts, setTs] = useState(() => DURATIONS.map(() => 0));
   useEffect(() => {
-    if (reduced) {
-      current.current = target;
-      return;
-    }
+    if (reached < 0) return;
     let raf = 0;
-    let last = performance.now();
-    const tick = (now: number) => {
-      const k = 1 - Math.exp(-(now - last) / tau);
-      last = now;
-      current.current += (target - current.current) * k;
-      if (Math.abs(target - current.current) < 0.0015) current.current = target;
-      setValue(current.current);
-      if (current.current !== target) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [target, reduced, tau]);
-  return reduced ? target : value;
-}
-
-/** Counts from the currently displayed number to `target` over ~500ms, eased. */
-function useCountTo(target: number, reduced: boolean, ms = 500) {
-  const [value, setValue] = useState(target);
-  const shown = useRef(target);
-  useEffect(() => {
-    if (reduced) {
-      shown.current = target;
-      return;
-    }
-    const from = shown.current;
-    if (from === target) return;
     const start = performance.now();
-    let raf = 0;
     const tick = (now: number) => {
-      const t = clamp((now - start) / ms);
-      shown.current = from + (target - from) * easeOut(t);
-      setValue(shown.current);
+      const t = reduced ? 1 : clamp((now - start) / DURATIONS[reached]);
+      setTs((prev) => prev.map((v, k) => (k < reached ? 1 : k === reached ? Math.max(v, t) : v)));
       if (t < 1) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [target, reduced, ms]);
-  return Math.round(reduced ? target : value);
+  }, [reached, reduced]);
+  return ts;
 }
 
-/** Soft ring that blooms and fades on an element whenever `signal` changes (not on mount). */
-function useFlash<T extends HTMLElement>(signal: unknown, reduced: boolean, color = "var(--accent-text)", delay = 0) {
-  const ref = useRef<T>(null);
-  const first = useRef(true);
-  const anim = useRef<Animation | null>(null);
-  useEffect(() => {
-    if (first.current) {
-      first.current = false;
-      return;
-    }
-    const el = ref.current;
-    if (!el || reduced || typeof el.animate !== "function") return;
-    anim.current?.cancel();
-    anim.current = el.animate(
-      [
-        { boxShadow: `0 0 0 3px color-mix(in srgb, ${color} 38%, transparent)` },
-        { boxShadow: `0 0 0 3px color-mix(in srgb, ${color} 0%, transparent)` },
-      ],
-      { duration: 900, delay, easing: "ease-out" },
-    );
-  }, [signal, reduced, color, delay]);
-  return ref;
-}
-
-/** Header pill whose number counts between states and flashes when it changes. */
-function CountPill({
-  value,
-  render,
-  reduced,
-  className,
-  style,
-  flashColor,
-  flashOn,
-}: {
-  value: number;
-  render: (n: number) => string;
-  reduced: boolean;
-  className: string;
-  style?: CSSProperties;
-  flashColor?: string;
-  /** Discrete signal that should trigger the highlight (defaults to the value). */
-  flashOn?: unknown;
-}) {
-  const n = useCountTo(value, reduced);
-  const ref = useFlash<HTMLSpanElement>(flashOn ?? value, reduced, flashColor);
-  return (
-    <span ref={ref} className={`tabular-nums ${className}`} style={style}>
-      {render(n)}
-    </span>
-  );
-}
-
-type CardStatus = "new" | "late" | "hot" | "warm" | "cold" | "working" | "done" | "handoff";
-
-const statusColor: Record<CardStatus, string> = {
-  new: "var(--accent-text)",
-  late: tone.red,
-  hot: tone.hot,
-  warm: tone.amber,
-  cold: tone.cold,
-  working: "var(--accent-text)",
-  done: tone.green,
-  handoff: tone.amber,
-};
-const statusBorder: Partial<Record<CardStatus, string>> = {
-  hot: "rgb(234 88 12 / 0.45)",
-  warm: "rgb(217 119 6 / 0.45)",
-  cold: "rgb(59 130 246 / 0.45)",
-  working: "var(--accent-text)",
-  done: "rgb(22 163 74 / 0.45)",
-  handoff: "rgb(217 119 6 / 0.55)",
-};
-
-/**
- * An inbox card at a fixed spot on the canvas. It fades + slides in when `shown`
- * flips on (staggered by `delay`), fades out when it flips off, and flashes in
- * its status colour whenever the status changes.
- */
-function StoryCard({
-  shown,
-  delay,
-  from,
-  status,
-  box,
-  reduced,
-  children,
-}: {
-  shown: boolean;
-  delay: number;
-  from: string;
-  status: CardStatus;
-  box: CSSProperties;
-  reduced: boolean;
-  children: ReactNode;
-}) {
-  const ref = useFlash<HTMLDivElement>(`${shown}:${status}`, reduced || !shown, statusColor[status], shown ? delay : 0);
-  return (
-    <div
-      ref={ref}
-      className="absolute overflow-hidden rounded-lg border px-3 py-2.5 motion-reduce:transition-none"
-      style={{
-        ...box,
-        opacity: shown ? 1 : 0,
-        transform: shown ? "none" : from,
-        borderColor: statusBorder[status] ?? "var(--border)",
-        // Cold leads frost over; everything else sits on the page colour.
-        background: status === "cold" ? "color-mix(in srgb, #3b82f6 7%, var(--bg))" : "var(--bg)",
-        transitionProperty: "opacity, transform, border-color, background-color",
-        transitionDuration: shown ? "380ms, 380ms, 500ms, 700ms" : "220ms, 220ms, 500ms, 700ms",
-        transitionTimingFunction: "cubic-bezier(0.2, 0.7, 0.2, 1)",
-        transitionDelay: reduced ? "0ms" : `${delay}ms, ${delay}ms, 0ms, 0ms`,
-      }}
-    >
-      {children}
-    </div>
-  );
-}
-
-/**
- * Stagger delays for a list that reveals in order: cards that appear together
- * enter one after another; cards that leave together exit newest-first.
- */
-function useStagger(count: number, step = 70) {
-  const [prev, setPrev] = useState(count);
-  const [base, setBase] = useState(count);
-  if (count !== prev) {
-    setPrev(count);
-    setBase(prev);
-  }
-  return (i: number) => (i >= base ? (i - base) * step : Math.max(0, base - 1 - i) * (step * 0.7));
-}
-
-/** Scales a fixed 540×460 design to fit its container. */
+/** Scales a fixed design canvas to fit its container. */
 function useFitScale<T extends HTMLElement>(w: number, h: number) {
   const ref = useRef<T>(null);
   const [scale, setScale] = useState(1);
@@ -336,423 +168,573 @@ function useFitScale<T extends HTMLElement>(w: number, h: number) {
   return [ref, scale] as const;
 }
 
-/** Crossfading layer for the composer's three states. */
-function Layer({ on, children }: { on: boolean; children: ReactNode }) {
+/* ---------- step scrolling ---------- */
+
+/** Minimum time between two steps, and the wheel silence that ends a gesture. */
+const STEP_LOCK = 420;
+const GESTURE_GAP = 200;
+
+/**
+ * Pins a panel over a tall track and moves through `count` steps one gesture at
+ * a time. Native scrolling still works (scrollbar, find-in-page); the step is
+ * always derived from the scroll position, the hijack only decides where to stop.
+ */
+function useStepScroll(count: number, reduced: boolean) {
+  const track = useRef<HTMLDivElement>(null);
+  const pin = useRef<HTMLDivElement>(null);
+  const goRef = useRef<(i: number) => void>(() => {});
+  const [step, setStep] = useState(0);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const trackEl = track.current;
+    const pinEl = pin.current;
+    if (!trackEl || !pinEl) return;
+
+    let raf = 0;
+    let syncFrame = 0;
+    let animating = false;
+    let stepAt = -Infinity;
+    let lastWheel = -Infinity;
+    let lastAbs = 0;
+    let gestureStepped = false;
+    let touchY = 0;
+    let touchStepped = false;
+
+    const geo = () => {
+      const stickyTop = parseFloat(getComputedStyle(pinEl).top) || 0;
+      const start = trackEl.getBoundingClientRect().top + window.scrollY - stickyTop;
+      const travel = Math.max(1, trackEl.offsetHeight - pinEl.offsetHeight);
+      return { start, travel, end: start + travel };
+    };
+    type Geo = ReturnType<typeof geo>;
+    const exactAt = (y: number, g: Geo) => ((y - g.start) / g.travel) * (count - 1);
+    const inside = (y: number, g: Geo) => y >= g.start - 2 && y <= g.end + 2;
+    /** The next step in `dir`, or null when the gesture should leave the panel. */
+    const nextFrom = (y: number, g: Geo, dir: number) => {
+      const x = exactAt(y, g);
+      const next = dir > 0 ? Math.floor(x + 0.05) + 1 : Math.ceil(x - 0.05) - 1;
+      return next >= 0 && next < count ? next : null;
+    };
+
+    const sync = () => {
+      if (animating) return;
+      setStep(Math.round(clamp(exactAt(window.scrollY, geo()), 0, count - 1)));
+    };
+    const onScroll = () => {
+      cancelAnimationFrame(syncFrame);
+      syncFrame = requestAnimationFrame(sync);
+    };
+
+    const go = (i: number) => {
+      const g = geo();
+      const to = g.start + (g.travel * i) / (count - 1);
+      const from = window.scrollY;
+      stepAt = performance.now();
+      setStep(i);
+      cancelAnimationFrame(raf);
+      if (reduced || Math.abs(to - from) < 2) {
+        animating = false;
+        window.scrollTo({ top: to, behavior: "instant" });
+        return;
+      }
+      animating = true;
+      const dur = clamp(Math.abs(to - from) * 0.9, 450, 800);
+      const t0 = performance.now();
+      const tick = (now: number) => {
+        const k = clamp((now - t0) / dur);
+        window.scrollTo({ top: from + (to - from) * easeInOut(k), behavior: "instant" });
+        if (k < 1) raf = requestAnimationFrame(tick);
+        else animating = false;
+      };
+      raf = requestAnimationFrame(tick);
+    };
+    goRef.current = go;
+
+    const onWheel = (e: WheelEvent) => {
+      if (e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      const dy = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1);
+      if (!dy) return;
+      // The event's own timestamp, so main-thread jank can't fake a pause.
+      const now = e.timeStamp || performance.now();
+      const abs = Math.abs(dy);
+      const dir = Math.sign(dy);
+      // A new gesture starts after a pause, a sudden surge (a fresh swipe during
+      // trackpad momentum), or a steady mouse wheel that keeps turning.
+      const fresh =
+        now - lastWheel > GESTURE_GAP ||
+        (abs > 12 && abs > lastAbs * 1.6) ||
+        (abs >= 40 && abs >= lastAbs && now - stepAt > 1000);
+      lastWheel = now;
+      lastAbs = abs;
+      if (fresh) gestureStepped = false;
+
+      const g = geo();
+      const y = window.scrollY;
+      // A fast fling from outside is caught at the panel's edge instead of skipping it.
+      const crossing = (dir > 0 && y < g.start - 2 && y + dy >= g.start) || (dir < 0 && y > g.end + 2 && y + dy <= g.end);
+      if (!inside(y, g) && !crossing) return;
+      if (animating || gestureStepped || performance.now() - stepAt < STEP_LOCK) {
+        e.preventDefault();
+        return;
+      }
+      const target = crossing ? (dir > 0 ? 0 : count - 1) : nextFrom(y, g, dir);
+      if (target === null) return;
+      e.preventDefault();
+      gestureStepped = true;
+      go(target);
+    };
+
+    const onTouchStart = (e: TouchEvent) => {
+      touchY = e.touches[0].clientY;
+      touchStepped = false;
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 1) return;
+      const dy = touchY - e.touches[0].clientY;
+      if (Math.abs(dy) < 6) return;
+      const g = geo();
+      const y = window.scrollY;
+      if (!inside(y, g)) return;
+      if (animating || touchStepped) {
+        if (e.cancelable) e.preventDefault();
+        return;
+      }
+      const target = nextFrom(y, g, Math.sign(dy));
+      if (target === null) return;
+      if (e.cancelable) e.preventDefault();
+      if (Math.abs(dy) > 28) {
+        touchStepped = true;
+        go(target);
+      }
+    };
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.altKey || e.ctrlKey || e.metaKey || e.defaultPrevented) return;
+      const el = e.target as HTMLElement | null;
+      if (el?.closest("input, textarea, select, [contenteditable='true']")) return;
+      const dir =
+        e.key === "ArrowDown" || e.key === "PageDown" || (e.key === " " && !e.shiftKey)
+          ? 1
+          : e.key === "ArrowUp" || e.key === "PageUp" || (e.key === " " && e.shiftKey)
+            ? -1
+            : 0;
+      if (!dir) return;
+      const g = geo();
+      const y = window.scrollY;
+      if (!inside(y, g)) return;
+      const target = nextFrom(y, g, dir);
+      if (target === null) return;
+      e.preventDefault();
+      if (!animating) go(target);
+    };
+
+    const io = new IntersectionObserver(([entry]) => entry.isIntersecting && setInView(true), { threshold: 0.35 });
+    io.observe(pinEl);
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    window.addEventListener("wheel", onWheel, { passive: false });
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    window.addEventListener("keydown", onKey);
+    return () => {
+      cancelAnimationFrame(raf);
+      cancelAnimationFrame(syncFrame);
+      io.disconnect();
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [count, reduced]);
+
+  return { track, pin, step, inView, goTo: (i: number) => goRef.current(i) };
+}
+
+/* ---------- stage pieces ---------- */
+
+/** The agent's mark: the VAUG "V" with its dot, on a purple tile. */
+function AgentMark({ className = "size-4" }: { className?: string }) {
   return (
-    <div
-      aria-hidden={!on}
-      className="absolute inset-0 flex flex-col px-3 py-2.5 transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.2,0.7,0.2,1)] motion-reduce:transition-none"
-      style={{ opacity: on ? 1 : 0, transform: on ? "none" : "translateY(6px)" }}
+    <span className={`inline-flex shrink-0 items-center justify-center rounded-[30%] bg-purple ${className}`} aria-hidden="true">
+      <svg viewBox="0 0 40 40" className="size-[70%]">
+        <path d="M6 9 L17 33 H23 L34 9 H27.5 L20 26 L12.5 9 Z" fill="#fff" />
+        <circle cx="34" cy="31" r="3.4" fill="#ffd23f" />
+      </svg>
+    </span>
+  );
+}
+
+function Pill({ color, children }: { color: string; children: ReactNode }) {
+  return (
+    <span
+      className="inline-flex items-center gap-1.5 whitespace-nowrap rounded px-2 py-1 font-mono text-[11px] font-semibold tabular-nums"
+      style={{ color, background: `color-mix(in srgb, ${color} 13%, transparent)` }}
     >
       {children}
-    </div>
+    </span>
+  );
+}
+
+function Label({ children, style }: { children: ReactNode; style?: CSSProperties }) {
+  return (
+    <p className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-subtle" style={style}>
+      {children}
+    </p>
+  );
+}
+
+/** One scene: a title + pill in the window header, and a body below it. */
+function Scene({ title, pill, children }: { title: ReactNode; pill: ReactNode; children: ReactNode }) {
+  return (
+    <>
+      <div className="absolute left-[92px] right-5 top-0 flex h-[49px] items-center justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-2 text-sm font-semibold text-fg">{title}</div>
+        {pill}
+      </div>
+      <div className="absolute inset-x-0 bottom-0 top-[49px] flex flex-col p-4">{children}</div>
+    </>
   );
 }
 
 const cannedReply = "Hi! Your order #4471 is on its way. Here's your tracking link, and sorry for the wait…";
 
-function Stage({ P, rawP, reduced }: { P: number; rawP: number; reduced: boolean }) {
+/** Scene 1: the same questions pile up and one person types the same reply again. */
+function RepeatScene({ t }: { t: number }) {
+  const total = questions.reduce((s, _, i) => s + repeatsAt(t, i), 0);
+  const typed = cannedReply.slice(0, Math.round(cannedReply.length * seg(t, 0.4, 0.92)));
+  return (
+    <Scene title="Support inbox" pill={<Pill color={tone.red}>{total} asked today</Pill>}>
+      <Label style={rise(t, 0)}>The same four questions, all day long</Label>
+      <div className="mt-3 flex flex-col gap-[14px]">
+        {questions.map((q, i) => {
+          const n = repeatsAt(t, i);
+          return (
+            <div key={q.text} className="relative" style={rise(t, 0.04 + i * 0.07, 0.14, -12)}>
+              {/* the pile of identical messages behind this one */}
+              <span className="absolute inset-x-3 -bottom-[9px] h-full rounded-lg border border-border bg-bg transition-opacity duration-500" style={{ opacity: n > 15 ? 0.55 : 0 }} />
+              <span className="absolute inset-x-1.5 -bottom-[5px] h-full rounded-lg border border-border bg-bg transition-opacity duration-500" style={{ opacity: n > 4 ? 0.85 : 0 }} />
+              <div className="relative flex h-[50px] items-center gap-2.5 rounded-lg border border-border bg-bg px-3">
+                <span className="inline-flex size-7 shrink-0 items-center justify-center rounded-full bg-surface-2 text-[10px] font-bold text-fg">{q.who}</span>
+                <p className="min-w-0 flex-1 truncate text-[13px] text-fg">{q.text}</p>
+                <span className="shrink-0 font-mono text-[10px] text-subtle">asked</span>
+                <span className="w-10 shrink-0 rounded bg-[rgb(220_38_38/0.1)] py-0.5 text-center font-mono text-[12px] font-bold tabular-nums" style={{ color: tone.red }}>
+                  ×{n}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="mt-auto rounded-lg border border-border-strong bg-bg px-3 py-2.5" style={rise(t, 0.34)}>
+        <Label>
+          <UserRound className="size-3" /> You · replying to EM
+        </Label>
+        <p className="mt-1.5 h-9 text-[12.5px] leading-snug text-fg">
+          {typed}
+          <span className="ml-px inline-block h-3 w-px translate-y-0.5 bg-fg motion-safe:animate-pulse" />
+        </p>
+        <p className="mt-1 font-mono text-[10px]" style={{ color: tone.red }}>
+          Same reply, typed for the {ordinal(Math.max(1, repeatsAt(t, 0)))} time today
+        </p>
+      </div>
+    </Scene>
+  );
+}
+
+/** Scene 2: leads wait and cool down while the team copies rows into a spreadsheet. */
+function ColdScene({ t }: { t: number }) {
+  const shown = leads.filter((_, i) => t > leadAppear(i)).length;
+  return (
+    <Scene title="New leads" pill={<Pill color={tone.red}>{shown} unanswered</Pill>}>
+      <Label style={rise(t, 0)}>Waiting for someone to reply</Label>
+      <div className="mt-3 flex flex-col gap-2">
+        {leads.map((l, i) => {
+          const wait = leadWaitAt(t, i);
+          const temp = heat(wait);
+          const color = heatColor[temp];
+          const Icon = heatIcon[temp];
+          // the lead's interest drains as the wait grows
+          const warmth = clamp(1 - wait / 260, 0.06, 1);
+          return (
+            <div
+              key={l.who}
+              className="relative overflow-hidden rounded-lg border px-3 pb-3 pt-2.5 transition-[background-color,border-color] duration-700"
+              style={{
+                ...rise(t, leadAppear(i), 0.14, 12),
+                borderColor: `color-mix(in srgb, ${color} 40%, transparent)`,
+                background: temp === "cold" ? "color-mix(in srgb, #3b82f6 7%, var(--bg))" : "var(--bg)",
+              }}
+            >
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-[13px] font-semibold text-fg">{l.who}</p>
+                <span
+                  className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-mono text-[10px] font-semibold capitalize transition-colors duration-500"
+                  style={{ color, background: `color-mix(in srgb, ${color} 12%, transparent)` }}
+                >
+                  <Icon className="size-3" /> {temp}
+                </span>
+              </div>
+              <div className="mt-0.5 flex items-center justify-between gap-2">
+                <p className="truncate text-[12px] text-muted">{l.text}</p>
+                <p className="flex shrink-0 items-center gap-1 font-mono text-[11px] tabular-nums transition-colors duration-500" style={{ color }}>
+                  <Clock className="size-3" /> No reply · {fmtWait(wait)}
+                </p>
+              </div>
+              <span className="absolute inset-x-0 bottom-0 h-1 bg-surface-2">
+                <span className="block h-full origin-left transition-colors duration-500" style={{ transform: `scaleX(${warmth})`, background: color }} />
+              </span>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="mt-auto rounded-lg border border-dashed border-border-strong bg-bg px-3 py-2.5" style={rise(t, 0.34)}>
+        <Label>
+          <Copy className="size-3" /> Meanwhile · you, in CRM.xlsx
+        </Label>
+        <p className="mt-1 text-[12px] text-muted">Copying each lead into the spreadsheet by hand.</p>
+        <div className="mt-2 flex flex-col gap-1">
+          {leads.slice(0, 2).map((l, i) => {
+            const cells = l.crm;
+            const total = cells.join("").length;
+            // the second row is still being typed when the scene ends
+            let budget = Math.round(total * (i === 0 ? seg(t, 0.42, 0.66) : seg(t, 0.66, 0.95) * 0.6));
+            return (
+              <div key={l.who} className="grid h-4 grid-cols-[5rem_1fr] gap-2 text-[11px] text-muted">
+                {cells.map((c, k) => {
+                  const text = c.slice(0, Math.max(0, budget));
+                  budget -= c.length;
+                  return text ? (
+                    <span key={k} className="truncate">
+                      {text}
+                    </span>
+                  ) : (
+                    <span key={k} className="my-0.5 rounded-sm bg-surface-2" />
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </Scene>
+  );
+}
+
+/** Scene 3: the agent clears the inbox one item at a time. */
+function AgentScene({ t, reduced }: { t: number; reduced: boolean }) {
+  const handled = handledAt(t);
+  const synced = t >= CRM_AT;
+  return (
+    <Scene
+      title={
+        <>
+          Shared inbox
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-soft py-0.5 pl-0.5 pr-2 font-mono text-[10px] font-semibold text-accent-text">
+            <AgentMark className="size-4" /> VAUG agent
+          </span>
+        </>
+      }
+      pill={
+        <Pill color={tone.green}>
+          {handled} of {agentItems.length} handled
+        </Pill>
+      }
+    >
+      <Label style={rise(t, 0)}>
+        <AgentMark className="size-3" /> The agent works the whole queue
+      </Label>
+      <div className="mt-3 flex flex-col gap-1.5">
+        {agentItems.map((item, i) => {
+          const e = seg(t, itemStart(i), itemStart(i) + ITEM_SPAN);
+          const working = e > 0 && e < 1;
+          const done = e >= 1;
+          const doneColor = item.handoff ? tone.amber : tone.green;
+          return (
+            <div
+              key={item.text}
+              className="relative flex h-9 items-center gap-2.5 overflow-hidden rounded-lg border bg-bg px-2.5 transition-[border-color] duration-300"
+              style={{
+                ...rise(t, 0.02 + i * 0.015, 0.12, 6),
+                borderColor: working ? "#7c3aed" : done ? `color-mix(in srgb, ${doneColor} 40%, transparent)` : "var(--border)",
+              }}
+            >
+              {/* light sweeps across while the agent works this item */}
+              {working && !reduced && (
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-y-0 left-0 w-1/2"
+                  style={{
+                    transform: `translateX(${lerp(-100, 200, e)}%)`,
+                    background: "linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent-text) 16%, transparent), transparent)",
+                  }}
+                />
+              )}
+              <span className="inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-surface-2 text-[9px] font-bold text-fg">{item.who}</span>
+              <p className={`min-w-0 flex-1 truncate text-[12.5px] transition-colors duration-300 ${done ? "text-muted" : "text-fg"}`}>{item.text}</p>
+              <p
+                className="flex w-[13.5rem] shrink-0 items-center justify-end gap-1.5 text-[11.5px] transition-colors duration-300"
+                style={{ color: done ? doneColor : working ? "#7c3aed" : tone.red }}
+              >
+                {done ? (
+                  <>
+                    {item.handoff ? <UserRound className="size-3.5 shrink-0" /> : <Check className="size-3.5 shrink-0" />}
+                    <span className="truncate font-medium">{item.result}</span>
+                    {!item.handoff && <span className="shrink-0 font-mono text-[10px] text-subtle">0.8s</span>}
+                  </>
+                ) : working ? (
+                  <>
+                    <AgentMark className="size-3.5" />
+                    <span className="font-mono text-[10.5px]">Agent {item.doing.toLowerCase()}…</span>
+                  </>
+                ) : (
+                  <>
+                    <Clock className="size-3 shrink-0" />
+                    <span className="font-mono text-[10.5px]">Waiting</span>
+                  </>
+                )}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+
+      <div
+        className="mt-auto flex items-center justify-between rounded-lg border px-3 py-2 transition-[border-color] duration-500"
+        style={{ ...rise(t, CRM_AT - 0.04, 0.12), borderColor: synced ? "rgb(22 163 74 / 0.4)" : "var(--border)" }}
+      >
+        <p className="flex items-center gap-1.5 text-[12px] font-medium" style={{ color: tone.green }}>
+          <Check className="size-3.5" /> CRM updated automatically
+        </p>
+        <p className="font-mono text-[10px] text-subtle">3 leads synced · 0 typed by hand</p>
+      </div>
+    </Scene>
+  );
+}
+
+/** Scene 4: the same inbox, before and after. */
+function OutcomeScene({ t }: { t: number }) {
+  return (
+    <Scene
+      title="The same inbox, with an agent on it"
+      pill={
+        <Pill color={tone.green}>
+          <span className="size-1.5 rounded-full bg-current" /> Agent online
+        </Pill>
+      }
+    >
+      <div className="grid grid-cols-3 gap-3">
+        {[
+          { l: "First reply", from: "2h+", to: "0.8s" },
+          { l: "Leads gone cold", from: "3", to: "0" },
+          { l: "Typed into CRM", from: "by hand", to: "0" },
+        ].map((s, i) => {
+          const e = easeBack(seg(t, 0.04 + i * 0.08, 0.32 + i * 0.08));
+          return (
+            <div key={s.l} className="rounded-lg bg-bg p-3" style={{ opacity: clamp(e * 1.5), transform: `translateY(${(1 - e) * 20}px)` }}>
+              <p className="text-[11px] text-muted">{s.l}</p>
+              <p className="mt-1 text-3xl font-semibold tracking-tight text-fg">{s.to}</p>
+              <p className="mt-0.5 font-mono text-[10px] text-muted">
+                was <span className="line-through" style={{ textDecorationColor: tone.red }}>{s.from}</span>
+              </p>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="mt-3 flex flex-1 flex-col justify-center gap-4 rounded-lg bg-bg p-4" style={rise(t, 0.3)}>
+        <p className="font-mono text-[10px] uppercase tracking-widest text-subtle">Where your team&apos;s day goes</p>
+        {[
+          {
+            label: "Before",
+            parts: [
+              { t: "Same replies", w: 40, bg: "rgb(220 38 38 / 0.16)", fg: "var(--fg)" },
+              { t: "Copy-paste", w: 25, bg: "rgb(217 119 6 / 0.2)", fg: "var(--fg)" },
+              { t: "Real work", w: 35, bg: "var(--accent)", fg: "var(--accent-fg)" },
+            ],
+          },
+          {
+            label: "After",
+            parts: [
+              { t: "Real work", w: 80, bg: "var(--accent)", fg: "var(--accent-fg)" },
+              { t: "Edge cases", w: 20, bg: "rgb(217 119 6 / 0.2)", fg: "var(--fg)" },
+            ],
+          },
+        ].map((row, r) => {
+          const e = easeOut(seg(t, 0.4 + r * 0.14, 0.66 + r * 0.14));
+          return (
+            <div key={row.label} className="flex items-center gap-3">
+              <span className="w-12 shrink-0 font-mono text-[11px] text-muted">{row.label}</span>
+              <div className="flex h-9 flex-1 gap-1 overflow-hidden rounded-md" style={{ clipPath: `inset(0 ${(1 - e) * 100}% 0 0 round 6px)` }}>
+                {row.parts.map((part) => (
+                  <span key={part.t} className="flex items-center truncate rounded-[4px] px-2 text-[11px] font-medium" style={{ width: `${part.w}%`, background: part.bg, color: part.fg }}>
+                    {part.t}
+                  </span>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* people back on real work */}
+      <div className="mt-3 flex gap-2">
+        {[
+          { n: "SA", t: "Strategy" },
+          { n: "AV", t: "Client calls" },
+          { n: "LE", t: "Product" },
+        ].map((p, i) => {
+          const e = easeBack(seg(t, 0.72 + i * 0.07, 0.94 + i * 0.02));
+          return (
+            <div key={p.t} className="flex flex-1 items-center gap-2 rounded-lg bg-bg px-3 py-2" style={{ opacity: clamp(e * 1.5), transform: `translateY(${(1 - e) * 20}px)` }}>
+              <span className="inline-flex size-7 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-fg">{p.n}</span>
+              <span className="text-[12px] text-fg">{p.t}</span>
+            </div>
+          );
+        })}
+      </div>
+    </Scene>
+  );
+}
+
+function Stage({ step, ts, reduced }: { step: number; ts: number[]; reduced: boolean }) {
   const [box, scale] = useFitScale<HTMLDivElement>(540, 460);
-
-  // Cards are triggered, not scrubbed: they enter/leave with a timed, staggered transition.
-  const qShown = questions.filter((_, i) => rawP > qAppear(i)).length;
-  const lShown = leads.filter((_, i) => rawP > lAppear(i)).length;
-  const qDelay = useStagger(qShown);
-  const lDelay = useStagger(lShown);
-  const beat = Math.min(3, Math.floor(rawP));
-
-  const inboxOut = easeOut(seg(P, 3.0, 3.35));
-  const dashIn = seg(P, 3.15, 3.5);
-  const crmIn = seg(P, 1.15, 1.3);
-  const synced = rawP >= stops[stops.length - 1].t;
-  const handled = handledBy(rawP);
-  const resolving = rawP > 2.1;
-  const waiting = qShown + lShown - handled;
-  const todayCount = Math.round(18 + easeOut(seg(rawP, 0, 2)) * 110);
-
-  // Composer: one person, three jobs. Replying (beat 1), copy-pasting (beat 2), then only the handoff.
-  const composer = rawP >= stopFor("l", 2).t ? "handoff" : rawP > 1.2 ? "paused" : "replying";
-  const typed = cannedReply.slice(0, Math.round(cannedReply.length * seg(P, 0.5, 0.95)));
-
-  // The agent flies stop to stop; each hop eases in over the 0.07 before that stop resolves.
-  const agentIn = seg(P, 2.0, 2.1);
-  let ax = 270;
-  let ay = 24;
-  for (const s of stops) {
-    const e = easeInOut(seg(P, s.t - 0.075, s.t - 0.01));
-    ax = lerp(ax, s.x, e);
-    ay = lerp(ay, s.y, e);
-  }
-  const workingOn = (s: (typeof stops)[number]) => rawP > s.t - 0.06 && rawP < s.t;
-
+  const scenes = [
+    <RepeatScene key="repeat" t={ts[0]} />,
+    <ColdScene key="cold" t={ts[1]} />,
+    <AgentScene key="agent" t={ts[2]} reduced={reduced} />,
+    <OutcomeScene key="outcome" t={ts[3]} />,
+  ];
   return (
     <div ref={box} className="relative h-full w-full">
-      <div
-        className="absolute left-1/2 top-1/2 h-[460px] w-[540px]"
-        style={{ transform: `translate(-50%, -50%) scale(${scale})` }}
-      >
-        {/* ---------- Inbox window (beats 1–3) ---------- */}
-        <div
-          className="glass absolute inset-0 overflow-hidden rounded-xl"
-          style={{ opacity: 1 - inboxOut, transform: `scale(${1 - inboxOut * 0.12}) translateY(${inboxOut * -30}px)` }}
-        >
-          <div className="flex h-[49px] items-center justify-between border-b border-border px-5">
-            <div className="flex items-center gap-2">
-              <span className="size-2.5 rounded-full bg-[#ff5f57]" />
-              <span className="size-2.5 rounded-full bg-[#febc2e]" />
-              <span className="size-2.5 rounded-full bg-[#28c840]" />
-              <span className="ml-3 text-sm font-semibold text-fg">Shared inbox</span>
-              <span
-                className="ml-1 inline-flex items-center gap-1 rounded-full bg-accent-soft px-2 py-0.5 font-mono text-[10px] font-semibold text-accent-text transition-[opacity,transform] duration-300"
-                style={{ opacity: resolving ? 1 : 0, transform: resolving ? "none" : "scale(0.8)" }}
-              >
-                <span className="size-1.5 rounded-full bg-current" /> Agent on
-              </span>
-            </div>
-            <div className="flex items-center gap-2 font-mono text-[11px]">
-              <CountPill
-                value={todayCount}
-                render={(n) => `Today ${n}`}
-                flashOn={Math.min(2, beat)}
-                reduced={reduced}
-                className="rounded bg-surface-2 px-2 py-1 text-muted"
-              />
-              <CountPill
-                key={resolving ? "handled" : "waiting"}
-                value={resolving ? handled : waiting}
-                render={(n) => (resolving ? `${n} of ${HANDLED_TOTAL} handled` : `${n} waiting`)}
-                reduced={reduced}
-                flashColor={resolving ? tone.green : tone.red}
-                className="rounded px-2 py-1 font-semibold transition-colors duration-300"
-                style={{
-                  background: resolving ? "rgb(22 163 74 / 0.14)" : "rgb(220 38 38 / 0.12)",
-                  color: resolving ? tone.green : tone.red,
-                }}
-              />
-            </div>
+      <div className="absolute left-1/2 top-1/2 h-[460px] w-[540px]" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
+        <div className="glass absolute inset-0 overflow-hidden rounded-xl">
+          <div className="flex h-[49px] items-center gap-2 border-b border-border px-5">
+            <span className="size-2.5 rounded-full bg-[#ff5f57]" />
+            <span className="size-2.5 rounded-full bg-[#febc2e]" />
+            <span className="size-2.5 rounded-full bg-[#28c840]" />
           </div>
-
-          {/* column labels */}
-          <p className="absolute top-[65px] font-mono text-[10px] uppercase tracking-widest text-subtle" style={{ left: COL_Q.x }}>
-            Customer questions
-          </p>
-          <p className="absolute top-[65px] font-mono text-[10px] uppercase tracking-widest text-subtle" style={{ left: COL_L.x }}>
-            New leads
-          </p>
-
-          {/* ---- customer questions ---- */}
-          {questions.map((q, i) => {
-            const stop = stopFor("q", i);
-            const done = rawP >= stop.t;
-            const working = workingOn(stop);
-            const wait = questionWaitAt(P, i);
-            const status: CardStatus = done ? "done" : working ? "working" : wait >= 60 ? "late" : "new";
-            const waitColor = wait >= 60 ? tone.red : wait >= 15 ? tone.amber : "var(--subtle)";
-            return (
-              <StoryCard
-                key={q.text}
-                shown={i < qShown}
-                delay={qDelay(i)}
-                from="translateY(-14px)"
-                status={status}
-                box={{ left: COL_Q.x, top: qY(i), width: COL_Q.w, height: Q_H }}
-                reduced={reduced}
-              >
-                <div className="flex items-center gap-2">
-                  <span className="inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-surface-2 text-[10px] font-bold text-fg">{q.who}</span>
-                  <p className="min-w-0 flex-1 truncate text-[13px] text-fg">{q.text}</p>
-                  <span
-                    className="shrink-0 rounded bg-surface-2 px-1.5 py-0.5 font-mono text-[10px] font-semibold tabular-nums transition-opacity duration-300"
-                    style={{ color: tone.red, opacity: done ? 0 : 1 }}
-                    title="Times asked today"
-                  >
-                    ×{repeatsAt(P, i)}
-                  </span>
-                </div>
-                <p className="mt-0.5 flex h-3.5 items-center gap-1 pl-8 font-mono text-[10px] transition-colors duration-500" style={{ color: done ? tone.green : working ? "var(--accent-text)" : waitColor }}>
-                  {done ? <Check className="size-3 shrink-0" /> : <Clock className="size-3 shrink-0" />}
-                  <span className="truncate">{done ? q.reply : working ? "Agent is replying…" : wait < 3 ? "New" : `Waiting ${fmtWait(wait)}`}</span>
-                  {done && <span className="ml-auto shrink-0 text-subtle">0.8s</span>}
-                </p>
-              </StoryCard>
-            );
-          })}
-
-          {/* ---- composer: what the one human is doing ---- */}
-          <div
-            className="absolute overflow-hidden rounded-lg border bg-bg transition-[opacity,transform,border-color] duration-500 motion-reduce:transition-none"
-            style={{
-              left: COL_Q.x,
-              top: COMPOSER.y,
-              width: COL_Q.w,
-              height: COMPOSER.h,
-              opacity: rawP > 0.5 ? 1 : 0,
-              transform: rawP > 0.5 ? "none" : "translateY(10px)",
-              borderColor: composer === "handoff" ? "rgb(217 119 6 / 0.55)" : composer === "paused" ? "var(--border)" : "var(--border-strong)",
-            }}
-          >
-            <Layer on={composer === "replying"}>
-              <p className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-subtle">
-                <UserRound className="size-3" /> You · replying to EM
-              </p>
-              <p className="mt-1 line-clamp-2 text-[12px] leading-snug text-fg">
-                {typed}
-                <span className="ml-px inline-block h-3 w-px translate-y-0.5 bg-fg motion-safe:animate-pulse" />
-              </p>
-              <p className="mt-auto font-mono text-[10px]" style={{ color: tone.red }}>
-                Same reply, typed for the {repeatsAt(P, 0)}th time today
-              </p>
-            </Layer>
-            <Layer on={composer === "paused"}>
-              <p className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-subtle">
-                <Copy className="size-3" /> You · in CRM.xlsx
-              </p>
-              <p className="mt-1 text-[12px] leading-snug text-muted">Replies paused while you copy new leads into the spreadsheet.</p>
-              <p className="mt-auto font-mono text-[10px]" style={{ color: tone.red }}>
-                {qShown} customers still waiting
-              </p>
-            </Layer>
-            <Layer on={composer === "handoff"}>
-              <p className="flex items-center gap-1.5 font-mono text-[10px] font-semibold uppercase tracking-widest" style={{ color: tone.amber }}>
-                <UserRound className="size-3" /> Needs you · 1
-              </p>
-              <p className="mt-1 text-[12px] leading-snug text-fg">Hana K. wants to talk partnerships. The agent summarised the thread for you.</p>
-              <p className="mt-auto flex items-center gap-1 font-mono text-[10px]" style={{ color: tone.green }}>
-                <Check className="size-3" /> Everything else is handled
-              </p>
-            </Layer>
-          </div>
-
-          {/* ---- new leads ---- */}
-          {leads.map((l, i) => {
-            const stop = stopFor("l", i);
-            const done = rawP >= stop.t;
-            const working = workingOn(stop);
-            const wait = leadWaitAt(P, i);
-            const temp = heat(wait);
-            const status: CardStatus = done ? (l.handoff ? "handoff" : "done") : working ? "working" : temp;
-            const TempIcon = temp === "hot" ? Flame : temp === "warm" ? Thermometer : Snowflake;
-            const tempColor = statusColor[temp];
-            return (
-              <StoryCard
-                key={l.who}
-                shown={i < lShown}
-                delay={lDelay(i)}
-                from="translateX(18px)"
-                status={status}
-                box={{ left: COL_L.x, top: lY(i), width: COL_L.w, height: L_H }}
-                reduced={reduced}
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <p className="text-[13px] font-semibold text-fg">{l.who}</p>
-                  <span
-                    className="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 font-mono text-[10px] font-semibold capitalize transition-[color,background-color,opacity] duration-500"
-                    style={{ color: tempColor, background: `color-mix(in srgb, ${tempColor} 12%, transparent)`, opacity: done || working ? 0 : 1 }}
-                  >
-                    <TempIcon className="size-3" /> {temp}
-                  </span>
-                </div>
-                <p className="truncate text-[12px] text-muted">{l.text}</p>
-                <p
-                  className="mt-1 flex items-center gap-1 font-mono text-[10px] transition-colors duration-500"
-                  style={{ color: done ? (l.handoff ? tone.amber : tone.green) : working ? "var(--accent-text)" : tempColor }}
-                >
-                  {done ? l.handoff ? <UserRound className="size-3 shrink-0" /> : <Check className="size-3 shrink-0" /> : <Clock className="size-3 shrink-0" />}
-                  <span className="truncate">{done ? l.result : working ? "Agent is qualifying…" : `Waiting ${fmtWait(wait)}`}</span>
-                </p>
-              </StoryCard>
-            );
-          })}
-
-          {/* ---- CRM sheet: typed by hand in beat 2, synced by the agent in beat 3 ---- */}
-          <div
-            className="absolute rounded-lg border bg-bg px-2.5 py-2 transition-[border-color,border-style] duration-500"
-            style={{
-              left: COL_L.x,
-              top: CRM.y,
-              width: COL_L.w,
-              height: CRM.h,
-              opacity: crmIn,
-              transform: `translateY(${(1 - crmIn) * 20}px)`,
-              borderStyle: synced ? "solid" : "dashed",
-              borderColor: synced ? "rgb(22 163 74 / 0.45)" : "var(--border-strong)",
-            }}
-          >
-            <p className="mb-1 flex h-3.5 items-center gap-1.5 font-mono text-[10px] transition-colors duration-500" style={{ color: synced ? tone.green : "var(--subtle)" }}>
-              {synced ? <Check className="size-3" /> : <Copy className="size-3" />}
-              {synced ? "CRM · synced by agent" : "CRM.xlsx · typed by hand"}
-            </p>
-            <div className="grid h-3.5 grid-cols-[4.5rem_1fr_4.75rem] gap-1.5 font-mono text-[9px] uppercase tracking-wider text-subtle">
-              <span>Name</span>
-              <span>Request</span>
-              <span>Status</span>
+          {scenes.map((scene, i) => (
+            <div
+              key={i}
+              aria-hidden={i !== step}
+              className="absolute inset-0 transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.2,0.7,0.2,1)] motion-reduce:transition-none"
+              style={{
+                opacity: i === step ? 1 : 0,
+                transform: i === step ? "none" : `translateY(${i < step ? -18 : 18}px)`,
+                pointerEvents: i === step ? "auto" : "none",
+                transitionDelay: i === step ? "90ms" : "0ms",
+              }}
+            >
+              {scene}
             </div>
-            {leads.map((l, i) => {
-              const agentRow = rawP >= stopFor("l", i).t;
-              // Hand-typed cells fill character by character; only the first two leads get typed.
-              const handTyped = i < 2 ? seg(P, copyAt(i) + 0.12, copyAt(i) + 0.3) : 0;
-              const cells = [l.crm[0], l.crm[1], ""];
-              const total = cells.join("").length;
-              let budget = Math.round(total * handTyped);
-              return (
-                <div
-                  key={l.who}
-                  className="mt-1 grid h-[18px] grid-cols-[4.5rem_1fr_4.75rem] items-center gap-1.5 rounded-sm border-l-2 pl-1 text-[10px] transition-colors duration-500"
-                  style={{ borderLeftColor: agentRow ? (l.handoff ? tone.amber : tone.green) : "transparent" }}
-                >
-                  {cells.map((c, k) => {
-                    const text = agentRow ? l.crm[k] : c.slice(0, Math.max(0, budget));
-                    if (!agentRow) budget -= c.length;
-                    const filled = text.length > 0;
-                    const typing = !agentRow && handTyped > 0 && handTyped < 1 && filled && text.length < c.length;
-                    return filled ? (
-                      <span
-                        key={k}
-                        className="truncate"
-                        style={{ color: k === 2 ? (l.handoff ? tone.amber : tone.green) : agentRow ? "var(--fg)" : "var(--muted)" }}
-                      >
-                        {text}
-                        {typing && <span className="ml-px inline-block h-2.5 w-px translate-y-0.5 bg-fg" />}
-                      </span>
-                    ) : (
-                      <span key={k} className="h-2.5 rounded-sm bg-surface-2" />
-                    );
-                  })}
-                </div>
-              );
-            })}
-          </div>
-
-          {/* ---- copy-paste: a clipboard chip hops from lead card to spreadsheet row ---- */}
-          {!reduced &&
-            [0, 1].map((i) => {
-              const f = seg(P, copyAt(i), copyAt(i) + 0.12);
-              if (f <= 0 || f >= 1) return null;
-              const e = easeInOut(f);
-              const x = lerp(COL_L.x + 40, COL_L.x + 36, e);
-              const y = lerp(lY(i) + 16, crmRowY(i), e) - Math.sin(e * Math.PI) * 26;
-              return (
-                <span
-                  key={i}
-                  className="pointer-events-none absolute inline-flex items-center gap-1 rounded-md border border-border-strong bg-surface px-1.5 py-0.5 font-mono text-[10px] text-fg shadow-lg"
-                  style={{ left: x, top: y, transform: `translate(-50%, -50%) rotate(${Math.sin(e * Math.PI) * -6}deg)`, opacity: clamp(Math.min(f, 1 - f) * 8) }}
-                >
-                  <Copy className="size-3" /> {leads[i].who}
-                </span>
-              );
-            })}
-
-          {/* ---- the agent: visits every card in order ---- */}
-          <div
-            className="pointer-events-none absolute left-0 top-0"
-            style={{
-              transform: `translate(${ax}px, ${ay}px) translate(-50%, -50%) scale(${0.4 + easeBack(agentIn) * 0.6})`,
-              opacity: clamp(agentIn * 3),
-            }}
-            aria-hidden="true"
-          >
-            <span className="absolute inset-0 rounded-full bg-purple/30 motion-safe:animate-ping [animation-duration:1.6s]" />
-            <div className="relative flex size-8 items-center justify-center rounded-full bg-purple text-white shadow-[0_10px_24px_-8px_rgb(124_58_237/0.8)] ring-2 ring-bg">
-              <svg viewBox="0 0 40 40" className="size-4" aria-hidden="true">
-                <path d="M6 9 L17 33 H23 L34 9 H27.5 L20 26 L12.5 9 Z" fill="#fff" />
-                <circle cx="34" cy="31" r="3.4" fill="#ffd23f" />
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        {/* ---------- Results (beat 4): the same inbox, before and after ---------- */}
-        <div className="absolute inset-0" style={{ opacity: dashIn, pointerEvents: dashIn > 0.5 ? "auto" : "none" }}>
-          <div className="glass flex h-full flex-col rounded-xl p-5" style={{ transform: `translateY(${(1 - easeOut(dashIn)) * 60}px)` }}>
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-semibold text-fg">The same inbox, with an agent on it</p>
-              <span className="inline-flex items-center gap-1.5 rounded bg-[rgb(22_163_74/0.14)] px-2 py-1 font-mono text-[11px] font-semibold" style={{ color: tone.green }}>
-                <span className="size-1.5 rounded-full bg-current" /> Agent online
-              </span>
-            </div>
-
-            <div className="mt-4 grid grid-cols-3 gap-3">
-              {[
-                { l: "First reply", from: "2h+", to: "0.8s" },
-                { l: "Leads left waiting", from: "3", to: "0" },
-                { l: "Rows typed by hand", from: "2", to: "0" },
-              ].map((t, i) => {
-                const e = easeBack(seg(P, 3.3 + i * 0.08, 3.55 + i * 0.08));
-                return (
-                  <div key={t.l} className="rounded-lg bg-bg p-3" style={{ opacity: clamp(e * 1.5), transform: `translateY(${(1 - e) * 24}px)` }}>
-                    <p className="text-[11px] text-muted">{t.l}</p>
-                    <p className="mt-1 flex items-baseline gap-2">
-                      <span className="text-3xl font-semibold tracking-tight text-fg">{t.to}</span>
-                      <span className="font-mono text-[11px] text-subtle line-through decoration-[1.5px]" style={{ textDecorationColor: tone.red }}>
-                        {t.from}
-                      </span>
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* where the team's day goes */}
-            <div className="mt-4 flex flex-1 flex-col justify-center gap-4 rounded-lg bg-bg p-4">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-subtle">Where your team&apos;s day goes</p>
-              {[
-                {
-                  label: "Before",
-                  parts: [
-                    { t: "Same replies", w: 40, bg: "rgb(220 38 38 / 0.16)", fg: "var(--fg)" },
-                    { t: "Copy-paste", w: 25, bg: "rgb(217 119 6 / 0.2)", fg: "var(--fg)" },
-                    { t: "Real work", w: 35, bg: "var(--accent)", fg: "var(--accent-fg)" },
-                  ],
-                },
-                {
-                  label: "After",
-                  parts: [
-                    { t: "Real work", w: 84, bg: "var(--accent)", fg: "var(--accent-fg)" },
-                    { t: "Edge cases", w: 16, bg: "rgb(217 119 6 / 0.2)", fg: "var(--fg)" },
-                  ],
-                },
-              ].map((row, r) => {
-                const e = easeOut(seg(P, 3.5 + r * 0.14, 3.75 + r * 0.14));
-                return (
-                  <div key={row.label} className="flex items-center gap-3">
-                    <span className="w-12 shrink-0 font-mono text-[11px] text-muted">{row.label}</span>
-                    <div className="flex h-9 flex-1 gap-1 overflow-hidden rounded-md" style={{ clipPath: `inset(0 ${(1 - e) * 100}% 0 0 round 6px)` }}>
-                      {row.parts.map((part) => (
-                        <span
-                          key={part.t}
-                          className="flex items-center truncate rounded-[4px] px-2 text-[11px] font-medium"
-                          style={{ width: `${part.w}%`, background: part.bg, color: part.fg }}
-                        >
-                          {part.t}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* people back on real work */}
-            <div className="mt-3 flex gap-2">
-              {[
-                { n: "SA", t: "Strategy" },
-                { n: "AV", t: "Client calls" },
-                { n: "LE", t: "Product" },
-              ].map((p, i) => {
-                const e = easeBack(seg(P, 3.75 + i * 0.06, 3.95 + i * 0.03));
-                return (
-                  <div
-                    key={p.t}
-                    className="flex flex-1 items-center gap-2 rounded-lg bg-bg px-3 py-2"
-                    style={{ opacity: clamp(e * 1.5), transform: `translateY(${(1 - e) * 30}px)` }}
-                  >
-                    <span className="inline-flex size-7 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-fg">{p.n}</span>
-                    <span className="text-[12px] text-fg">{p.t}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>
@@ -761,49 +743,21 @@ function Stage({ P, rawP, reduced }: { P: number; rawP: number; reduced: boolean
 
 const labels = ["The problem", "The cost", "The agent", "The outcome"];
 
-/** Progress (0–1) of a sticky panel across its tall scroll track. */
-function usePinProgress() {
-  const track = useRef<HTMLDivElement>(null);
-  const pin = useRef<HTMLDivElement>(null);
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    let frame = 0;
-    const update = () => {
-      const t = track.current?.getBoundingClientRect();
-      const p = pin.current?.getBoundingClientRect();
-      if (!t || !p) return;
-      const travel = t.height - p.height;
-      setProgress(clamp(travel > 0 ? (p.top - t.top) / travel : 0));
-    };
-    const onScroll = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(update);
-    };
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
-  }, []);
-
-  return { track, pin, progress };
-}
-
 export function AgentStory({ beats }: { beats: StoryBeat[] }) {
-  const { track, pin, progress } = usePinProgress();
   const reduced = useReducedMotion();
-  const P = progress * beats.length;
-  // Scrubbed pieces follow a lightly smoothed P so big scroll jumps glide.
-  const smoothP = useSmoothed(P, reduced);
-  const active = Math.min(beats.length - 1, Math.floor(P));
+  const count = Math.min(beats.length, labels.length);
+  const { track, pin, step, inView, goTo } = useStepScroll(count, reduced);
+
+  // Furthest scene reached: it plays its intro once; everything before it stays finished.
+  const [reached, setReached] = useState(-1);
+  const reach = inView ? step : -1;
+  if (reach > reached) setReached(reach);
+  const ts = useScenePlayback(reached, reduced);
+  const sceneDone = ts[step] >= 1;
 
   return (
-    // Track = panel height + scroll distance for the four beats; no dead space above or below.
-    <div ref={track} style={{ height: `calc(${beats.length * 80}vh + min(100svh - 6rem, 760px))` }} className="relative px-2 sm:px-4">
+    // Track = panel height + one viewport-ish of scroll per step after the first.
+    <div ref={track} style={{ height: `calc(${(count - 1) * 90}vh + min(100svh - 6rem, 760px))` }} className="relative px-2 sm:px-4">
       <div ref={pin} className="sticky top-[5.5rem] h-[min(100svh-6rem,760px)]">
         <div className="relative isolate grid h-full w-full grid-rows-[auto_minmax(0,1fr)] overflow-hidden rounded-lg border border-border bg-bg lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:grid-rows-1">
           {/* decoration */}
@@ -821,32 +775,44 @@ export function AgentStory({ beats }: { beats: StoryBeat[] }) {
 
           {/* text column */}
           <div className="relative flex flex-col justify-center px-5 pt-5 sm:px-10 lg:px-14 lg:pt-0">
-            {/* segmented progress */}
-            <div className="flex gap-2" role="progressbar" aria-label="Story progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress * 100)}>
-              {beats.map((_, i) => (
-                <span key={i} className="h-1 flex-1 overflow-hidden rounded-full bg-border-strong">
-                  <span className="block h-full origin-left bg-accent-text" style={{ transform: `scaleX(${clamp(P - i)})` }} />
-                </span>
+            {/* step progress: each segment jumps to its scene */}
+            <nav className="flex gap-2" aria-label="Story steps">
+              {labels.slice(0, count).map((label, i) => (
+                <button
+                  key={label}
+                  type="button"
+                  onClick={() => goTo(i)}
+                  aria-label={`${i + 1}. ${label}`}
+                  aria-current={i === step ? "step" : undefined}
+                  className="group flex-1 py-2"
+                >
+                  <span className="block h-1 overflow-hidden rounded-full bg-border-strong transition-colors group-hover:bg-subtle">
+                    <span
+                      className="block h-full origin-left bg-accent-text transition-transform duration-300"
+                      style={{ transform: `scaleX(${i < step ? 1 : i === step ? Math.max(0.04, ts[i]) : 0})` }}
+                    />
+                  </span>
+                </button>
               ))}
-            </div>
-            <p key={active} className="story-label-in mt-4 font-mono text-xs uppercase tracking-widest text-accent-text">
-              {String(active + 1).padStart(2, "0")} · {labels[active]}
+            </nav>
+            <p key={step} className="story-label-in mt-2 font-mono text-xs uppercase tracking-widest text-accent-text">
+              {String(step + 1).padStart(2, "0")} / {String(count).padStart(2, "0")} · {labels[step]}
             </p>
 
             <div className="relative mt-4 min-h-[9.5rem] sm:min-h-[15rem] lg:mt-8 lg:min-h-[20rem]">
-              {beats.map((beat, i) => {
-                const state = i === active ? "now" : i < active ? "past" : "next";
-                const meter = beatMeter(i, smoothP);
+              {beats.slice(0, count).map((beat, i) => {
+                const state = i === step ? "now" : i < step ? "past" : "next";
+                const meter = beatMeter(i, ts[i]);
                 return (
                   <div
                     key={beat.punch}
-                    aria-hidden={i !== active}
-                    className={`absolute inset-0 transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.2,0.7,0.2,1)] motion-reduce:transition-none ${
+                    aria-hidden={i !== step}
+                    className={`absolute inset-0 transition-[opacity,transform] ease-[cubic-bezier(0.2,0.7,0.2,1)] motion-reduce:transition-none ${
                       state === "now"
-                        ? "opacity-100 delay-75 duration-[225ms]"
+                        ? "opacity-100 delay-100 duration-500"
                         : state === "past"
-                          ? "pointer-events-none -translate-y-3 opacity-0 motion-reduce:translate-y-0"
-                          : "pointer-events-none translate-y-3 opacity-0 motion-reduce:translate-y-0"
+                          ? "pointer-events-none -translate-y-4 opacity-0 duration-300 motion-reduce:translate-y-0"
+                          : "pointer-events-none translate-y-4 opacity-0 duration-300 motion-reduce:translate-y-0"
                     }`}
                   >
                     <p className="text-base text-muted sm:text-xl">{beat.lead}</p>
@@ -857,7 +823,7 @@ export function AgentStory({ beats }: { beats: StoryBeat[] }) {
                       className="mt-5 hidden items-center gap-2 rounded-full border border-border bg-surface/60 px-3 py-1.5 font-mono text-xs tabular-nums text-fg sm:inline-flex"
                       aria-hidden="true"
                     >
-                      <span className="size-1.5 rounded-full motion-safe:animate-pulse" style={{ background: meter.color }} />
+                      <span className="size-1.5 rounded-full" style={{ background: meter.color }} />
                       {meter.text}
                     </p>
                   </div>
@@ -865,15 +831,24 @@ export function AgentStory({ beats }: { beats: StoryBeat[] }) {
               })}
             </div>
 
-            <p className={`hidden font-mono text-xs text-subtle transition-opacity duration-500 lg:block ${progress < 0.04 ? "opacity-100" : "opacity-0"}`}>
-              Scroll to see an agent at work ↓
-            </p>
+            {/* nudge onward once the scene has finished playing */}
+            <button
+              type="button"
+              onClick={() => goTo(step + 1)}
+              tabIndex={step < count - 1 && sceneDone ? 0 : -1}
+              className={`hidden w-fit items-center gap-2 font-mono text-xs text-subtle transition-[opacity,color] duration-500 hover:text-fg lg:inline-flex ${
+                step < count - 1 && sceneDone ? "opacity-100" : "pointer-events-none opacity-0"
+              }`}
+            >
+              <ArrowDown className="size-3.5 motion-safe:animate-bounce" />
+              Scroll · next: {labels[Math.min(step + 1, count - 1)]}
+            </button>
           </div>
 
           {/* stage */}
           <div className="relative flex min-h-0 flex-col p-4 sm:p-8 lg:p-10">
             <div className="min-h-0 flex-1">
-              <Stage P={smoothP} rawP={P} reduced={reduced} />
+              <Stage step={step} ts={ts} reduced={reduced} />
             </div>
             <div className="mt-2 flex justify-end">
               <IllustrativeTag />

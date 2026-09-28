@@ -1,10 +1,13 @@
-import { ArrowRightLeft, Bot, CircleCheck, Download, FileClock, FileText, Inbox, LayoutDashboard, Link2, Plug, RotateCcw, Settings, ShieldCheck, Sparkles, UserRound, X } from "lucide-react";
+import { Bot, Check as CheckIcon, ChevronLeft, ChevronRight, CircleCheck, Download, FileClock, FileSpreadsheet, Inbox, LayoutDashboard, Link2, Loader, MoreHorizontal, Plug, RotateCcw, Settings, UserRound, X } from "lucide-react";
 
-import { Bar, BarChart, Browser, Btn, Check, Kpi, Legend, LineChart, Panel, Pill, Segments, Select, Sidebar, Tag, Th, TONES, TopBar, Tr, type Screen, type Tone } from "./kit";
+import { Bar, Browser, Btn, Check, LineChart, Panel, Pill, Segments, Select, Sidebar, Tag, Th, TONES, TopBar, Tr, type Screen, type Tone } from "./kit";
+import { Photo } from "./tools";
 
-/* Reconciliation agent · Frankfurt payments processor */
+/* Reconciliation agent · Frankfurt payments processor (internal tool) */
 
-const URL = "reconcile.finance-eu.internal";
+const URL = "reconcile.traxpay.internal";
+const LOGO = { src: "/logos/traxpay.webp", img: { w: 480, h: 111 } };
+const SYS = { fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif' };
 const NAV = (open = 38) => [
   { label: "Overview", Icon: LayoutDashboard },
   { label: "Exceptions", Icon: Inbox, badge: open },
@@ -15,12 +18,26 @@ const NAV = (open = 38) => [
 ];
 const USER = { name: "Katrin Weber", role: "Finance analyst", initials: "KW" };
 
+/** The kit sidebar with the real Traxpay wordmark over its brand row. */
+function AppSidebar({ tint, active }: { tint: string; active: number }) {
+  return (
+    <div className="relative h-full shrink-0">
+      <Sidebar tint={tint} brand="Traxpay Reconcile" mark="T" items={NAV()} active={active} user={USER} />
+      <div className="absolute left-0 right-[1px] top-0 flex h-[32px] items-end gap-[5px] bg-[#fbfbfa] px-[12px] pb-[2px]">
+        <Photo {...LOGO} w={52} h={12} />
+        <span className="text-[9.5px] font-semibold leading-none tracking-[-0.01em] text-black/55">Reconcile</span>
+      </div>
+    </div>
+  );
+}
+
 const REASON: Record<string, string> = {
   "Split settlement": "#2563eb",
   "Fee at source": "#7c3aed",
   "Duplicate refund": "#e11d48",
   "Timing (T+2)": "#d97706",
   "FX rounding": "#0891b2",
+  "No ledger entry": "#52525b",
 };
 
 const confTone = (c: number): Tone => (c >= 85 ? "green" : c >= 50 ? "amber" : "red");
@@ -28,58 +45,92 @@ const confTone = (c: number): Tone => (c >= 85 ? "green" : c >= 50 ? "amber" : "
 function Confidence({ value }: { value: number }) {
   const t = TONES[confTone(value)];
   return (
-    <span className="flex items-center gap-[5px]">
-      <span className="w-[38px]">
-        <Bar pct={value} color={t.solid} h={4} />
+    <span className="flex items-center gap-[4px]">
+      <span className="w-[30px]">
+        <Bar pct={value} color={t.solid} h={3} />
       </span>
-      <span className="w-[20px] text-[8.5px] font-semibold tabular-nums" style={{ color: t.fg }}>
+      <span className="text-[7.5px] font-semibold tabular-nums" style={{ color: t.fg }}>
         {value}%
       </span>
     </span>
   );
 }
 
+function Pager({ text, per = 25 }: { text: string; per?: number }) {
+  return (
+    <div className="flex h-[24px] shrink-0 items-center justify-between border-t border-black/[0.06] px-[10px] text-[7.5px] text-black/45">
+      <span>{text}</span>
+      <span className="flex items-center gap-[6px]">
+        <span>Rows per page: {per}</span>
+        <ChevronLeft className="size-[9px] text-black/25" aria-hidden="true" />
+        <ChevronRight className="size-[9px]" aria-hidden="true" />
+      </span>
+    </div>
+  );
+}
+
 /* 01 · Exception queue --------------------------------------------- */
 
 const QUEUE = [
-  { ref: "PSP-88240", src: "Adyen", who: "Nordlicht Mode GmbH", amt: "€12,005.12", reason: "Split settlement", conf: 64, sel: true },
-  { ref: "WLT-10923", src: "PayPal", who: "Kaffeerösterei Lang", amt: "−€89.90", reason: "Duplicate refund", conf: 22, sel: true },
-  { ref: "STR-55190", src: "Stripe", who: "Velo Werk Berlin", amt: "€640.00", reason: "Fee at source", conf: 71, sel: false },
-  { ref: "SEPA-40188", src: "Deutsche Bank", who: "Alpen Outdoor AG", amt: "€3,118.40", reason: "Timing (T+2)", conf: 83, sel: true },
-  { ref: "KLN-20471", src: "Klarna", who: "Haus & Hof Online", amt: "€1,249.99", reason: "Fee at source", conf: 58, sel: false },
-  { ref: "PSP-88262", src: "Adyen", who: "Studio Feinkost", amt: "€7,402.66", reason: "Split settlement", conf: 76, sel: false },
-  { ref: "SEPA-40203", src: "Commerzbank", who: "Brettspiel Kontor", amt: "€412.07", reason: "FX rounding", conf: 91, sel: false },
+  { ref: "PSP-88240", src: "Adyen", who: "Nordlicht Mode GmbH", amt: "€12,005.12", reason: "Split settlement", conf: 64, age: "4h", sel: true },
+  { ref: "WLT-10923", src: "PayPal", who: "Kaffeerösterei Lang", amt: "−€89.90", reason: "Duplicate refund", conf: 22, age: "4h", sel: true },
+  { ref: "STR-55190", src: "Stripe", who: "Velo Werk Berlin", amt: "€640.00", reason: "Fee at source", conf: 71, age: "4h", sel: false },
+  { ref: "SEPA-40188", src: "Deutsche Bank", who: "Alpen Outdoor AG", amt: "€3,118.40", reason: "Timing (T+2)", conf: 83, age: "1d", sel: true },
+  { ref: "KLN-20471", src: "Klarna", who: "Haus & Hof Online", amt: "€1,249.99", reason: "Fee at source", conf: 58, age: "4h", sel: false },
+  { ref: "PSP-88262", src: "Adyen", who: "Studio Feinkost", amt: "€7,402.66", reason: "Split settlement", conf: 76, age: "4h", sel: false },
+  { ref: "SEPA-40203", src: "Commerzbank", who: "Brettspiel Kontor", amt: "€412.07", reason: "FX rounding", conf: 91, age: "2d", sel: false },
+  { ref: "WLT-10930", src: "PayPal", who: "Grünwerk Naturkosmetik", amt: "€58.35", reason: "No ledger entry", conf: 12, age: "3d", sel: false },
+  { ref: "PSP-88277", src: "Adyen", who: "Nordlicht Mode GmbH", amt: "€2,871.30", reason: "Split settlement", conf: 69, age: "4h", sel: false },
+  { ref: "STR-55204", src: "Stripe", who: "Lindenholz Möbel", amt: "€19.00", reason: "Fee at source", conf: 88, age: "4h", sel: false },
+  { ref: "SPK-7719", src: "Sparkasse", who: "Bäckerei Hollmann", amt: "€1,036.84", reason: "Timing (T+2)", conf: 47, age: "1d", sel: false },
+  { ref: "KLN-20488", src: "Klarna", who: "Kinderzimmer Kiel", amt: "−€214.50", reason: "Duplicate refund", conf: 35, age: "4h", sel: false },
 ];
-const QCOLS = "10px 58px minmax(0,1fr) 58px 80px 64px 82px";
+const QCOLS = "10px 60px minmax(0,1fr) 62px 84px 58px 22px 34px";
 
 export const ExceptionQueue: Screen = ({ tint }) => (
-  <Browser w={640} h={400} url={`${URL}/exceptions`}>
-    <div className="flex h-full bg-[#f6f7f9] text-[#111827]">
-      <Sidebar tint={tint} brand="Reconcile" mark="R" items={NAV()} active={1} user={USER} />
+  <Browser w={640} h={400} url={`${URL}/exceptions?status=open&sort=confidence`}>
+    <div className="flex h-full bg-[#f6f7f9] text-[#111827]" style={SYS}>
+      <AppSidebar tint={tint} active={1} />
       <div className="flex min-w-0 flex-1 flex-col">
-        <TopBar title="Exception queue" sub="Close · 30 Sep · agent run 06:00 CET" search="Search reference, merchant…">
-          <Btn tint={tint} Icon={Download} outline>
-            Export
+        <TopBar title="Exceptions" sub="Close 30 Sep · run 06:00 CET · 38 open" search="Search reference, merchant…">
+          <Btn Icon={Download} outline>
+            CSV
           </Btn>
         </TopBar>
-        <div className="flex items-center gap-[5px] px-[12px] pt-[9px]">
+        <div className="flex items-center gap-[4px] px-[10px] pt-[7px]">
           {[
             ["All", 38],
             ["Split settlement", 12],
             ["Fee at source", 9],
             ["Timing", 7],
             ["Duplicate", 6],
+            ["Other", 4],
           ].map(([l, n], i) => (
-            <span key={l} className={`flex h-[20px] items-center whitespace-nowrap gap-[4px] rounded-full px-[8px] text-[8.5px] font-medium ${i === 0 ? "text-white" : "bg-white text-black/60 ring-1 ring-black/[0.08]"}`} style={i === 0 ? { background: "#111827" } : undefined}>
+            <span key={l} className={`flex h-[18px] items-center gap-[3px] whitespace-nowrap rounded-[5px] px-[6px] text-[8px] font-medium ${i === 0 ? "bg-white text-black/85 ring-1 ring-black/15" : "text-black/55"}`}>
               {l}
-              <span className={i === 0 ? "text-white/60" : "text-black/35"}>{n}</span>
+              <span className="text-black/35">{n}</span>
             </span>
           ))}
           <span className="ml-auto">
-            <Select>Confidence ↑</Select>
+            <Select>Sort: confidence</Select>
           </span>
         </div>
-        <Panel className="mx-[12px] mt-[8px] flex-1" pad={false}>
+        <Panel className="mx-[10px] my-[7px] flex-1" pad={false}>
+          <div className="flex h-[24px] items-center gap-[8px] border-b border-black/[0.06] px-[10px] text-[8px]" style={{ background: `color-mix(in oklab, ${tint} 6%, white)` }}>
+            <span className="font-semibold">3 selected</span>
+            <span className="tabular-nums text-black/50">€15,033.62</span>
+            <span className="ml-auto flex items-center gap-[4px]">
+              <Btn tint={tint} size="sm" Icon={CircleCheck}>
+                Approve
+              </Btn>
+              <Btn size="sm" outline Icon={RotateCcw}>
+                Override
+              </Btn>
+              <Btn size="sm" outline Icon={UserRound}>
+                Reassign
+              </Btn>
+            </span>
+          </div>
           <Th cols={QCOLS}>
             <Check tint={tint} />
             <span>Reference</span>
@@ -87,41 +138,33 @@ export const ExceptionQueue: Screen = ({ tint }) => (
             <span className="text-right">Amount</span>
             <span>Reason</span>
             <span>Confidence</span>
-            <span className="text-right">Action</span>
+            <span>Age</span>
+            <span />
           </Th>
-          {QUEUE.map((r) => (
-            <Tr key={r.ref} cols={QCOLS} h={33} highlight={r.sel ? `color-mix(in oklab, ${tint} 5%, white)` : undefined}>
+          {QUEUE.slice(0, 10).map((r) => (
+            <Tr key={r.ref} cols={QCOLS} h={22.5} highlight={r.sel ? `color-mix(in oklab, ${tint} 4%, white)` : undefined} style={{ fontSize: 8 }}>
               <Check on={r.sel} tint={tint} />
-              <span className="truncate font-mono text-[8.5px] font-semibold">{r.ref}</span>
-              <span className="min-w-0 leading-tight">
-                <span className="block truncate font-medium">{r.who}</span>
-                <span className="block truncate text-[7.5px] text-black/45">{r.src}</span>
+              <span className="truncate font-mono text-[7.5px] font-semibold">{r.ref}</span>
+              <span className="min-w-0 truncate">
+                <span className="font-medium">{r.who}</span>
+                <span className="text-black/40"> · {r.src}</span>
               </span>
-              <span className="text-right font-semibold tabular-nums">{r.amt}</span>
-              <Tag color={REASON[r.reason]}>{r.reason}</Tag>
+              <span className="text-right font-medium tabular-nums">{r.amt}</span>
+              <span>
+                <Tag color={REASON[r.reason]} size={7}>
+                  {r.reason}
+                </Tag>
+              </span>
               <Confidence value={r.conf} />
-              <span className="flex justify-end gap-[3px]">
-                <Btn tint={tint} size="sm" Icon={CircleCheck}>
-                  Approve
-                </Btn>
-                <Btn size="sm" outline Icon={RotateCcw} style={{ width: 18, padding: 0 }}>
-                  {null}
-                </Btn>
+              <span className="text-black/45">{r.age}</span>
+              <span className="flex justify-end gap-[5px] text-black/40">
+                <CheckIcon className="size-[9px]" strokeWidth={2.5} aria-hidden="true" />
+                <MoreHorizontal className="size-[9px]" aria-hidden="true" />
               </span>
             </Tr>
           ))}
+          <Pager text="1–10 of 38" per={10} />
         </Panel>
-        <div className="mx-[12px] my-[8px] flex h-[30px] items-center gap-[8px] rounded-[8px] bg-[#111827] px-[10px] text-[9px] text-white">
-          <span className="font-semibold">3 selected</span>
-          <span className="text-white/50">€15,033.62 total</span>
-          <span className="ml-auto flex items-center gap-[4px] text-white/60">
-            <Bot className="size-[10px]" aria-hidden="true" />
-            Agent suggests: approve 2, write off 1
-          </span>
-          <Btn tint={tint} Icon={CircleCheck}>
-            Apply suggestions
-          </Btn>
-        </div>
       </div>
     </div>
   </Browser>
@@ -130,117 +173,137 @@ export const ExceptionQueue: Screen = ({ tint }) => (
 /* 02 · Daily dashboard ---------------------------------------------- */
 
 const SOURCES = [
-  { short: "Adyen", m: 5180, o: 14 },
-  { short: "Stripe", m: 3420, o: 6 },
-  { short: "PayPal", m: 2210, o: 8 },
-  { short: "Klarna", m: 1160, o: 5 },
-  { short: "DB", m: 1040, o: 2 },
-  { short: "Coba", m: 720, o: 2 },
-  { short: "Spk", m: 480, o: 1 },
+  { name: "Adyen", kind: "PSP · API", tx: 5198, auto: 91.2, open: 14, file: "05:52" },
+  { name: "Stripe", kind: "PSP · API", tx: 3433, auto: 95.1, open: 6, file: "05:49" },
+  { name: "PayPal", kind: "Wallet · API", tx: 2214, auto: 88.4, open: 8, file: "05:55" },
+  { name: "Klarna", kind: "PSP · SFTP", tx: 1168, auto: 90.3, open: 5, file: "05:31" },
+  { name: "Deutsche Bank", kind: "Bank · SFTP", tx: 1043, auto: 96.8, open: 2, file: "05:40" },
+  { name: "Commerzbank", kind: "Bank · SFTP", tx: 715, auto: 97.2, open: 2, file: "05:44" },
+  { name: "Sparkasse", kind: "Bank · SFTP", tx: 477, auto: 94.1, open: 1, file: "retry 06:15", warn: true },
+];
+const SCOLS = "minmax(0,1fr) 44px 60px 26px 50px";
+const RATE_14D = [90.1, 91.3, 89.7, 92.0, 91.8, 88.9, 90.6, 92.2, 91.5, 93.0, 92.1, 91.7, 92.8, 92.4];
+
+const RUN = [
+  ["06:00:02", "Run started · 7 sources, 14,248 transactions"],
+  ["06:00:41", "Sparkasse SFTP timed out, retry scheduled 06:15"],
+  ["06:01:58", "Rules matched 12,904 · LLM matched 268"],
+  ["06:02:31", "Adyen PO-7731: 318 txns less €412.06 fees, 14 to review"],
 ];
 
-export const ReconDashboard: Screen = ({ tint }) => {
-  const soft = `color-mix(in oklab, ${tint} 30%, white)`;
-  return (
-    <Browser w={640} h={400} url={`${URL}/overview`}>
-      <div className="flex h-full bg-[#f6f7f9] text-[#111827]">
-        <Sidebar tint={tint} brand="Reconcile" mark="R" items={NAV()} active={0} user={USER} />
-        <div className="flex min-w-0 flex-1 flex-col">
-          <TopBar title="Daily reconciliation" sub="Tuesday 30 Sep · 7 sources · 3 banks, 4 PSPs">
-            <Segments items={["Today", "7d", "Month"]} active={0} tint={tint} />
-          </TopBar>
-          <div className="grid grid-cols-4 gap-[8px] px-[12px] pt-[10px]">
-            <Kpi tint={tint} accent label="Matched today" value="14,210" delta="▲ 6.2%" sub="vs Mon" />
-            <Kpi tint={tint} label="Auto-match rate" value="92.4%" delta="▲ 0.8 pt" />
-            <Kpi tint={tint} label="Open exceptions" value="38" delta="▼ 21" sub="since 06:00" />
-            <Kpi tint={tint} label="Avg. match time" value="1.4s" delta="▼ 0.3s" />
-          </div>
-          <div className="grid min-h-0 flex-1 grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)] gap-[8px] px-[12px] py-[8px]">
-            <Panel title="Matched vs open by source" action={<Legend items={[{ label: "Matched", color: tint }, { label: "Open ×50", color: "#f59e0b" }]} />}>
-              <BarChart w={246} h={120} bars={SOURCES.map((s) => [s.m, s.o * 50])} colors={[tint, "#f59e0b"]} max={6000} labels={SOURCES.map((s) => s.short)} yFormat={(n) => (n ? `${n / 1000}k` : "0")} gap={0.42} />
-              <div className="mt-[8px] grid grid-cols-3 gap-[6px] border-t border-black/[0.06] pt-[7px] text-[8px]">
-                <span>
-                  <span className="block text-black/45">Card (PSP)</span>
-                  <span className="text-[10px] font-bold">11,970</span>
-                </span>
-                <span>
-                  <span className="block text-black/45">SEPA (bank)</span>
-                  <span className="text-[10px] font-bold">2,240</span>
-                </span>
-                <span>
-                  <span className="block text-black/45">Value matched</span>
-                  <span className="text-[10px] font-bold">€4.82M</span>
-                </span>
-              </div>
-            </Panel>
-            <div className="flex min-h-0 flex-col gap-[8px]">
-              <Panel title="Match rate · 14d" action="target 90%">
-                <LineChart
-                  w={164}
-                  h={46}
-                  min={80}
-                  max={95}
-                  grid={3}
-                  series={[
-                    { values: [84, 85, 87, 86, 88, 89, 88, 90, 91, 90, 92, 91, 92, 92.4], color: tint, area: true },
-                    { values: Array(14).fill(90), color: "#94a3b8", dashed: true },
-                  ]}
-                  labels={["17 Sep", "23 Sep", "30 Sep"]}
-                />
-              </Panel>
-              <Panel title="Source status" pad={false} className="flex-1">
-                {[
-                  ["Adyen", "API", "05:52", "green"],
-                  ["Deutsche Bank", "SFTP", "05:40", "green"],
-                  ["PayPal", "API", "05:55", "green"],
-                  ["Sparkasse", "SFTP", "retry 06:15", "amber"],
-                ].map(([n, via, t, tn]) => (
-                  <div key={n} className="flex h-[19px] items-center gap-[6px] border-b border-black/[0.05] px-[10px] text-[8.5px] last:border-b-0">
-                    <span className="size-[5px] rounded-full" style={{ background: TONES[tn as Tone].solid }} />
-                    <span className="font-medium">{n}</span>
-                    <span className="rounded-[3px] bg-black/[0.05] px-[3px] font-mono text-[7px] text-black/50">{via}</span>
-                    <span className="ml-auto tabular-nums text-black/45">{t}</span>
-                  </div>
-                ))}
-              </Panel>
+export const ReconDashboard: Screen = ({ tint }) => (
+  <Browser w={640} h={400} url={`${URL}/overview`}>
+    <div className="flex h-full bg-[#f6f7f9] text-[#111827]" style={SYS}>
+      <AppSidebar tint={tint} active={0} />
+      <div className="flex min-w-0 flex-1 flex-col">
+        <TopBar title="Overview" sub="Tue 30 Sep 2026 · last run 06:15 CET">
+          <Segments items={["Today", "7d", "Month"]} active={0} />
+        </TopBar>
+        <div className="grid grid-cols-4 border-b border-black/[0.07] bg-white">
+          {[
+            ["Matched", "14,210", "+832 vs Mon"],
+            ["Auto-match rate", "92.4%", "13,172 of 14,248"],
+            ["Open exceptions", "38", "59 at 06:00"],
+            ["Avg. match time", "1.4s", "p95 3.1s"],
+          ].map(([l, v, s], i) => (
+            <div key={l} className={`px-[12px] py-[7px] ${i ? "border-l border-black/[0.06]" : ""}`}>
+              <p className="text-[7.5px] text-black/50">{l}</p>
+              <p className="mt-[2px] text-[14px] font-semibold tabular-nums tracking-[-0.02em]">{v}</p>
+              <p className="text-[7px] text-black/40">{s}</p>
             </div>
-          </div>
-          <div className="mx-[12px] mb-[10px] flex items-center gap-[8px] whitespace-nowrap rounded-[7px] px-[10px] py-[6px] text-[8.5px]" style={{ background: soft }}>
-            <Sparkles className="size-[10px]" style={{ color: tint }} aria-hidden="true" />
-            <span>
-              <b>Agent note:</b> Adyen payout PO-7731 covers 318 transactions less €412.06 fees. 14 need review.
-            </span>
+          ))}
+        </div>
+        <div className="grid min-h-0 flex-1 grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] gap-[7px] p-[9px]">
+          <Panel title="By source" action="today" pad={false}>
+            <Th cols={SCOLS}>
+              <span>Source</span>
+              <span className="text-right">Txns</span>
+              <span>Auto-match</span>
+              <span className="text-right">Open</span>
+              <span className="text-right">Last file</span>
+            </Th>
+            {SOURCES.map((s) => (
+              <Tr key={s.name} cols={SCOLS} h={25} style={{ fontSize: 8 }}>
+                <span className="min-w-0 truncate leading-tight">
+                  <span className="block truncate font-medium">{s.name}</span>
+                  <span className="block truncate text-[6.5px] text-black/40">{s.kind}</span>
+                </span>
+                <span className="text-right tabular-nums">{s.tx.toLocaleString("en-GB")}</span>
+                <span className="flex items-center gap-[4px]">
+                  <span className="w-[26px]">
+                    <Bar pct={(s.auto - 80) * 5} color={tint} h={3} />
+                  </span>
+                  <span className="tabular-nums text-black/70">{s.auto}%</span>
+                </span>
+                <span className="text-right font-semibold tabular-nums">{s.open}</span>
+                <span className={`text-right tabular-nums ${s.warn ? "text-[#b45309]" : "text-black/45"}`}>{s.file}</span>
+              </Tr>
+            ))}
+            <div className="grid h-[22px] items-center gap-[6px] bg-black/[0.02] px-[10px] text-[8px] font-semibold" style={{ gridTemplateColumns: SCOLS }}>
+              <span>Total</span>
+              <span className="text-right tabular-nums">14,248</span>
+              <span className="tabular-nums">92.4%</span>
+              <span className="text-right tabular-nums">38</span>
+              <span />
+            </div>
+          </Panel>
+          <div className="flex min-h-0 flex-col gap-[7px]">
+            <Panel title="Auto-match rate, 14 days" action="target 90%">
+              <LineChart
+                w={184}
+                h={70}
+                min={86}
+                max={95}
+                grid={3}
+                yFormat={(n) => `${Math.round(n)}%`}
+                series={[
+                  { values: RATE_14D, color: tint },
+                  { values: Array(14).fill(90), color: "#94a3b8", dashed: true },
+                ]}
+                labels={["17 Sep", "23 Sep", "30 Sep"]}
+              />
+            </Panel>
+            <Panel title="Agent run · 06:00" action={<span className="text-[#15803d]">completed</span>} pad={false} className="flex-1">
+              {RUN.map(([t, m]) => (
+                <div key={t} className="flex gap-[6px] border-b border-black/[0.04] px-[10px] py-[3.5px] text-[7.5px] leading-[1.3] last:border-b-0">
+                  <span className="shrink-0 font-mono text-[7px] text-black/40">{t}</span>
+                  <span className="text-black/70">{m}</span>
+                </div>
+              ))}
+            </Panel>
           </div>
         </div>
       </div>
-    </Browser>
-  );
-};
+    </div>
+  </Browser>
+);
 
 /* 03 · Transaction detail drawer ------------------------------------- */
 
 export const TransactionDrawer: Screen = ({ tint }) => (
   <Browser w={640} h={400} url={`${URL}/exceptions/PSP-88240`}>
-    <div className="relative flex h-full bg-[#f6f7f9] text-[#111827]">
-      <Sidebar tint={tint} brand="Reconcile" mark="R" items={NAV()} active={1} user={USER} />
-      <div className="flex min-w-0 flex-1 flex-col opacity-60">
-        <TopBar title="Exception queue" sub="Close · 30 Sep" />
-        <Panel className="m-[12px] flex-1" pad={false}>
+    <div className="relative flex h-full bg-[#f6f7f9] text-[#111827]" style={SYS}>
+      <AppSidebar tint={tint} active={1} />
+      <div className="flex min-w-0 flex-1 flex-col">
+        <TopBar title="Exceptions" sub="Close 30 Sep · run 06:00 CET · 38 open" />
+        <Panel className="m-[10px] flex-1" pad={false}>
           <Th cols={QCOLS}>
             <span />
             <span>Reference</span>
-            <span>Merchant</span>
-            <span>Amount</span>
+            <span>Merchant · source</span>
+            <span className="text-right">Amount</span>
+            <span>Reason</span>
             <span />
             <span />
             <span />
           </Th>
-          {QUEUE.slice(0, 7).map((r, i) => (
-            <Tr key={r.ref} cols={QCOLS} h={33} highlight={i === 0 ? `color-mix(in oklab, ${tint} 10%, white)` : undefined}>
+          {QUEUE.map((r, i) => (
+            <Tr key={r.ref} cols={QCOLS} h={23} highlight={i === 0 ? `color-mix(in oklab, ${tint} 8%, white)` : undefined} style={{ fontSize: 8 }}>
               <span />
-              <span className="font-mono text-[8.5px] font-semibold">{r.ref}</span>
+              <span className="font-mono text-[7.5px] font-semibold">{r.ref}</span>
               <span className="truncate">{r.who}</span>
-              <span className="font-semibold">{r.amt}</span>
+              <span className="text-right tabular-nums">{r.amt}</span>
+              <span className="truncate text-black/50">{r.reason}</span>
               <span />
               <span />
               <span />
@@ -248,67 +311,79 @@ export const TransactionDrawer: Screen = ({ tint }) => (
           ))}
         </Panel>
       </div>
-      <div className="absolute inset-y-0 right-0 flex w-[300px] flex-col bg-white shadow-[-20px_0_40px_-20px_rgb(0_0_0/0.35)]">
-        <div className="flex items-start gap-[8px] border-b border-black/[0.07] px-[14px] py-[10px]">
+      <div className="absolute inset-0 bg-black/[0.18]" />
+      <div className="absolute inset-y-0 right-0 flex w-[292px] flex-col bg-white shadow-[-8px_0_24px_-12px_rgb(0_0_0/0.35)]">
+        <div className="flex items-start gap-[8px] border-b border-black/[0.07] px-[12px] py-[9px]">
           <div className="min-w-0 flex-1">
-            <p className="font-mono text-[8.5px] text-black/45">PSP-88240 · Adyen payout PO-7731</p>
-            <p className="mt-[2px] text-[16px] font-bold tracking-[-0.02em]">€12,005.12</p>
-            <div className="mt-[4px] flex gap-[4px]">
-              <Tag color={REASON["Split settlement"]}>Split settlement</Tag>
-              <Pill tone="amber" size={7.5}>
+            <p className="font-mono text-[7.5px] text-black/45">PSP-88240 · Adyen payout PO-7731 · value date 29 Sep</p>
+            <p className="mt-[2px] text-[15px] font-semibold tabular-nums tracking-[-0.02em]">€12,005.12</p>
+            <div className="mt-[3px] flex items-center gap-[4px]">
+              <Tag color={REASON["Split settlement"]} size={7}>
+                Split settlement
+              </Tag>
+              <Pill tone="amber" size={7}>
                 64% confidence
               </Pill>
+              <span className="text-[7px] text-black/40">Nordlicht Mode GmbH</span>
             </div>
           </div>
-          <X className="size-[12px] text-black/40" aria-hidden="true" />
+          <X className="size-[11px] text-black/40" aria-hidden="true" />
         </div>
-        <div className="flex-1 space-y-[8px] overflow-hidden px-[14px] py-[9px]">
-          <div className="rounded-[8px] p-[9px]" style={{ background: `color-mix(in oklab, ${tint} 7%, white)`, boxShadow: `inset 3px 0 0 ${tint}` }}>
-            <p className="flex items-center gap-[4px] text-[8.5px] font-bold" style={{ color: tint }}>
-              <Bot className="size-[10px]" aria-hidden="true" />
-              Why the agent could not auto-match
+        <div className="flex gap-[12px] border-b border-black/[0.07] px-[12px] text-[8px]">
+          {["Details", "Ledger", "Activity (3)"].map((t, i) => (
+            <span key={t} className={`py-[5px] ${i === 0 ? "font-semibold" : "text-black/45"}`} style={i === 0 ? { boxShadow: `inset 0 -1.5px 0 ${tint}` } : undefined}>
+              {t}
+            </span>
+          ))}
+        </div>
+        <div className="flex-1 space-y-[8px] overflow-hidden px-[12px] py-[8px]">
+          <div>
+            <p className="flex items-center gap-[4px] text-[7px] font-semibold uppercase tracking-[0.06em] text-black/40">
+              <Bot className="size-[9px]" aria-hidden="true" />
+              Agent explanation
             </p>
-            <p className="mt-[4px] text-[9px] leading-[1.45] text-black/75">
-              One payout settles <b>3 ledger entries</b> for Nordlicht Mode GmbH, less a <b>€37.40 fee</b> taken at source. Totals agree to the cent, but order NM-40932 was part-refunded on 28 Sep, so a human should confirm.
+            <p className="mt-[3px] rounded-[5px] bg-black/[0.03] p-[7px] text-[8px] leading-[1.45] text-black/75">
+              One payout settles 3 ledger entries for Nordlicht Mode GmbH, less a €37.40 fee taken at source. Totals agree to the cent, but order NM-40932 was part-refunded on 28 Sep, so this needs a human check.
             </p>
           </div>
           <div>
-            <p className="text-[8px] font-semibold uppercase tracking-[0.06em] text-black/40">Proposed match (3 → 1)</p>
-            <div className="mt-[4px] overflow-hidden rounded-[7px] ring-1 ring-black/[0.07]">
+            <p className="text-[7px] font-semibold uppercase tracking-[0.06em] text-black/40">Proposed match (3 → 1)</p>
+            <div className="mt-[3px] overflow-hidden rounded-[5px] ring-1 ring-black/[0.08]">
               {[
                 ["LED-551208", "Order NM-40911", "€6,210.00"],
                 ["LED-551231", "Order NM-40925", "€3,988.52"],
-                ["LED-551240", "Order NM-40932 · part refund", "€1,844.00"],
-                ["FEE", "Adyen fee (inferred)", "−€37.40"],
+                ["LED-551240", "Order NM-40932 (part refund)", "€1,844.00"],
+                ["—", "Adyen fee, inferred", "−€37.40"],
               ].map(([a, b, c], i) => (
-                <div key={a} className={`flex h-[18px] items-center gap-[6px] border-b border-black/[0.05] px-[8px] text-[8.5px] ${i === 3 ? "text-black/50" : ""}`}>
-                  <span className="w-[58px] font-mono text-[7.5px] text-black/45">{a}</span>
+                <div key={b} className={`flex h-[17px] items-center gap-[6px] border-b border-black/[0.05] px-[7px] text-[8px] ${i === 3 ? "text-black/50" : ""}`}>
+                  <span className="w-[54px] font-mono text-[7px] text-black/45">{a}</span>
                   <span className="flex-1 truncate">{b}</span>
-                  <span className="font-semibold tabular-nums">{c}</span>
+                  <span className="tabular-nums">{c}</span>
                 </div>
               ))}
-              <div className="flex h-[22px] items-center justify-between bg-black/[0.025] px-[8px] text-[9px] font-bold">
-                <span className="flex items-center gap-[4px]">
-                  <ArrowRightLeft className="size-[9px]" aria-hidden="true" />
-                  Difference
-                </span>
-                <span className="text-[#15803d]">€0.00</span>
+              <div className="flex h-[19px] items-center justify-between bg-black/[0.025] px-[7px] text-[8px] font-semibold">
+                <span>Difference</span>
+                <span className="tabular-nums">€0.00</span>
               </div>
             </div>
           </div>
-          <div className="text-[8.5px]">
-            <p className="text-[8px] font-semibold uppercase tracking-[0.06em] text-black/40">Suggested action</p>
-            <p className="mt-[3px] leading-[1.4]">Confirm match and post fee to 4970 · PSP charges.</p>
+          <div className="grid grid-cols-[70px_1fr] gap-y-[3px] text-[8px]">
+            <span className="text-black/45">Suggested</span>
+            <span>Confirm match, post fee to 4970 PSP charges</span>
+            <span className="text-black/45">Rule tried</span>
+            <span className="font-mono text-[7.5px]">R-12 payout sum − fees (failed: refund)</span>
+            <span className="text-black/45">Assignee</span>
+            <span>Katrin Weber</span>
           </div>
         </div>
-        <div className="flex gap-[6px] border-t border-black/[0.07] px-[14px] py-[10px]">
-          <Btn tint={tint} Icon={CircleCheck} style={{ flex: 1, height: 26 }}>
+        <div className="flex gap-[5px] border-t border-black/[0.07] px-[12px] py-[8px]">
+          <Btn tint={tint} style={{ flex: 1, height: 22 }}>
             Approve match
           </Btn>
-          <Btn outline Icon={RotateCcw} style={{ height: 26 }}>
+          <Btn outline style={{ height: 22 }}>
             Override
           </Btn>
-          <Btn outline Icon={UserRound} style={{ height: 26 }}>
+          <Btn outline style={{ height: 22 }}>
             Reassign
           </Btn>
         </div>
@@ -320,72 +395,94 @@ export const TransactionDrawer: Screen = ({ tint }) => (
 /* 04 · Audit log export --------------------------------------------- */
 
 const LOG = [
-  ["06:02:14", "SEPA-40117", "Auto-matched", "green", "Agent", "Rule R-04 · exact ref + amount"],
-  ["06:02:15", "PSP-88213", "Auto-matched", "green", "Agent", "Rule R-12 · payout sum − fees"],
-  ["06:02:19", "STR-55177", "LLM matched", "violet", "Agent", "Ref typo ‘INV-2O4’ → INV-204"],
-  ["08:41:52", "PSP-88240", "Approved", "blue", "K. Weber", "Confirmed split, fee to 4970"],
-  ["08:43:07", "WLT-10923", "Written off", "red", "K. Weber", "Duplicate of WLT-10871"],
-  ["09:10:33", "SEPA-40188", "Approved", "blue", "M. Hoffmann", "Settled T+2, bank holiday"],
   ["09:12:02", "KLN-20471", "Overridden", "amber", "M. Hoffmann", "Fee rate 2.49% not 1.99%"],
+  ["09:10:33", "SEPA-40188", "Approved", "blue", "M. Hoffmann", "Settled T+2, bank holiday"],
+  ["08:43:07", "WLT-10923", "Written off", "red", "K. Weber", "Duplicate of WLT-10871"],
+  ["08:41:52", "PSP-88240", "Approved", "blue", "K. Weber", "Confirmed split, fee to 4970"],
+  ["06:15:11", "SPK-7702", "Auto-matched", "green", "Agent", "R-04 exact ref + amount"],
+  ["06:02:19", "STR-55177", "LLM matched", "violet", "Agent", "Ref typo ‘INV-2O4’ → INV-204"],
+  ["06:02:15", "PSP-88213", "Auto-matched", "green", "Agent", "R-12 payout sum − fees (PO-7731)"],
+  ["06:02:15", "PSP-88214", "Auto-matched", "green", "Agent", "R-12 payout sum − fees (PO-7731)"],
+  ["06:02:14", "SEPA-40117", "Auto-matched", "green", "Agent", "R-04 exact ref + amount"],
+  ["06:02:14", "WLT-10930", "Flagged", "grey", "Agent", "No ledger entry found for PayPal txn"],
 ] as const;
-const LCOLS = "44px 62px 70px 66px minmax(0,1fr)";
+const LCOLS = "44px 58px 64px 60px minmax(0,1fr)";
+
+const EXPORTS = [
+  { name: "september-close-audit.xlsx", meta: "412,380 rows · SHA-256 signed · 09:14", st: "ready" },
+  { name: "q3-auditor-pack.zip", meta: "Jul–Sep · 1,196,442 rows", st: "running" },
+  { name: "august-close-audit.xlsx", meta: "398,115 rows · SHA-256 signed · 1 Sep", st: "ready" },
+];
 
 export const AuditExport: Screen = ({ tint }) => (
-  <Browser w={640} h={400} url={`${URL}/audit`}>
-    <div className="relative flex h-full bg-[#f6f7f9] text-[#111827]">
-      <Sidebar tint={tint} brand="Reconcile" mark="R" items={NAV()} active={4} user={USER} />
+  <Browser w={640} h={400} url={`${URL}/audit?from=2026-09-01&to=2026-09-30`}>
+    <div className="flex h-full bg-[#f6f7f9] text-[#111827]" style={SYS}>
+      <AppSidebar tint={tint} active={4} />
       <div className="flex min-w-0 flex-1 flex-col">
-        <TopBar title="Audit log" sub="412,380 decisions · every match, override and write-off">
+        <TopBar title="Audit log" sub="Every match, override and write-off, with the rule or reasoning">
           <Btn tint={tint} Icon={Download}>
             Export
           </Btn>
         </TopBar>
-        <div className="flex items-center gap-[6px] px-[12px] pt-[9px]">
+        <div className="flex items-center gap-[5px] px-[10px] pt-[7px]">
           <Select>1–30 Sep 2026</Select>
           <Select>All decisions</Select>
           <Select>All actors</Select>
+          <span className="ml-auto text-[7.5px] text-black/45">Times in CET · 30 Sep</span>
         </div>
-        <Panel className="mx-[12px] my-[8px] flex-1" pad={false}>
+        <div className="mx-[10px] mt-[7px] grid grid-cols-3 overflow-hidden rounded-[8px] bg-white ring-1 ring-black/[0.07]">
+          {EXPORTS.map((e, i) => (
+            <div key={e.name} className={`flex min-w-0 items-start gap-[5px] px-[8px] py-[6px] ${i ? "border-l border-black/[0.06]" : ""}`}>
+              {e.st === "running" ? (
+                <Loader className="mt-[1px] size-[10px] shrink-0 text-black/40" aria-hidden="true" />
+              ) : (
+                <FileSpreadsheet className="mt-[1px] size-[10px] shrink-0 text-[#15803d]" aria-hidden="true" />
+              )}
+              <span className="min-w-0 flex-1 leading-tight">
+                <span className="flex items-center gap-[4px]">
+                  <span className="truncate text-[7.5px] font-medium">{e.name}</span>
+                  {e.st === "running" ? (
+                    <span className="ml-auto shrink-0 text-[7px] text-black/45">64%</span>
+                  ) : (
+                    <Download className="ml-auto size-[8px] shrink-0" style={{ color: tint }} aria-hidden="true" />
+                  )}
+                </span>
+                <span className="block truncate text-[6.5px] text-black/45">{e.meta}</span>
+                {e.st === "running" && (
+                  <span className="mt-[2px] block">
+                    <Bar pct={64} color={tint} h={2} />
+                  </span>
+                )}
+              </span>
+            </div>
+          ))}
+        </div>
+        <Panel className="m-[10px] mt-[7px] flex-1" pad={false}>
           <Th cols={LCOLS}>
-            <span>Timestamp</span>
+            <span>Time</span>
             <span>Item</span>
             <span>Decision</span>
             <span>Actor</span>
             <span>Reasoning</span>
           </Th>
           {LOG.map(([t, ref, d, tn, who, why]) => (
-            <Tr key={ref} cols={LCOLS} h={29}>
-              <span className="font-mono text-[7.5px] text-black/50">{t}</span>
-              <span className="font-mono text-[8px] font-semibold">{ref}</span>
+            <Tr key={ref + t} cols={LCOLS} h={20.5} style={{ fontSize: 8 }}>
+              <span className="font-mono text-[7px] text-black/50">{t}</span>
+              <span className="font-mono text-[7.5px] font-semibold">{ref}</span>
               <span>
-                <Pill tone={tn as Tone} size={7.5}>
+                <Pill tone={tn as Tone} size={7}>
                   {d}
                 </Pill>
               </span>
               <span className="flex items-center gap-[3px] truncate text-black/65">
-                {who === "Agent" && <Bot className="size-[9px]" style={{ color: tint }} aria-hidden="true" />}
+                {who === "Agent" && <Bot className="size-[8px]" aria-hidden="true" />}
                 {who}
               </span>
               <span className="truncate text-black/60">{why}</span>
             </Tr>
           ))}
+          <Pager text="1–25 of 412,380" />
         </Panel>
-      </div>
-
-      <div className="absolute bottom-[20px] right-[22px] flex w-[300px] items-center gap-[9px] rounded-[10px] bg-[#111827] p-[10px] text-white shadow-[0_24px_50px_-16px_rgb(0_0_0/0.55)]">
-        <span className="flex size-[28px] shrink-0 items-center justify-center rounded-[7px] bg-white/10">
-          <FileText className="size-[13px]" aria-hidden="true" />
-        </span>
-        <div className="min-w-0 flex-1 leading-tight">
-          <p className="truncate text-[9.5px] font-semibold">september-close-audit.xlsx</p>
-          <p className="mt-[2px] flex items-center gap-[3px] truncate text-[7.5px] text-white/55">
-            <ShieldCheck className="size-[8px] shrink-0 text-[#4ade80]" aria-hidden="true" />
-            412,380 rows · reasoning incl. · SHA-256 signed
-          </p>
-        </div>
-        <Btn tint={tint} Icon={Download}>
-          Download
-        </Btn>
       </div>
     </div>
   </Browser>

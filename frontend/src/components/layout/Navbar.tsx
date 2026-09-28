@@ -12,6 +12,7 @@ import { ThemeToggle } from "./ThemeToggle";
 
 export function Navbar({ items }: { items: NavItem[] }) {
   const [hidden, setHidden] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const pathname = usePathname();
@@ -40,6 +41,7 @@ export function Navbar({ items }: { items: NavItem[] }) {
     let lastY = window.scrollY;
     const onScroll = () => {
       const y = window.scrollY;
+      setScrolled(y > 12);
       if (Math.abs(y - lastY) > 6) {
         // Pinned sections (marked data-keep-header) reserve space for the header, so keep it shown there.
         const pinned = Array.from(document.querySelectorAll("[data-keep-header]")).some((el) => {
@@ -77,7 +79,7 @@ export function Navbar({ items }: { items: NavItem[] }) {
     <header
       data-tone="dark"
       onMouseLeave={() => hoverTo(null)}
-      className={`fixed inset-x-0 top-0 z-50 border-b border-border bg-bg/70 text-fg backdrop-blur-xl backdrop-saturate-150 transition-transform duration-300 ${
+      className={`nav-glass fixed inset-x-0 top-0 z-50 text-fg transition-[translate,box-shadow] duration-300 ${scrolled || openMenu || mobileOpen ? "is-scrolled" : ""} ${
         hidden && !mobileOpen && !openMenu ? "-translate-y-full" : "translate-y-0"
       }`}
     >
@@ -97,7 +99,7 @@ export function Navbar({ items }: { items: NavItem[] }) {
                       setOpenMenu(openMenu === item.label ? null : item.label);
                     }}
                     className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-2 text-[15px] transition-colors xl:px-3.5 ${
-                      openMenu === item.label ? "bg-surface-2 text-fg" : isActive(item) ? "text-fg" : "text-muted hover:text-fg"
+                      openMenu === item.label ? "bg-white/[0.08] text-fg shadow-[inset_0_1px_0_rgb(255_255_255/0.08)]" : isActive(item) ? "text-fg" : "text-muted hover:bg-white/[0.05] hover:text-fg"
                     }`}
                   >
                     {item.label}
@@ -109,7 +111,7 @@ export function Navbar({ items }: { items: NavItem[] }) {
                   <Link
                     href={item.href}
                     aria-current={isActive(item) ? "page" : undefined}
-                    className={`relative rounded-md px-2.5 py-2 text-[15px] transition-colors hover:text-fg xl:px-3.5 ${isActive(item) ? "text-fg" : "text-muted"}`}
+                    className={`relative rounded-md px-2.5 py-2 text-[15px] transition-colors hover:bg-white/[0.05] hover:text-fg xl:px-3.5 ${isActive(item) ? "text-fg" : "text-muted"}`}
                   >
                     <span className="link-underline pb-0.5">{item.label}</span>
                     {item.href === "/agents" && <span className="absolute right-0.5 top-0.5 size-1.5 animate-pulse-dot rounded-full bg-yellow" aria-hidden="true" />}

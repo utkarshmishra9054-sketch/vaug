@@ -57,7 +57,7 @@ export default async function CaseStudyPage(props: PageProps<"/case-studies/[slu
   const [study, all] = await Promise.all([getCaseStudy(slug), getCaseStudies()]);
   if (!study) notFound();
 
-  const sector = sectorBySlug(study.sector);
+  const sector = study.sector ? sectorBySlug(study.sector) : undefined;
   const service = serviceBySlug(study.service);
   const i = all.findIndex((s) => s.slug === study.slug);
   const prev = all[(i - 1 + all.length) % all.length];
@@ -71,11 +71,12 @@ export default async function CaseStudyPage(props: PageProps<"/case-studies/[slu
   const facts = [
     { label: "Client", value: study.client },
     { label: "Location", value: study.city },
-    { label: "Sector", value: sector.label, href: routes.industry(sector.slug) },
+    study.website && { label: "Website", value: new URL(study.website.url).hostname.replace(/^www\./, ""), href: study.website.url, external: true },
+    { label: "Sector", value: sector?.label ?? study.industry, href: sector && routes.industry(sector.slug) },
     { label: "Service", value: service.label, href: routes.service(service.slug) },
     { label: "Duration", value: study.duration },
     { label: "Team", value: study.team },
-  ];
+  ].filter((f) => !!f && !!f.value) as { label: string; value: string; href?: string; external?: boolean }[];
 
   return (
     <>
@@ -86,13 +87,17 @@ export default async function CaseStudyPage(props: PageProps<"/case-studies/[slu
             items={[
               { label: "Home", href: routes.home },
               { label: "Case Studies", href: routes.caseStudies },
-              { label: sector.label, href: `${routes.caseStudies}?sector=${sector.slug}` },
+              sector ? { label: sector.label, href: `${routes.caseStudies}?sector=${sector.slug}` } : { label: study.industry, href: `${routes.caseStudies}?q=${encodeURIComponent(study.industry)}` },
             ]}
           />
           <div className="mt-8 flex flex-wrap items-center gap-2">
-            <Link href={routes.industry(sector.slug)} className="rounded-sm bg-surface-2 px-2.5 py-1 text-sm text-fg transition hover:bg-accent hover:text-accent-fg">
-              {sector.label}
-            </Link>
+            {sector ? (
+              <Link href={routes.industry(sector.slug)} className="rounded-sm bg-surface-2 px-2.5 py-1 text-sm text-fg transition hover:bg-accent hover:text-accent-fg">
+                {sector.label}
+              </Link>
+            ) : (
+              <span className="rounded-sm bg-surface-2 px-2.5 py-1 text-sm text-fg">{study.industry}</span>
+            )}
             <Link href={routes.service(service.slug)} className="rounded-sm bg-accent-soft px-2.5 py-1 text-sm text-accent-text transition hover:bg-accent hover:text-accent-fg">
               {service.label}
             </Link>
@@ -109,7 +114,7 @@ export default async function CaseStudyPage(props: PageProps<"/case-studies/[slu
 
         <div className="relative grid border-t border-border lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
           <ViewTransition name={`case-${study.slug}`} share="case-morph" default="none">
-            <div className="h-80 sm:h-[26rem]">
+            <div className="h-80 sm:h-[26rem] lg:h-full lg:min-h-[26rem]">
               <ScreenMock study={study} />
             </div>
           </ViewTransition>
@@ -118,7 +123,11 @@ export default async function CaseStudyPage(props: PageProps<"/case-studies/[slu
               <div key={f.label} className="border-b border-border p-6 odd:border-r lg:p-7">
                 <dt className="font-mono text-[11px] uppercase tracking-[0.2em] text-subtle">{f.label}</dt>
                 <dd className="mt-2 text-sm leading-snug text-fg">
-                  {f.href ? (
+                  {f.external ? (
+                    <a href={f.href} target="_blank" rel="noopener noreferrer" className="link-underline text-accent-text">
+                      {f.value}
+                    </a>
+                  ) : f.href ? (
                     <Link href={f.href} className="link-underline text-accent-text">
                       {f.value}
                     </Link>
@@ -128,6 +137,7 @@ export default async function CaseStudyPage(props: PageProps<"/case-studies/[slu
                 </dd>
               </div>
             ))}
+            {study.techStack.length > 0 && (
             <div className="col-span-2 p-6 lg:p-7">
               <dt className="font-mono text-[11px] uppercase tracking-[0.2em] text-subtle">Built with</dt>
               <dd className="mt-3 flex flex-wrap gap-1.5">
@@ -138,6 +148,7 @@ export default async function CaseStudyPage(props: PageProps<"/case-studies/[slu
                 ))}
               </dd>
             </div>
+            )}
           </dl>
         </div>
       </Band>
@@ -254,11 +265,41 @@ export default async function CaseStudyPage(props: PageProps<"/case-studies/[slu
 
       {/* Screens */}
       <Band tone="dark" label="Product screens">
-        <SectionTitle title="Inside the product." subtitle="Key screens from the build. Client details are hidden. Click any screen to enlarge." className="frame-pad py-16 lg:py-20" />
+        <SectionTitle
+          title={study.images ? "Inside the work." : study.campaign ? "Inside the campaign." : "Inside the product."}
+          subtitle={
+            study.images
+              ? "Screenshots from the live work. Click any screen to enlarge."
+              : study.campaign
+                ? "Key screens from the campaigns and reports. Click any screen to enlarge."
+                : "Key screens from the build. Click any screen to enlarge."
+          }
+          className="frame-pad py-16 lg:py-20"
+        />
         <div className="grid border-t border-border sm:grid-cols-2">
           {study.screenshots.map((caption, n) => (
-            <ScreenFrame key={caption} slug={study.slug} caption={caption} tint={study.tint} index={n} />
+            <ScreenFrame
+              key={caption}
+              slug={study.slug}
+              caption={caption}
+              tint={study.tint}
+              index={n}
+              screenIndex={n - (study.images?.length ?? 0)}
+              image={study.images?.[n]}
+            />
           ))}
+          {study.website && (
+            // Spans both columns when it would otherwise sit alone in the last row.
+            <div className={study.screenshots.length % 2 === 0 ? "sm:col-span-2" : undefined}>
+              <ScreenFrame
+                slug={study.slug}
+                caption={`${study.client}'s website today: ${new URL(study.website.url).hostname.replace(/^www\./, "")}`}
+                tint={study.tint}
+                index={study.screenshots.length}
+                image={study.website.image}
+              />
+            </div>
+          )}
         </div>
       </Band>
 

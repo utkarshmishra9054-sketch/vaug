@@ -161,7 +161,7 @@ export const roles: Role[] = [
     locationGroup: "India",
     type: "Full-time",
     experience: "3+ years",
-    summary: "Ship polished iOS and Android apps with Flutter for startups and Venture Studio clients.",
+    summary: "Ship polished iOS and Android apps with Flutter for startups and Build With Us clients.",
     about: [
       "You'll build mobile apps from first screen to App Store release, working with a designer and a backend engineer.",
     ],
@@ -251,7 +251,7 @@ export const roles: Role[] = [
     locationGroup: "Remote",
     type: "Contract",
     experience: "3+ years",
-    summary: "Run paid campaigns, listings and SEO for the ventures we launch in our Venture Studio.",
+    summary: "Run paid campaigns, listings and SEO for the businesses we launch through Build With Us.",
     about: ["You'll own growth for several early-stage ventures, from first campaign to steady, measurable demand."],
     responsibilities: [
       "Plan and run Google, Meta and LinkedIn campaigns",
