@@ -372,43 +372,20 @@ export const AuditExport: Screen = ({ tint }) => (
         </Panel>
       </div>
 
-      <div className="absolute right-[40px] top-[38px] w-[236px] rounded-[10px] bg-white p-[12px] shadow-[0_24px_50px_-16px_rgb(0_0_0/0.45)] ring-1 ring-black/10">
-        <div className="flex items-center justify-between">
-          <p className="text-[11px] font-bold">Export for auditors</p>
-          <X className="size-[11px] text-black/40" aria-hidden="true" />
+      <div className="absolute bottom-[20px] right-[22px] flex w-[300px] items-center gap-[9px] rounded-[10px] bg-[#111827] p-[10px] text-white shadow-[0_24px_50px_-16px_rgb(0_0_0/0.55)]">
+        <span className="flex size-[28px] shrink-0 items-center justify-center rounded-[7px] bg-white/10">
+          <FileText className="size-[13px]" aria-hidden="true" />
+        </span>
+        <div className="min-w-0 flex-1 leading-tight">
+          <p className="truncate text-[9.5px] font-semibold">september-close-audit.xlsx</p>
+          <p className="mt-[2px] flex items-center gap-[3px] truncate text-[7.5px] text-white/55">
+            <ShieldCheck className="size-[8px] shrink-0 text-[#4ade80]" aria-hidden="true" />
+            412,380 rows · reasoning incl. · SHA-256 signed
+          </p>
         </div>
-        <p className="mt-[2px] text-[8.5px] text-black/50">September close · 412,380 records</p>
-        <p className="mt-[10px] text-[8px] font-semibold uppercase tracking-[0.06em] text-black/40">Format</p>
-        <div className="mt-[4px] grid grid-cols-3 gap-[5px]">
-          {["CSV", "XLSX", "PDF summary"].map((f, i) => (
-            <span key={f} className={`flex h-[34px] flex-col items-center justify-center gap-[2px] rounded-[7px] text-[8.5px] font-semibold ${i === 1 ? "" : "text-black/60 ring-1 ring-black/10"}`} style={i === 1 ? { boxShadow: `inset 0 0 0 1.5px ${tint}`, color: tint, background: `color-mix(in oklab, ${tint} 6%, white)` } : undefined}>
-              <FileText className="size-[11px]" aria-hidden="true" />
-              {f}
-            </span>
-          ))}
-        </div>
-        <div className="mt-[10px] space-y-[6px] text-[9px]">
-          {[
-            ["Include agent reasoning", true],
-            ["Include source file hashes", true],
-            ["Only human decisions", false],
-          ].map(([l, on]) => (
-            <label key={l as string} className="flex items-center gap-[6px]">
-              <Check on={on as boolean} tint={tint} />
-              {l}
-            </label>
-          ))}
-        </div>
-        <div className="mt-[10px] flex items-center gap-[6px] rounded-[7px] bg-[#f0fdf4] px-[8px] py-[6px] text-[8px] text-[#166534]">
-          <ShieldCheck className="size-[11px] shrink-0" aria-hidden="true" />
-          Signed SHA-256 manifest · data stays in eu-central-1
-        </div>
-        <div className="mt-[12px] flex justify-end gap-[6px]">
-          <Btn outline>Cancel</Btn>
-          <Btn tint={tint} Icon={Download}>
-            Export 412k records
-          </Btn>
-        </div>
+        <Btn tint={tint} Icon={Download}>
+          Download
+        </Btn>
       </div>
     </div>
   </Browser>

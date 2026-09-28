@@ -112,7 +112,7 @@ export function TopBar({ title, sub, search, children, dark = false }: { title: 
       <div className="ml-auto flex items-center gap-[7px]">
         {search && (
           <span className={`flex h-[22px] w-[130px] items-center gap-[5px] overflow-hidden whitespace-nowrap rounded-[6px] px-[7px] text-[8.5px] ${dark ? "bg-white/10 text-white/50" : "bg-black/[0.045] text-black/40"}`}>
-            <Search className="size-[9px]" aria-hidden="true" />
+            <Search className="size-[9px] shrink-0" aria-hidden="true" />
             {search}
           </span>
         )}
@@ -388,17 +388,14 @@ export function BarChart({
 export function Donut({ size, stroke = 10, segments, children }: { size: number; stroke?: number; segments: { value: number; color: string }[]; children?: ReactNode }) {
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
-  let off = 0;
+  const offsets = segments.map((_, i) => segments.slice(0, i).reduce((t, s) => t + (s.value / 100) * c, 0));
   return (
     <span className="relative inline-flex shrink-0 items-center justify-center" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="absolute inset-0 -rotate-90" aria-hidden="true">
         <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgb(0 0 0 / 0.06)" strokeWidth={stroke} />
-        {segments.map((s, i) => {
-          const len = (s.value / 100) * c;
-          const el = <circle key={i} cx={size / 2} cy={size / 2} r={r} fill="none" stroke={s.color} strokeWidth={stroke} strokeDasharray={`${r1(Math.max(len - 1.2, 0))} ${r1(c)}`} strokeDashoffset={r1(-off)} />;
-          off += len;
-          return el;
-        })}
+        {segments.map((s, i) => (
+          <circle key={i} cx={size / 2} cy={size / 2} r={r} fill="none" stroke={s.color} strokeWidth={stroke} strokeDasharray={`${r1(Math.max((s.value / 100) * c - 1.2, 0))} ${r1(c)}`} strokeDashoffset={r1(-offsets[i])} />
+        ))}
       </svg>
       <span className="relative flex flex-col items-center leading-none">{children}</span>
     </span>

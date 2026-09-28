@@ -1,40 +1,121 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type ReactNode } from "react";
-import { Check, Clock, Copy } from "lucide-react";
+import { Check, Clock, Copy, Flame, Snowflake, Thermometer, UserRound } from "lucide-react";
 
 import { IllustrativeTag } from "@/components/ui/IllustrativeTag";
 import type { StoryBeat } from "@/content/types";
 
 /*
- * Pinned, scroll-scrubbed story. Overall progress P runs 0 → 4 across four beats:
- *   0–1  questions drop into a shared inbox and pile up
- *   1–2  leads slide in and wait while someone copy-pastes into the CRM
- *   2–3  a VAUG agent drops in, connects to every card and resolves them
- *   3–4  the inbox clears and a results dashboard falls into place
+ * Pinned, scroll-scrubbed story. Overall progress P runs 0 → 4 across four beats,
+ * and every beat makes its headline visible on the stage:
+ *   0–1  the same four questions keep arriving; repeat counters climb to 100 and
+ *        one person types the same reply again
+ *   1–2  leads arrive while that person copies rows into a spreadsheet by hand;
+ *        wait clocks tick and each lead cools from hot to warm to cold
+ *   2–3  the agent works the queue card by card: answers, qualifies, syncs the
+ *        CRM, and hands the one unusual lead to a person
+ *   3–4  the inbox clears and a before/after view shows where the team's day goes
  * Every element's position is a pure function of P, so scrolling back rewinds it.
  */
 
 const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const seg = (P: number, from: number, to: number) => clamp((P - from) / (to - from));
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const easeOut = (x: number) => 1 - Math.pow(1 - x, 3);
+const easeInOut = (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
 const easeBack = (x: number) => {
   const c1 = 1.70158;
   const c3 = c1 + 1;
   return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
 };
 
+const tone = {
+  green: "#16a34a",
+  red: "#dc2626",
+  amber: "#d97706",
+  hot: "#ea580c",
+  cold: "#3b82f6",
+};
+
+/* ---------- story data ---------- */
+
+// Repeat counts add up to the "hundred times a day" in beat 1.
 const questions = [
-  { who: "EM", text: "Where is my order #4471?", tilt: -9 },
-  { who: "JB", text: "Can I change my delivery address?", tilt: 7 },
-  { who: "LK", text: "Is the blue one back in stock?", tilt: -5 },
-  { who: "TR", text: "How do I get a refund?", tilt: 10 },
+  { who: "EM", text: "Where is my order #4471?", repeats: 38, reply: "Out for delivery, arrives today" },
+  { who: "JB", text: "Can I change my delivery address?", repeats: 14, reply: "Address updated, confirmation sent" },
+  { who: "LK", text: "Is the blue one back in stock?", repeats: 21, reply: "Back Friday · restock alert set" },
+  { who: "TR", text: "How do I get a refund?", repeats: 27, reply: "Return label sent · refund in 3–5 days" },
 ];
 const leads = [
-  { who: "Maya R.", text: "Demo request · 40 seats", wait: ["20m", "3h"] },
-  { who: "Oliver P.", text: "Pricing for the Pro plan", wait: ["1h", "1d"] },
-  { who: "Hana K.", text: "Partnership enquiry", wait: ["45m", "5h"] },
+  { who: "Maya R.", text: "Demo request · 40 seats", wait: [2, 190], result: "Qualified · demo booked Thu 10:00", crm: ["Maya R.", "Demo · 40 seats", "Demo booked"] },
+  { who: "Oliver P.", text: "Pricing for the Pro plan", wait: [1, 1500], result: "Pricing sent · follow-up set", crm: ["Oliver P.", "Pro pricing", "Pricing sent"] },
+  { who: "Hana K.", text: "Partnership enquiry", wait: [1, 300], result: "Summarised · handed to you", crm: ["Hana K.", "Partnership", "With you"], handoff: true },
 ];
+
+/* ---------- stage layout (fixed 540×460 canvas) ---------- */
+
+const COL_Q = { x: 16, w: 246 };
+const COL_L = { x: 278, w: 246 };
+const Q_H = 62;
+const L_H = 72;
+const qY = (i: number) => 89 + i * (Q_H + 6);
+const lY = (i: number) => 89 + i * (L_H + 6);
+const COMPOSER = { y: qY(4), h: 444 - qY(4) };
+const CRM = { y: lY(3), h: 444 - lY(3) };
+const crmRowY = (i: number) => CRM.y + 52 + i * 22;
+
+/* ---------- timeline ---------- */
+
+const qAppear = (i: number) => 0.08 + i * 0.14;
+const lAppear = (i: number) => 1.05 + i * 0.15;
+/** When the typist copies lead i into the spreadsheet (only the first two make it). */
+const copyAt = (i: number) => 1.3 + i * 0.3;
+
+// The agent visits every card, then the CRM. `t` is the moment it resolves that stop.
+const stops = [
+  ...questions.map((_, i) => ({ kind: "q" as const, i, x: COL_Q.x + COL_Q.w, y: qY(i) + Q_H / 2, t: 2.15 + i * 0.1 })),
+  ...leads.map((_, i) => ({ kind: "l" as const, i, x: COL_L.x + COL_L.w - 2, y: lY(i) + L_H / 2, t: 2.55 + i * 0.1 })),
+  { kind: "crm" as const, i: 0, x: COL_L.x + COL_L.w - 2, y: CRM.y + 20, t: 2.85 },
+];
+const stopFor = (kind: "q" | "l", i: number) => stops.find((s) => s.kind === kind && s.i === i)!;
+const handledBy = (P: number) => stops.filter((s) => s.kind !== "crm" && P >= s.t).length;
+const HANDLED_TOTAL = questions.length + leads.length;
+
+const repeatsAt = (P: number, i: number) => Math.round(questions[i].repeats * easeOut(seg(P, qAppear(i) + 0.02, 1.0)));
+const questionWaitAt = (P: number, i: number) => Math.round(1 + seg(P, qAppear(i) + 0.1, 2.0) * (135 - i * 12));
+const leadWaitAt = (P: number, i: number) => {
+  const [a, b] = leads[i].wait;
+  return Math.round(lerp(a, b, seg(P, lAppear(i), 2.0)));
+};
+const heat = (min: number) => (min < 30 ? "hot" : min < 120 ? "warm" : "cold");
+
+function fmtWait(min: number) {
+  if (min < 1) return "just now";
+  if (min < 60) return `${min}m`;
+  if (min < 1440) return `${Math.floor(min / 60)}h ${String(min % 60).padStart(2, "0")}m`;
+  return `${Math.floor(min / 1440)}d ${Math.floor((min % 1440) / 60)}h`;
+}
+
+/** The live line under each beat's caption: the same number the stage is showing. */
+function beatMeter(i: number, P: number): { text: string; color: string } {
+  if (i === 0) {
+    const n = questions.reduce((s, _, k) => s + repeatsAt(P, k), 0);
+    return { text: `${n} repeat questions answered by hand today`, color: tone.red };
+  }
+  if (i === 1) {
+    const oldest = Math.max(0, ...leads.map((_, k) => (P > lAppear(k) ? leadWaitAt(P, k) : 0)));
+    return { text: `Oldest lead waiting · ${fmtWait(oldest)}`, color: heat(oldest) === "cold" ? tone.cold : tone.hot };
+  }
+  if (i === 2) {
+    const n = handledBy(P);
+    return {
+      text: n < HANDLED_TOTAL ? `${n} of ${HANDLED_TOTAL} handled by the agent` : `${HANDLED_TOTAL - 1} answered · 1 passed to a person`,
+      color: tone.green,
+    };
+  }
+  return { text: "First reply · 2h+ → 0.8s", color: tone.green };
+}
 
 /* ---------- motion helpers ---------- */
 
@@ -158,41 +239,65 @@ function CountPill({
   );
 }
 
+type CardStatus = "new" | "late" | "hot" | "warm" | "cold" | "working" | "done" | "handoff";
+
+const statusColor: Record<CardStatus, string> = {
+  new: "var(--accent-text)",
+  late: tone.red,
+  hot: tone.hot,
+  warm: tone.amber,
+  cold: tone.cold,
+  working: "var(--accent-text)",
+  done: tone.green,
+  handoff: tone.amber,
+};
+const statusBorder: Partial<Record<CardStatus, string>> = {
+  hot: "rgb(234 88 12 / 0.45)",
+  warm: "rgb(217 119 6 / 0.45)",
+  cold: "rgb(59 130 246 / 0.45)",
+  working: "var(--accent-text)",
+  done: "rgb(22 163 74 / 0.45)",
+  handoff: "rgb(217 119 6 / 0.55)",
+};
+
 /**
- * An inbox card that fades + slides in when `shown` flips on (staggered by
- * `delay`), fades out when it flips off, and flashes when its `status` changes.
+ * An inbox card at a fixed spot on the canvas. It fades + slides in when `shown`
+ * flips on (staggered by `delay`), fades out when it flips off, and flashes in
+ * its status colour whenever the status changes.
  */
 function StoryCard({
   shown,
   delay,
   from,
   status,
-  borderColor,
+  box,
   reduced,
   children,
 }: {
   shown: boolean;
   delay: number;
   from: string;
-  status: string;
-  borderColor: string;
+  status: CardStatus;
+  box: CSSProperties;
   reduced: boolean;
   children: ReactNode;
 }) {
-  const flashColor = status === "done" ? "#16a34a" : status === "late" ? "#dc2626" : "var(--accent-text)";
-  const ref = useFlash<HTMLDivElement>(`${shown}:${status}`, reduced || !shown, flashColor, shown ? delay : 0);
+  const ref = useFlash<HTMLDivElement>(`${shown}:${status}`, reduced || !shown, statusColor[status], shown ? delay : 0);
   return (
     <div
       ref={ref}
-      className="rounded-lg border bg-bg p-3 motion-reduce:transition-none"
+      className="absolute overflow-hidden rounded-lg border px-3 py-2.5 motion-reduce:transition-none"
       style={{
+        ...box,
         opacity: shown ? 1 : 0,
         transform: shown ? "none" : from,
-        borderColor,
-        transitionProperty: "opacity, transform, border-color",
-        transitionDuration: shown ? "380ms, 380ms, 500ms" : "220ms, 220ms, 500ms",
+        borderColor: statusBorder[status] ?? "var(--border)",
+        // Cold leads frost over; everything else sits on the page colour.
+        background: status === "cold" ? "color-mix(in srgb, #3b82f6 7%, var(--bg))" : "var(--bg)",
+        transitionProperty: "opacity, transform, border-color, background-color",
+        transitionDuration: shown ? "380ms, 380ms, 500ms, 700ms" : "220ms, 220ms, 500ms, 700ms",
         transitionTimingFunction: "cubic-bezier(0.2, 0.7, 0.2, 1)",
-        transitionDelay: reduced ? "0ms" : `${delay}ms, ${delay}ms, 0ms`,
+        transitionDelay: reduced ? "0ms" : `${delay}ms, ${delay}ms, 0ms, 0ms`,
       }}
     >
       {children}
@@ -231,28 +336,54 @@ function useFitScale<T extends HTMLElement>(w: number, h: number) {
   return [ref, scale] as const;
 }
 
-function Stage({ P: rawP, reduced }: { P: number; reduced: boolean }) {
+/** Crossfading layer for the composer's three states. */
+function Layer({ on, children }: { on: boolean; children: ReactNode }) {
+  return (
+    <div
+      aria-hidden={!on}
+      className="absolute inset-0 flex flex-col px-3 py-2.5 transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.2,0.7,0.2,1)] motion-reduce:transition-none"
+      style={{ opacity: on ? 1 : 0, transform: on ? "none" : "translateY(6px)" }}
+    >
+      {children}
+    </div>
+  );
+}
+
+const cannedReply = "Hi! Your order #4471 is on its way. Here's your tracking link, and sorry for the wait…";
+
+function Stage({ P, rawP, reduced }: { P: number; rawP: number; reduced: boolean }) {
   const [box, scale] = useFitScale<HTMLDivElement>(540, 460);
-  // Scrubbed pieces (agent, wires, dashboard) follow a lightly smoothed P so big scroll jumps glide.
-  const P = useSmoothed(rawP, reduced);
 
   // Cards are triggered, not scrubbed: they enter/leave with a timed, staggered transition.
-  const qShown = questions.filter((_, i) => rawP > 0.1 + i * 0.18).length;
-  const lShown = leads.filter((_, i) => rawP > 1.05 + i * 0.2).length;
+  const qShown = questions.filter((_, i) => rawP > qAppear(i)).length;
+  const lShown = leads.filter((_, i) => rawP > lAppear(i)).length;
   const qDelay = useStagger(qShown);
   const lDelay = useStagger(lShown);
   const beat = Math.min(3, Math.floor(rawP));
 
   const inboxOut = easeOut(seg(P, 3.0, 3.35));
-  const agentIn = easeBack(seg(P, 2.0, 2.35));
-  const wires = seg(P, 2.3, 2.6);
   const dashIn = seg(P, 3.15, 3.5);
-  const copying = P > 1.25 && P < 2.05;
-  const unanswered =
-    questions.filter((_, i) => rawP > 0.1 + i * 0.18 + 0.1).length + leads.filter((_, i) => rawP > 1.05 + i * 0.2 + 0.1).length;
-  const resolvedCount = [...questions, ...leads].filter((_, i) => rawP > 2.5 + i * 0.06).length;
+  const crmIn = seg(P, 1.15, 1.3);
+  const synced = rawP >= stops[stops.length - 1].t;
+  const handled = handledBy(rawP);
+  const resolving = rawP > 2.1;
+  const waiting = qShown + lShown - handled;
   const todayCount = Math.round(18 + easeOut(seg(rawP, 0, 2)) * 110);
-  const resolving = rawP > 2.5;
+
+  // Composer: one person, three jobs. Replying (beat 1), copy-pasting (beat 2), then only the handoff.
+  const composer = rawP >= stopFor("l", 2).t ? "handoff" : rawP > 1.2 ? "paused" : "replying";
+  const typed = cannedReply.slice(0, Math.round(cannedReply.length * seg(P, 0.5, 0.95)));
+
+  // The agent flies stop to stop; each hop eases in over the 0.07 before that stop resolves.
+  const agentIn = seg(P, 2.0, 2.1);
+  let ax = 270;
+  let ay = 24;
+  for (const s of stops) {
+    const e = easeInOut(seg(P, s.t - 0.075, s.t - 0.01));
+    ax = lerp(ax, s.x, e);
+    ay = lerp(ay, s.y, e);
+  }
+  const workingOn = (s: (typeof stops)[number]) => rawP > s.t - 0.06 && rawP < s.t;
 
   return (
     <div ref={box} className="relative h-full w-full">
@@ -265,12 +396,18 @@ function Stage({ P: rawP, reduced }: { P: number; reduced: boolean }) {
           className="glass absolute inset-0 overflow-hidden rounded-xl"
           style={{ opacity: 1 - inboxOut, transform: `scale(${1 - inboxOut * 0.12}) translateY(${inboxOut * -30}px)` }}
         >
-          <div className="flex items-center justify-between border-b border-border px-5 py-3">
+          <div className="flex h-[49px] items-center justify-between border-b border-border px-5">
             <div className="flex items-center gap-2">
               <span className="size-2.5 rounded-full bg-[#ff5f57]" />
               <span className="size-2.5 rounded-full bg-[#febc2e]" />
               <span className="size-2.5 rounded-full bg-[#28c840]" />
               <span className="ml-3 text-sm font-semibold text-fg">Shared inbox</span>
+              <span
+                className="ml-1 inline-flex items-center gap-1 rounded-full bg-accent-soft px-2 py-0.5 font-mono text-[10px] font-semibold text-accent-text transition-[opacity,transform] duration-300"
+                style={{ opacity: resolving ? 1 : 0, transform: resolving ? "none" : "scale(0.8)" }}
+              >
+                <span className="size-1.5 rounded-full bg-current" /> Agent on
+              </span>
             </div>
             <div className="flex items-center gap-2 font-mono text-[11px]">
               <CountPill
@@ -281,181 +418,320 @@ function Stage({ P: rawP, reduced }: { P: number; reduced: boolean }) {
                 className="rounded bg-surface-2 px-2 py-1 text-muted"
               />
               <CountPill
-                key={resolving ? "resolved" : "waiting"}
-                value={resolving ? Math.round((resolvedCount / 7) * 94) : unanswered}
-                render={(n) => (resolving ? `${n}% auto-resolved` : `${n} waiting`)}
+                key={resolving ? "handled" : "waiting"}
+                value={resolving ? handled : waiting}
+                render={(n) => (resolving ? `${n} of ${HANDLED_TOTAL} handled` : `${n} waiting`)}
                 reduced={reduced}
-                flashColor={resolving ? "#16a34a" : "#dc2626"}
+                flashColor={resolving ? tone.green : tone.red}
                 className="rounded px-2 py-1 font-semibold transition-colors duration-300"
                 style={{
                   background: resolving ? "rgb(22 163 74 / 0.14)" : "rgb(220 38 38 / 0.12)",
-                  color: resolving ? "#16a34a" : "#dc2626",
+                  color: resolving ? tone.green : tone.red,
                 }}
               />
             </div>
           </div>
 
-          {/* wires from the agent to every card */}
-          <svg className="pointer-events-none absolute inset-0 size-full" viewBox="0 0 540 460" fill="none" aria-hidden="true">
-            {[
-              [270, 250, 130, 110],
-              [270, 250, 130, 190],
-              [270, 250, 130, 270],
-              [270, 250, 130, 350],
-              [270, 250, 400, 110],
-              [270, 250, 400, 200],
-              [270, 250, 400, 290],
-            ].map(([x1, y1, x2, y2], i) => (
-              <path
-                key={i}
-                d={`M${x1},${y1} C${(x1 + x2) / 2},${y1} ${(x1 + x2) / 2},${y2} ${x2},${y2}`}
-                pathLength={1}
-                stroke="var(--accent-text)"
-                strokeWidth={1.5}
-                strokeDasharray="1"
-                strokeDashoffset={1 - clamp(wires * 1.6 - i * 0.1)}
-                opacity={0.8}
-              />
-            ))}
-          </svg>
+          {/* column labels */}
+          <p className="absolute top-[65px] font-mono text-[10px] uppercase tracking-widest text-subtle" style={{ left: COL_Q.x }}>
+            Customer questions
+          </p>
+          <p className="absolute top-[65px] font-mono text-[10px] uppercase tracking-widest text-subtle" style={{ left: COL_L.x }}>
+            New leads
+          </p>
 
-          <div className="relative grid h-[calc(100%-49px)] grid-cols-2 gap-4 p-4">
-            {/* customer questions */}
-            <div>
-              <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-subtle">Customer questions</p>
-              <div className="flex flex-col gap-2.5">
-                {questions.map((q, i) => {
-                  const done = rawP > 2.5 + i * 0.06;
-                  const late = rawP > 1.2;
-                  return (
-                    <StoryCard
-                      key={q.text}
-                      shown={i < qShown}
-                      delay={qDelay(i)}
-                      from={`translateY(-14px) rotate(${q.tilt * 0.25}deg)`}
-                      status={done ? "done" : late ? "late" : "new"}
-                      borderColor={done ? "rgb(22 163 74 / 0.45)" : "var(--border)"}
-                      reduced={reduced}
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className="inline-flex size-6 items-center justify-center rounded-full bg-surface-2 text-[10px] font-bold text-fg">{q.who}</span>
-                        <p className="truncate text-[13px] text-fg">{q.text}</p>
-                      </div>
-                      <p className="mt-1.5 flex items-center gap-1 pl-8 font-mono text-[10px] transition-colors duration-500" style={{ color: done ? "#16a34a" : late ? "#dc2626" : "var(--subtle)" }}>
-                        {done ? <Check className="size-3" /> : <Clock className="size-3" />}
-                        {done ? "Answered by agent · 0.8s" : late ? "Waiting 2h+" : "New"}
-                      </p>
-                    </StoryCard>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* leads + CRM */}
-            <div className="relative">
-              <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-subtle">New leads</p>
-              <div className="flex flex-col gap-2.5">
-                {leads.map((l, i) => {
-                  const late = seg(rawP, 1.3 + i * 0.1, 1.9) > 0.5;
-                  const done = rawP > 2.5 + (i + 4) * 0.06;
-                  return (
-                    <StoryCard
-                      key={l.who}
-                      shown={i < lShown}
-                      delay={lDelay(i)}
-                      from="translateX(18px)"
-                      status={done ? "done" : late ? "late" : "new"}
-                      borderColor={done ? "rgb(22 163 74 / 0.45)" : late ? "rgb(220 38 38 / 0.45)" : "var(--border)"}
-                      reduced={reduced}
-                    >
-                      <p className="text-[13px] font-semibold text-fg">{l.who}</p>
-                      <p className="text-[12px] text-muted">{l.text}</p>
-                      <p className="mt-1.5 flex items-center gap-1 font-mono text-[10px] transition-colors duration-500" style={{ color: done ? "#16a34a" : late ? "#dc2626" : "var(--subtle)" }}>
-                        {done ? <Check className="size-3" /> : <Clock className="size-3" />}
-                        {done ? "Qualified · meeting booked" : `Waiting ${late ? l.wait[1] : l.wait[0]}`}
-                      </p>
-                    </StoryCard>
-                  );
-                })}
-              </div>
-
-              {/* CRM sheet someone is copying into */}
-              <div
-                className="absolute inset-x-0 bottom-0 rounded-lg border border-dashed border-border-strong bg-bg p-2.5"
-                style={{ opacity: seg(P, 1.2, 1.4) * (1 - seg(P, 2.1, 2.3)), transform: `translateY(${(1 - seg(P, 1.2, 1.4)) * 20}px)` }}
+          {/* ---- customer questions ---- */}
+          {questions.map((q, i) => {
+            const stop = stopFor("q", i);
+            const done = rawP >= stop.t;
+            const working = workingOn(stop);
+            const wait = questionWaitAt(P, i);
+            const status: CardStatus = done ? "done" : working ? "working" : wait >= 60 ? "late" : "new";
+            const waitColor = wait >= 60 ? tone.red : wait >= 15 ? tone.amber : "var(--subtle)";
+            return (
+              <StoryCard
+                key={q.text}
+                shown={i < qShown}
+                delay={qDelay(i)}
+                from="translateY(-14px)"
+                status={status}
+                box={{ left: COL_Q.x, top: qY(i), width: COL_Q.w, height: Q_H }}
+                reduced={reduced}
               >
-                <p className="mb-1.5 flex items-center gap-1.5 font-mono text-[10px] text-subtle">
-                  <Copy className="size-3" /> CRM.xlsx · manual entry
-                </p>
-                <div className="grid grid-cols-4 gap-1">
-                  {Array.from({ length: 8 }).map((_, i) => (
-                    <span key={i} className={`h-3 rounded-sm ${copying && i === Math.floor(P * 10) % 8 ? "bg-accent" : "bg-surface-2"}`} />
-                  ))}
+                <div className="flex items-center gap-2">
+                  <span className="inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-surface-2 text-[10px] font-bold text-fg">{q.who}</span>
+                  <p className="min-w-0 flex-1 truncate text-[13px] text-fg">{q.text}</p>
+                  <span
+                    className="shrink-0 rounded bg-surface-2 px-1.5 py-0.5 font-mono text-[10px] font-semibold tabular-nums transition-opacity duration-300"
+                    style={{ color: tone.red, opacity: done ? 0 : 1 }}
+                    title="Times asked today"
+                  >
+                    ×{repeatsAt(P, i)}
+                  </span>
                 </div>
-              </div>
-            </div>
+                <p className="mt-0.5 flex h-3.5 items-center gap-1 pl-8 font-mono text-[10px] transition-colors duration-500" style={{ color: done ? tone.green : working ? "var(--accent-text)" : waitColor }}>
+                  {done ? <Check className="size-3 shrink-0" /> : <Clock className="size-3 shrink-0" />}
+                  <span className="truncate">{done ? q.reply : working ? "Agent is replying…" : wait < 3 ? "New" : `Waiting ${fmtWait(wait)}`}</span>
+                  {done && <span className="ml-auto shrink-0 text-subtle">0.8s</span>}
+                </p>
+              </StoryCard>
+            );
+          })}
+
+          {/* ---- composer: what the one human is doing ---- */}
+          <div
+            className="absolute overflow-hidden rounded-lg border bg-bg transition-[opacity,transform,border-color] duration-500 motion-reduce:transition-none"
+            style={{
+              left: COL_Q.x,
+              top: COMPOSER.y,
+              width: COL_Q.w,
+              height: COMPOSER.h,
+              opacity: rawP > 0.5 ? 1 : 0,
+              transform: rawP > 0.5 ? "none" : "translateY(10px)",
+              borderColor: composer === "handoff" ? "rgb(217 119 6 / 0.55)" : composer === "paused" ? "var(--border)" : "var(--border-strong)",
+            }}
+          >
+            <Layer on={composer === "replying"}>
+              <p className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-subtle">
+                <UserRound className="size-3" /> You · replying to EM
+              </p>
+              <p className="mt-1 line-clamp-2 text-[12px] leading-snug text-fg">
+                {typed}
+                <span className="ml-px inline-block h-3 w-px translate-y-0.5 bg-fg motion-safe:animate-pulse" />
+              </p>
+              <p className="mt-auto font-mono text-[10px]" style={{ color: tone.red }}>
+                Same reply, typed for the {repeatsAt(P, 0)}th time today
+              </p>
+            </Layer>
+            <Layer on={composer === "paused"}>
+              <p className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-subtle">
+                <Copy className="size-3" /> You · in CRM.xlsx
+              </p>
+              <p className="mt-1 text-[12px] leading-snug text-muted">Replies paused while you copy new leads into the spreadsheet.</p>
+              <p className="mt-auto font-mono text-[10px]" style={{ color: tone.red }}>
+                {qShown} customers still waiting
+              </p>
+            </Layer>
+            <Layer on={composer === "handoff"}>
+              <p className="flex items-center gap-1.5 font-mono text-[10px] font-semibold uppercase tracking-widest" style={{ color: tone.amber }}>
+                <UserRound className="size-3" /> Needs you · 1
+              </p>
+              <p className="mt-1 text-[12px] leading-snug text-fg">Hana K. wants to talk partnerships. The agent summarised the thread for you.</p>
+              <p className="mt-auto flex items-center gap-1 font-mono text-[10px]" style={{ color: tone.green }}>
+                <Check className="size-3" /> Everything else is handled
+              </p>
+            </Layer>
           </div>
 
-          {/* the agent drops in */}
+          {/* ---- new leads ---- */}
+          {leads.map((l, i) => {
+            const stop = stopFor("l", i);
+            const done = rawP >= stop.t;
+            const working = workingOn(stop);
+            const wait = leadWaitAt(P, i);
+            const temp = heat(wait);
+            const status: CardStatus = done ? (l.handoff ? "handoff" : "done") : working ? "working" : temp;
+            const TempIcon = temp === "hot" ? Flame : temp === "warm" ? Thermometer : Snowflake;
+            const tempColor = statusColor[temp];
+            return (
+              <StoryCard
+                key={l.who}
+                shown={i < lShown}
+                delay={lDelay(i)}
+                from="translateX(18px)"
+                status={status}
+                box={{ left: COL_L.x, top: lY(i), width: COL_L.w, height: L_H }}
+                reduced={reduced}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-[13px] font-semibold text-fg">{l.who}</p>
+                  <span
+                    className="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 font-mono text-[10px] font-semibold capitalize transition-[color,background-color,opacity] duration-500"
+                    style={{ color: tempColor, background: `color-mix(in srgb, ${tempColor} 12%, transparent)`, opacity: done || working ? 0 : 1 }}
+                  >
+                    <TempIcon className="size-3" /> {temp}
+                  </span>
+                </div>
+                <p className="truncate text-[12px] text-muted">{l.text}</p>
+                <p
+                  className="mt-1 flex items-center gap-1 font-mono text-[10px] transition-colors duration-500"
+                  style={{ color: done ? (l.handoff ? tone.amber : tone.green) : working ? "var(--accent-text)" : tempColor }}
+                >
+                  {done ? l.handoff ? <UserRound className="size-3 shrink-0" /> : <Check className="size-3 shrink-0" /> : <Clock className="size-3 shrink-0" />}
+                  <span className="truncate">{done ? l.result : working ? "Agent is qualifying…" : `Waiting ${fmtWait(wait)}`}</span>
+                </p>
+              </StoryCard>
+            );
+          })}
+
+          {/* ---- CRM sheet: typed by hand in beat 2, synced by the agent in beat 3 ---- */}
           <div
-            className="absolute left-[270px] top-[250px]"
-            style={{ transform: `translate(-50%, -50%) translateY(${(1 - agentIn) * -420}px) scale(${0.6 + agentIn * 0.4})`, opacity: clamp(agentIn * 2) }}
+            className="absolute rounded-lg border bg-bg px-2.5 py-2 transition-[border-color,border-style] duration-500"
+            style={{
+              left: COL_L.x,
+              top: CRM.y,
+              width: COL_L.w,
+              height: CRM.h,
+              opacity: crmIn,
+              transform: `translateY(${(1 - crmIn) * 20}px)`,
+              borderStyle: synced ? "solid" : "dashed",
+              borderColor: synced ? "rgb(22 163 74 / 0.45)" : "var(--border-strong)",
+            }}
           >
-            <span className="absolute inset-0 animate-ping rounded-full bg-purple/30 [animation-duration:2s]" aria-hidden="true" />
-            <div className="relative flex size-20 flex-col items-center justify-center rounded-full bg-purple text-white shadow-[0_20px_40px_-12px_rgb(124_58_237/0.7)]">
-              <svg viewBox="0 0 40 40" className="size-8" aria-hidden="true">
+            <p className="mb-1 flex h-3.5 items-center gap-1.5 font-mono text-[10px] transition-colors duration-500" style={{ color: synced ? tone.green : "var(--subtle)" }}>
+              {synced ? <Check className="size-3" /> : <Copy className="size-3" />}
+              {synced ? "CRM · synced by agent" : "CRM.xlsx · typed by hand"}
+            </p>
+            <div className="grid h-3.5 grid-cols-[4.5rem_1fr_4.75rem] gap-1.5 font-mono text-[9px] uppercase tracking-wider text-subtle">
+              <span>Name</span>
+              <span>Request</span>
+              <span>Status</span>
+            </div>
+            {leads.map((l, i) => {
+              const agentRow = rawP >= stopFor("l", i).t;
+              // Hand-typed cells fill character by character; only the first two leads get typed.
+              const handTyped = i < 2 ? seg(P, copyAt(i) + 0.12, copyAt(i) + 0.3) : 0;
+              const cells = [l.crm[0], l.crm[1], ""];
+              const total = cells.join("").length;
+              let budget = Math.round(total * handTyped);
+              return (
+                <div
+                  key={l.who}
+                  className="mt-1 grid h-[18px] grid-cols-[4.5rem_1fr_4.75rem] items-center gap-1.5 rounded-sm border-l-2 pl-1 text-[10px] transition-colors duration-500"
+                  style={{ borderLeftColor: agentRow ? (l.handoff ? tone.amber : tone.green) : "transparent" }}
+                >
+                  {cells.map((c, k) => {
+                    const text = agentRow ? l.crm[k] : c.slice(0, Math.max(0, budget));
+                    if (!agentRow) budget -= c.length;
+                    const filled = text.length > 0;
+                    const typing = !agentRow && handTyped > 0 && handTyped < 1 && filled && text.length < c.length;
+                    return filled ? (
+                      <span
+                        key={k}
+                        className="truncate"
+                        style={{ color: k === 2 ? (l.handoff ? tone.amber : tone.green) : agentRow ? "var(--fg)" : "var(--muted)" }}
+                      >
+                        {text}
+                        {typing && <span className="ml-px inline-block h-2.5 w-px translate-y-0.5 bg-fg" />}
+                      </span>
+                    ) : (
+                      <span key={k} className="h-2.5 rounded-sm bg-surface-2" />
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* ---- copy-paste: a clipboard chip hops from lead card to spreadsheet row ---- */}
+          {!reduced &&
+            [0, 1].map((i) => {
+              const f = seg(P, copyAt(i), copyAt(i) + 0.12);
+              if (f <= 0 || f >= 1) return null;
+              const e = easeInOut(f);
+              const x = lerp(COL_L.x + 40, COL_L.x + 36, e);
+              const y = lerp(lY(i) + 16, crmRowY(i), e) - Math.sin(e * Math.PI) * 26;
+              return (
+                <span
+                  key={i}
+                  className="pointer-events-none absolute inline-flex items-center gap-1 rounded-md border border-border-strong bg-surface px-1.5 py-0.5 font-mono text-[10px] text-fg shadow-lg"
+                  style={{ left: x, top: y, transform: `translate(-50%, -50%) rotate(${Math.sin(e * Math.PI) * -6}deg)`, opacity: clamp(Math.min(f, 1 - f) * 8) }}
+                >
+                  <Copy className="size-3" /> {leads[i].who}
+                </span>
+              );
+            })}
+
+          {/* ---- the agent: visits every card in order ---- */}
+          <div
+            className="pointer-events-none absolute left-0 top-0"
+            style={{
+              transform: `translate(${ax}px, ${ay}px) translate(-50%, -50%) scale(${0.4 + easeBack(agentIn) * 0.6})`,
+              opacity: clamp(agentIn * 3),
+            }}
+            aria-hidden="true"
+          >
+            <span className="absolute inset-0 rounded-full bg-purple/30 motion-safe:animate-ping [animation-duration:1.6s]" />
+            <div className="relative flex size-8 items-center justify-center rounded-full bg-purple text-white shadow-[0_10px_24px_-8px_rgb(124_58_237/0.8)] ring-2 ring-bg">
+              <svg viewBox="0 0 40 40" className="size-4" aria-hidden="true">
                 <path d="M6 9 L17 33 H23 L34 9 H27.5 L20 26 L12.5 9 Z" fill="#fff" />
                 <circle cx="34" cy="31" r="3.4" fill="#ffd23f" />
               </svg>
-              <span className="mt-0.5 font-mono text-[9px] tracking-wider">AGENT</span>
             </div>
           </div>
         </div>
 
-        {/* ---------- Results dashboard (beat 4) ---------- */}
+        {/* ---------- Results (beat 4): the same inbox, before and after ---------- */}
         <div className="absolute inset-0" style={{ opacity: dashIn, pointerEvents: dashIn > 0.5 ? "auto" : "none" }}>
-          <div
-            className="glass flex h-full flex-col rounded-xl p-5"
-            style={{ transform: `translateY(${(1 - easeOut(dashIn)) * 60}px)` }}
-          >
+          <div className="glass flex h-full flex-col rounded-xl p-5" style={{ transform: `translateY(${(1 - easeOut(dashIn)) * 60}px)` }}>
             <div className="flex items-center justify-between">
-              <p className="text-sm font-semibold text-fg">This week with VAUG agents</p>
-              <span className="rounded bg-[rgb(22_163_74/0.14)] px-2 py-1 font-mono text-[11px] font-semibold text-[#16a34a]">All systems running</span>
+              <p className="text-sm font-semibold text-fg">The same inbox, with an agent on it</p>
+              <span className="inline-flex items-center gap-1.5 rounded bg-[rgb(22_163_74/0.14)] px-2 py-1 font-mono text-[11px] font-semibold" style={{ color: tone.green }}>
+                <span className="size-1.5 rounded-full bg-current" /> Agent online
+              </span>
             </div>
+
             <div className="mt-4 grid grid-cols-3 gap-3">
               {[
-                { v: "42h", l: "team hours saved" },
-                { v: "94%", l: "auto-resolved" },
-                { v: "3x", l: "more demos booked" },
+                { l: "First reply", from: "2h+", to: "0.8s" },
+                { l: "Leads left waiting", from: "3", to: "0" },
+                { l: "Rows typed by hand", from: "2", to: "0" },
               ].map((t, i) => {
-                const e = easeBack(seg(P, 3.3 + i * 0.1, 3.6 + i * 0.1));
+                const e = easeBack(seg(P, 3.3 + i * 0.08, 3.55 + i * 0.08));
                 return (
-                  <div
-                    key={t.l}
-                    className="rounded-lg bg-bg p-3"
-                    style={{ opacity: clamp(e * 1.5), transform: `translateY(${(1 - e) * -120}px) rotate(${(1 - e) * (i - 1) * 8}deg)` }}
-                  >
-                    <p className="text-3xl font-semibold tracking-tight text-fg">{t.v}</p>
-                    <p className="mt-1 text-[12px] text-muted">{t.l}</p>
+                  <div key={t.l} className="rounded-lg bg-bg p-3" style={{ opacity: clamp(e * 1.5), transform: `translateY(${(1 - e) * 24}px)` }}>
+                    <p className="text-[11px] text-muted">{t.l}</p>
+                    <p className="mt-1 flex items-baseline gap-2">
+                      <span className="text-3xl font-semibold tracking-tight text-fg">{t.to}</span>
+                      <span className="font-mono text-[11px] text-subtle line-through decoration-[1.5px]" style={{ textDecorationColor: tone.red }}>
+                        {t.from}
+                      </span>
+                    </p>
                   </div>
                 );
               })}
             </div>
-            {/* chart */}
-            <div className="mt-4 flex-1 rounded-lg bg-bg p-3">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-subtle">Hours back to the team</p>
-              <svg viewBox="0 0 300 90" preserveAspectRatio="none" className="mt-2 h-[120px] w-full" fill="none" aria-hidden="true">
-                <path
-                  d="M0,80 C40,78 60,70 90,62 S150,40 180,34 S240,16 300,8"
-                  stroke="var(--accent-text)"
-                  strokeWidth={2.5}
-                  pathLength={1}
-                  strokeDasharray="1"
-                  strokeDashoffset={1 - seg(P, 3.45, 3.85)}
-                />
-                <path d="M0,80 C40,78 60,70 90,62 S150,40 180,34 S240,16 300,8 V90 H0 Z" fill="var(--accent-soft)" opacity={seg(P, 3.6, 3.9)} />
-              </svg>
+
+            {/* where the team's day goes */}
+            <div className="mt-4 flex flex-1 flex-col justify-center gap-4 rounded-lg bg-bg p-4">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-subtle">Where your team&apos;s day goes</p>
+              {[
+                {
+                  label: "Before",
+                  parts: [
+                    { t: "Same replies", w: 40, bg: "rgb(220 38 38 / 0.16)", fg: "var(--fg)" },
+                    { t: "Copy-paste", w: 25, bg: "rgb(217 119 6 / 0.2)", fg: "var(--fg)" },
+                    { t: "Real work", w: 35, bg: "var(--accent)", fg: "var(--accent-fg)" },
+                  ],
+                },
+                {
+                  label: "After",
+                  parts: [
+                    { t: "Real work", w: 84, bg: "var(--accent)", fg: "var(--accent-fg)" },
+                    { t: "Edge cases", w: 16, bg: "rgb(217 119 6 / 0.2)", fg: "var(--fg)" },
+                  ],
+                },
+              ].map((row, r) => {
+                const e = easeOut(seg(P, 3.5 + r * 0.14, 3.75 + r * 0.14));
+                return (
+                  <div key={row.label} className="flex items-center gap-3">
+                    <span className="w-12 shrink-0 font-mono text-[11px] text-muted">{row.label}</span>
+                    <div className="flex h-9 flex-1 gap-1 overflow-hidden rounded-md" style={{ clipPath: `inset(0 ${(1 - e) * 100}% 0 0 round 6px)` }}>
+                      {row.parts.map((part) => (
+                        <span
+                          key={part.t}
+                          className="flex items-center truncate rounded-[4px] px-2 text-[11px] font-medium"
+                          style={{ width: `${part.w}%`, background: part.bg, color: part.fg }}
+                        >
+                          {part.t}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
+
             {/* people back on real work */}
             <div className="mt-3 flex gap-2">
               {[
@@ -463,12 +739,12 @@ function Stage({ P: rawP, reduced }: { P: number; reduced: boolean }) {
                 { n: "AV", t: "Client calls" },
                 { n: "LE", t: "Product" },
               ].map((p, i) => {
-                const e = easeBack(seg(P, 3.6 + i * 0.08, 3.85 + i * 0.08));
+                const e = easeBack(seg(P, 3.75 + i * 0.06, 3.95 + i * 0.03));
                 return (
                   <div
                     key={p.t}
                     className="flex flex-1 items-center gap-2 rounded-lg bg-bg px-3 py-2"
-                    style={{ opacity: clamp(e * 1.5), transform: `translateY(${(1 - e) * 50}px)` }}
+                    style={{ opacity: clamp(e * 1.5), transform: `translateY(${(1 - e) * 30}px)` }}
                   >
                     <span className="inline-flex size-7 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-fg">{p.n}</span>
                     <span className="text-[12px] text-fg">{p.t}</span>
@@ -521,11 +797,13 @@ export function AgentStory({ beats }: { beats: StoryBeat[] }) {
   const { track, pin, progress } = usePinProgress();
   const reduced = useReducedMotion();
   const P = progress * beats.length;
+  // Scrubbed pieces follow a lightly smoothed P so big scroll jumps glide.
+  const smoothP = useSmoothed(P, reduced);
   const active = Math.min(beats.length - 1, Math.floor(P));
 
   return (
     // Track = panel height + scroll distance for the four beats; no dead space above or below.
-    <div ref={track} style={{ height: `calc(${beats.length * 70}vh + min(100svh - 6rem, 760px))` }} className="relative px-2 sm:px-4">
+    <div ref={track} style={{ height: `calc(${beats.length * 80}vh + min(100svh - 6rem, 760px))` }} className="relative px-2 sm:px-4">
       <div ref={pin} className="sticky top-[5.5rem] h-[min(100svh-6rem,760px)]">
         <div className="relative isolate grid h-full w-full grid-rows-[auto_minmax(0,1fr)] overflow-hidden rounded-lg border border-border bg-bg lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:grid-rows-1">
           {/* decoration */}
@@ -534,7 +812,6 @@ export function AgentStory({ beats }: { beats: StoryBeat[] }) {
             {/* colour behind the glass stage */}
             <div data-parallax="-0.03" className="hero-aurora absolute right-[18%] top-[22%] size-72 rounded-full bg-purple/25 blur-3xl" />
             <div data-parallax="0.03" className="hero-aurora absolute bottom-[10%] right-[6%] size-56 rounded-full bg-yellow/35 blur-3xl [animation-delay:-5s]" />
-            <div data-parallax="0.04" className="absolute bottom-[8%] left-[38%] size-24 rounded-full border border-dashed border-border-strong" />
             <div className="absolute bottom-6 left-6 grid grid-cols-6 gap-3 sm:bottom-10 sm:left-10">
               {Array.from({ length: 18 }).map((_, i) => (
                 <span key={i} className="size-1 rounded-full bg-subtle/50" />
@@ -556,9 +833,10 @@ export function AgentStory({ beats }: { beats: StoryBeat[] }) {
               {String(active + 1).padStart(2, "0")} · {labels[active]}
             </p>
 
-            <div className="relative mt-4 min-h-[9.5rem] sm:min-h-[12rem] lg:mt-8 lg:min-h-[17rem]">
+            <div className="relative mt-4 min-h-[9.5rem] sm:min-h-[15rem] lg:mt-8 lg:min-h-[20rem]">
               {beats.map((beat, i) => {
                 const state = i === active ? "now" : i < active ? "past" : "next";
+                const meter = beatMeter(i, smoothP);
                 return (
                   <div
                     key={beat.punch}
@@ -574,6 +852,14 @@ export function AgentStory({ beats }: { beats: StoryBeat[] }) {
                     <p className="text-base text-muted sm:text-xl">{beat.lead}</p>
                     <p className="mt-1 text-3xl font-bold leading-[1.05] tracking-[-0.035em] text-fg sm:text-5xl lg:text-6xl">{beat.punch}</p>
                     <p className="mt-3 max-w-md text-sm leading-relaxed text-muted sm:mt-5 sm:text-base">{beat.caption}</p>
+                    {/* live readout of what the stage is showing right now */}
+                    <p
+                      className="mt-5 hidden items-center gap-2 rounded-full border border-border bg-surface/60 px-3 py-1.5 font-mono text-xs tabular-nums text-fg sm:inline-flex"
+                      aria-hidden="true"
+                    >
+                      <span className="size-1.5 rounded-full motion-safe:animate-pulse" style={{ background: meter.color }} />
+                      {meter.text}
+                    </p>
                   </div>
                 );
               })}
@@ -587,7 +873,7 @@ export function AgentStory({ beats }: { beats: StoryBeat[] }) {
           {/* stage */}
           <div className="relative flex min-h-0 flex-col p-4 sm:p-8 lg:p-10">
             <div className="min-h-0 flex-1">
-              <Stage P={P} reduced={reduced} />
+              <Stage P={smoothP} rawP={P} reduced={reduced} />
             </div>
             <div className="mt-2 flex justify-end">
               <IllustrativeTag />
