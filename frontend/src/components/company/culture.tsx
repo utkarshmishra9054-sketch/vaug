@@ -99,7 +99,7 @@ function Motif({ motif }: { motif: Moment["motif"] }) {
       );
     case "bars":
       return (
-        <div className="absolute inset-x-6 bottom-24 flex h-24 items-end gap-2 opacity-40">
+        <div className="absolute inset-x-6 bottom-32 flex h-24 items-end gap-2 opacity-40">
           {[35, 55, 45, 70, 60, 85, 75, 95].map((h, i) => (
             <span key={i} className="company-bar flex-1 origin-bottom rounded-t-sm bg-current" style={{ height: `${h}%`, animationDelay: `${i * 0.12}s` }} />
           ))}

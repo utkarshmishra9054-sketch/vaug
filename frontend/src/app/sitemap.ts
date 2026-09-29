@@ -6,6 +6,8 @@ import { getCaseStudies, getSiteConfig } from "@/lib/content";
 
 type Entry = MetadataRoute.Sitemap[number];
 
+export const dynamic = "force-static";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [site, caseStudies] = await Promise.all([getSiteConfig(), getCaseStudies()]);
   const base = site.url.replace(/\/$/, "");

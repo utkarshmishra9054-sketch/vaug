@@ -112,7 +112,7 @@ function StatTile({ stat, index, featured }: { stat: Stat; index: number; featur
 
 export function Stats({ stats }: { stats: Stat[] }) {
   return (
-    <div className="grid gap-4 py-16 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:py-20">
+    <div className="grid grid-cols-1 gap-4 py-16 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:py-20">
       <ul className="grid grid-cols-2 gap-4">
         {stats.map((stat, i) => (
           <StatTile key={stat.label} stat={stat} index={i} featured={i === 0} />

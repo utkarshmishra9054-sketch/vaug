@@ -7,14 +7,15 @@ import { IllustrativeTag } from "@/components/ui/IllustrativeTag";
 import type { StoryBeat } from "@/content/types";
 
 /*
- * Pinned, step-by-step story in four scenes. One scroll gesture (wheel, swipe or
- * arrow key) moves exactly one scene; the panel releases the page after the last
- * scene going down, or the first going up.
+ * Scroll story in four scenes, driven by plain native scrolling (no scroll
+ * hijacking, so trackpad momentum and phone flings never skip or shake).
  *   0  The problem  the same four questions, answered by hand again and again
  *   1  The cost     new leads sit unanswered and cool from hot to cold
  *   2  The agent    the agent works the inbox item by item, then syncs the CRM
  *   3  The outcome  before/after numbers and where the team's day goes
- * Each scene plays its intro once, the first time it is reached. Scenes already
+ * Desktop: the beats scroll past on the left while one sticky window on the right
+ * swaps scenes. Below lg: each beat is a stacked card with its own window.
+ * Each scene plays its intro once, the first time it is reached; scenes already
  * seen (or skipped past) show their finished state, so scrolling back never replays.
  */
 
@@ -151,6 +152,38 @@ function useScenePlayback(reached: number, reduced: boolean) {
   return ts;
 }
 
+/** A single clock (0 → 1) that plays once, the first time its element is on screen. */
+function usePlayWhenSeen<T extends HTMLElement>(duration: number, reduced: boolean) {
+  const ref = useRef<T>(null);
+  const [seen, setSeen] = useState(false);
+  const [t, setT] = useState(0);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setSeen(true);
+        io.disconnect();
+      }
+    }, { threshold: 0.45 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  useEffect(() => {
+    if (!seen) return;
+    let raf = 0;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const next = reduced ? 1 : clamp((now - start) / duration);
+      setT(next);
+      if (next < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [seen, duration, reduced]);
+  return [ref, t] as const;
+}
+
 /** Scales a fixed design canvas to fit its container. */
 function useFitScale<T extends HTMLElement>(w: number, h: number) {
   const ref = useRef<T>(null);
@@ -160,7 +193,7 @@ function useFitScale<T extends HTMLElement>(w: number, h: number) {
     if (!el) return;
     const ro = new ResizeObserver(([entry]) => {
       const { width, height } = entry.contentRect;
-      setScale(Math.min(width / w, height / h, 1.25));
+      setScale(Math.min(width / w, height / h, 1.2));
     });
     ro.observe(el);
     return () => ro.disconnect();
@@ -168,192 +201,46 @@ function useFitScale<T extends HTMLElement>(w: number, h: number) {
   return [ref, scale] as const;
 }
 
-/* ---------- step scrolling ---------- */
-
-/** Minimum time between two steps, and the wheel silence that ends a gesture. */
-const STEP_LOCK = 420;
-const GESTURE_GAP = 200;
+/**
+ * Fills its container's width, never narrower than `minW` design pixels: below
+ * that the canvas is scaled down instead of squashed.
+ */
+function useFluidCanvas<T extends HTMLElement>(minW: number) {
+  const ref = useRef<T>(null);
+  const [width, setWidth] = useState(0);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([entry]) => setWidth(entry.contentRect.width));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  const scale = width ? Math.min(1, width / minW) : 1;
+  return { ref, scale, canvasW: width ? width / scale : minW };
+}
 
 /**
- * Pins a panel over a tall track and moves through `count` steps one gesture at
- * a time. Native scrolling still works (scrollbar, find-in-page); the step is
- * always derived from the scroll position, the hijack only decides where to stop.
+ * The beat crossing the middle of the viewport. Plain native scrolling: nothing
+ * here intercepts wheel, touch or keys, so momentum and the scrollbar behave.
  */
-function useStepScroll(count: number, reduced: boolean) {
-  const track = useRef<HTMLDivElement>(null);
-  const pin = useRef<HTMLDivElement>(null);
-  const goRef = useRef<(i: number) => void>(() => {});
-  const [step, setStep] = useState(0);
-  const [inView, setInView] = useState(false);
-
+function useActiveBeat(count: number) {
+  const refs = useRef<(HTMLElement | null)[]>([]);
+  const [active, setActive] = useState(-1);
   useEffect(() => {
-    const trackEl = track.current;
-    const pinEl = pin.current;
-    if (!trackEl || !pinEl) return;
-
-    let raf = 0;
-    let syncFrame = 0;
-    let animating = false;
-    let stepAt = -Infinity;
-    let lastWheel = -Infinity;
-    let lastAbs = 0;
-    let gestureStepped = false;
-    let touchY = 0;
-    let touchStepped = false;
-
-    const geo = () => {
-      const stickyTop = parseFloat(getComputedStyle(pinEl).top) || 0;
-      const start = trackEl.getBoundingClientRect().top + window.scrollY - stickyTop;
-      const travel = Math.max(1, trackEl.offsetHeight - pinEl.offsetHeight);
-      return { start, travel, end: start + travel };
-    };
-    type Geo = ReturnType<typeof geo>;
-    const exactAt = (y: number, g: Geo) => ((y - g.start) / g.travel) * (count - 1);
-    const inside = (y: number, g: Geo) => y >= g.start - 2 && y <= g.end + 2;
-    /** The next step in `dir`, or null when the gesture should leave the panel. */
-    const nextFrom = (y: number, g: Geo, dir: number) => {
-      const x = exactAt(y, g);
-      const next = dir > 0 ? Math.floor(x + 0.05) + 1 : Math.ceil(x - 0.05) - 1;
-      return next >= 0 && next < count ? next : null;
-    };
-
-    const sync = () => {
-      if (animating) return;
-      setStep(Math.round(clamp(exactAt(window.scrollY, geo()), 0, count - 1)));
-    };
-    const onScroll = () => {
-      cancelAnimationFrame(syncFrame);
-      syncFrame = requestAnimationFrame(sync);
-    };
-
-    const go = (i: number) => {
-      const g = geo();
-      const to = g.start + (g.travel * i) / (count - 1);
-      const from = window.scrollY;
-      stepAt = performance.now();
-      setStep(i);
-      cancelAnimationFrame(raf);
-      if (reduced || Math.abs(to - from) < 2) {
-        animating = false;
-        window.scrollTo({ top: to, behavior: "instant" });
-        return;
-      }
-      animating = true;
-      const dur = clamp(Math.abs(to - from) * 0.9, 450, 800);
-      const t0 = performance.now();
-      const tick = (now: number) => {
-        const k = clamp((now - t0) / dur);
-        window.scrollTo({ top: from + (to - from) * easeInOut(k), behavior: "instant" });
-        if (k < 1) raf = requestAnimationFrame(tick);
-        else animating = false;
-      };
-      raf = requestAnimationFrame(tick);
-    };
-    goRef.current = go;
-
-    const onWheel = (e: WheelEvent) => {
-      if (e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
-      const dy = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1);
-      if (!dy) return;
-      // The event's own timestamp, so main-thread jank can't fake a pause.
-      const now = e.timeStamp || performance.now();
-      const abs = Math.abs(dy);
-      const dir = Math.sign(dy);
-      // A new gesture starts after a pause, a sudden surge (a fresh swipe during
-      // trackpad momentum), or a steady mouse wheel that keeps turning.
-      const fresh =
-        now - lastWheel > GESTURE_GAP ||
-        (abs > 12 && abs > lastAbs * 1.6) ||
-        (abs >= 40 && abs >= lastAbs && now - stepAt > 1000);
-      lastWheel = now;
-      lastAbs = abs;
-      if (fresh) gestureStepped = false;
-
-      const g = geo();
-      const y = window.scrollY;
-      // A fast fling from outside is caught at the panel's edge instead of skipping it.
-      const crossing = (dir > 0 && y < g.start - 2 && y + dy >= g.start) || (dir < 0 && y > g.end + 2 && y + dy <= g.end);
-      if (!inside(y, g) && !crossing) return;
-      if (animating || gestureStepped || performance.now() - stepAt < STEP_LOCK) {
-        e.preventDefault();
-        return;
-      }
-      const target = crossing ? (dir > 0 ? 0 : count - 1) : nextFrom(y, g, dir);
-      if (target === null) return;
-      e.preventDefault();
-      gestureStepped = true;
-      go(target);
-    };
-
-    const onTouchStart = (e: TouchEvent) => {
-      touchY = e.touches[0].clientY;
-      touchStepped = false;
-    };
-    const onTouchMove = (e: TouchEvent) => {
-      if (e.touches.length > 1) return;
-      const dy = touchY - e.touches[0].clientY;
-      if (Math.abs(dy) < 6) return;
-      const g = geo();
-      const y = window.scrollY;
-      if (!inside(y, g)) return;
-      if (animating || touchStepped) {
-        if (e.cancelable) e.preventDefault();
-        return;
-      }
-      const target = nextFrom(y, g, Math.sign(dy));
-      if (target === null) return;
-      if (e.cancelable) e.preventDefault();
-      if (Math.abs(dy) > 28) {
-        touchStepped = true;
-        go(target);
-      }
-    };
-
-    const onKey = (e: KeyboardEvent) => {
-      if (e.altKey || e.ctrlKey || e.metaKey || e.defaultPrevented) return;
-      const el = e.target as HTMLElement | null;
-      if (el?.closest("input, textarea, select, [contenteditable='true']")) return;
-      const dir =
-        e.key === "ArrowDown" || e.key === "PageDown" || (e.key === " " && !e.shiftKey)
-          ? 1
-          : e.key === "ArrowUp" || e.key === "PageUp" || (e.key === " " && e.shiftKey)
-            ? -1
-            : 0;
-      if (!dir) return;
-      const g = geo();
-      const y = window.scrollY;
-      if (!inside(y, g)) return;
-      const target = nextFrom(y, g, dir);
-      if (target === null) return;
-      e.preventDefault();
-      if (!animating) go(target);
-    };
-
-    const io = new IntersectionObserver(([entry]) => entry.isIntersecting && setInView(true), { threshold: 0.35 });
-    io.observe(pinEl);
-
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    window.addEventListener("wheel", onWheel, { passive: false });
-    window.addEventListener("touchstart", onTouchStart, { passive: true });
-    window.addEventListener("touchmove", onTouchMove, { passive: false });
-    window.addEventListener("keydown", onKey);
-    return () => {
-      cancelAnimationFrame(raf);
-      cancelAnimationFrame(syncFrame);
-      io.disconnect();
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      window.removeEventListener("wheel", onWheel);
-      window.removeEventListener("touchstart", onTouchStart);
-      window.removeEventListener("touchmove", onTouchMove);
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [count, reduced]);
-
-  return { track, pin, step, inView, goTo: (i: number) => goRef.current(i) };
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) setActive(Number((entry.target as HTMLElement).dataset.beat));
+        }
+      },
+      { rootMargin: "-50% 0px -50% 0px" },
+    );
+    refs.current.slice(0, count).forEach((el) => el && io.observe(el));
+    return () => io.disconnect();
+  }, [count]);
+  return { refs, active };
 }
+
 
 /* ---------- stage pieces ---------- */
 
@@ -393,7 +280,7 @@ function Scene({ title, pill, children }: { title: ReactNode; pill: ReactNode; c
   return (
     <>
       <div className="absolute left-[92px] right-5 top-0 flex h-[49px] items-center justify-between gap-3">
-        <div className="flex min-w-0 items-center gap-2 text-sm font-semibold text-fg">{title}</div>
+        <div className="flex min-w-0 items-center gap-2 overflow-hidden whitespace-nowrap text-sm font-semibold text-fg">{title}</div>
         {pill}
       </div>
       <div className="absolute inset-x-0 bottom-0 top-[49px] flex flex-col p-4">{children}</div>
@@ -535,8 +422,8 @@ function AgentScene({ t, reduced }: { t: number; reduced: boolean }) {
     <Scene
       title={
         <>
-          Shared inbox
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-soft py-0.5 pl-0.5 pr-2 font-mono text-[10px] font-semibold text-accent-text">
+          <span className="truncate">Shared inbox</span>
+          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-accent-soft py-0.5 pl-0.5 pr-2 font-mono text-[10px] font-semibold text-accent-text">
             <AgentMark className="size-4" /> VAUG agent
           </span>
         </>
@@ -579,7 +466,7 @@ function AgentScene({ t, reduced }: { t: number; reduced: boolean }) {
               <span className="inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-surface-2 text-[9px] font-bold text-fg">{item.who}</span>
               <p className={`min-w-0 flex-1 truncate text-[12.5px] transition-colors duration-300 ${done ? "text-muted" : "text-fg"}`}>{item.text}</p>
               <p
-                className="flex w-[13.5rem] shrink-0 items-center justify-end gap-1.5 text-[11.5px] transition-colors duration-300"
+                className="flex w-[13.5rem] max-w-[52%] shrink-0 items-center justify-end gap-1.5 text-[11.5px] transition-colors duration-300"
                 style={{ color: done ? doneColor : working ? "#7c3aed" : tone.red }}
               >
                 {done ? (
@@ -609,10 +496,10 @@ function AgentScene({ t, reduced }: { t: number; reduced: boolean }) {
         className="mt-auto flex items-center justify-between rounded-lg border px-3 py-2 transition-[border-color] duration-500"
         style={{ ...rise(t, CRM_AT - 0.04, 0.12), borderColor: synced ? "rgb(22 163 74 / 0.4)" : "var(--border)" }}
       >
-        <p className="flex items-center gap-1.5 text-[12px] font-medium" style={{ color: tone.green }}>
+        <p className="flex shrink-0 items-center gap-1.5 whitespace-nowrap text-[12px] font-medium" style={{ color: tone.green }}>
           <Check className="size-3.5" /> CRM updated automatically
         </p>
-        <p className="font-mono text-[10px] text-subtle">3 leads synced · 0 typed by hand</p>
+        <p className="truncate pl-3 font-mono text-[10px] text-subtle">3 leads synced · 0 typed by hand</p>
       </div>
     </Scene>
   );
@@ -622,7 +509,7 @@ function AgentScene({ t, reduced }: { t: number; reduced: boolean }) {
 function OutcomeScene({ t }: { t: number }) {
   return (
     <Scene
-      title="The same inbox, with an agent on it"
+      title={<span className="truncate">The same inbox, with an agent on it</span>}
       pill={
         <Pill color={tone.green}>
           <span className="size-1.5 rounded-full bg-current" /> Agent online
@@ -703,154 +590,207 @@ function OutcomeScene({ t }: { t: number }) {
   );
 }
 
+function sceneFor(i: number, t: number, reduced: boolean) {
+  if (i === 0) return <RepeatScene t={t} />;
+  if (i === 1) return <ColdScene t={t} />;
+  if (i === 2) return <AgentScene t={t} reduced={reduced} />;
+  return <OutcomeScene t={t} />;
+}
+
+/** The app window every scene plays in. */
+function Window({ className = "", children }: { className?: string; children: ReactNode }) {
+  return (
+    <div className={`absolute inset-0 overflow-hidden rounded-xl ${className}`}>
+      <div className="flex h-[49px] items-center gap-2 border-b border-border px-5">
+        <span className="size-2.5 rounded-full bg-[#ff5f57]" />
+        <span className="size-2.5 rounded-full bg-[#febc2e]" />
+        <span className="size-2.5 rounded-full bg-[#28c840]" />
+      </div>
+      {children}
+    </div>
+  );
+}
+
+/** Desktop: one window, scenes cross-fading inside it as the beats scroll past. */
 function Stage({ step, ts, reduced }: { step: number; ts: number[]; reduced: boolean }) {
   const [box, scale] = useFitScale<HTMLDivElement>(540, 460);
-  const scenes = [
-    <RepeatScene key="repeat" t={ts[0]} />,
-    <ColdScene key="cold" t={ts[1]} />,
-    <AgentScene key="agent" t={ts[2]} reduced={reduced} />,
-    <OutcomeScene key="outcome" t={ts[3]} />,
-  ];
   return (
     <div ref={box} className="relative h-full w-full">
       <div className="absolute left-1/2 top-1/2 h-[460px] w-[540px]" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
-        <div className="glass absolute inset-0 overflow-hidden rounded-xl">
-          <div className="flex h-[49px] items-center gap-2 border-b border-border px-5">
-            <span className="size-2.5 rounded-full bg-[#ff5f57]" />
-            <span className="size-2.5 rounded-full bg-[#febc2e]" />
-            <span className="size-2.5 rounded-full bg-[#28c840]" />
-          </div>
-          {scenes.map((scene, i) => (
+        <Window className="glass">
+          {ts.map((t, i) => (
             <div
               key={i}
               aria-hidden={i !== step}
               className="absolute inset-0 transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.2,0.7,0.2,1)] motion-reduce:transition-none"
               style={{
                 opacity: i === step ? 1 : 0,
-                transform: i === step ? "none" : `translateY(${i < step ? -18 : 18}px)`,
+                transform: i === step ? "none" : `translateY(${i < step ? -14 : 14}px) scale(0.985)`,
                 pointerEvents: i === step ? "auto" : "none",
-                transitionDelay: i === step ? "90ms" : "0ms",
+                transitionDelay: i === step ? "80ms" : "0ms",
               }}
             >
-              {scene}
+              {sceneFor(i, t, reduced)}
             </div>
           ))}
-        </div>
+        </Window>
       </div>
     </div>
   );
 }
 
+/** Mobile: each beat is its own card, and its scene plays when the card is on screen. */
+function Chapter({ beat, index, count, reduced }: { beat: StoryBeat; index: number; count: number; reduced: boolean }) {
+  const [ref, t] = usePlayWhenSeen<HTMLElement>(DURATIONS[index], reduced);
+  const { ref: canvasBox, scale, canvasW } = useFluidCanvas<HTMLDivElement>(420);
+  const meter = beatMeter(index, t);
+  return (
+    <article ref={ref} className="overflow-hidden rounded-xl border border-border bg-bg">
+      <div className="px-5 pb-5 pt-6 sm:px-8 sm:pt-8">
+        <p className="font-mono text-xs uppercase tracking-widest text-accent-text">
+          {String(index + 1).padStart(2, "0")} / {String(count).padStart(2, "0")} · {labels[index]}
+        </p>
+        <p className="mt-3 text-base text-muted sm:text-lg">{beat.lead}</p>
+        <p className="mt-0.5 text-[2rem] font-bold leading-[1.05] tracking-[-0.035em] text-fg sm:text-5xl">{beat.punch}</p>
+        <p className="mt-3 text-sm leading-relaxed text-muted sm:text-base">{beat.caption}</p>
+      </div>
+      <div className="relative border-t border-border bg-surface-2/40 px-3 pb-3 pt-3 sm:px-6 sm:pb-6 sm:pt-6">
+        <div ref={canvasBox} className="relative" style={{ height: 460 * scale }}>
+          <div className="absolute left-0 top-0 h-[460px] origin-top-left" style={{ width: canvasW, transform: `scale(${scale})` }}>
+            <Window className="border border-border bg-surface shadow-[0_18px_40px_-28px_rgb(0_0_0/0.45)]">{sceneFor(index, t, reduced)}</Window>
+          </div>
+        </div>
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+          <p className="inline-flex items-center gap-2 rounded-full border border-border bg-bg px-3 py-1 font-mono text-[11px] tabular-nums text-fg" aria-hidden="true">
+            <span className="size-1.5 shrink-0 rounded-full" style={{ background: meter.color }} />
+            {meter.text}
+          </p>
+          <IllustrativeTag />
+        </div>
+      </div>
+    </article>
+  );
+}
+
 const labels = ["The problem", "The cost", "The agent", "The outcome"];
+
+/** Hand-off from the story to the services section right below it. */
+function NextUp({ className = "" }: { className?: string }) {
+  return (
+    <a
+      href="#models"
+      className={`group inline-flex items-center gap-3 rounded-full border border-border bg-surface py-2 pl-4 pr-2 text-sm font-medium text-fg transition-colors hover:border-border-strong ${className}`}
+    >
+      See the six ways we build it
+      <span className="inline-flex size-7 items-center justify-center rounded-full bg-accent text-accent-fg transition-transform duration-300 group-hover:translate-y-0.5">
+        <ArrowDown className="size-3.5" />
+      </span>
+    </a>
+  );
+}
 
 export function AgentStory({ beats }: { beats: StoryBeat[] }) {
   const reduced = useReducedMotion();
   const count = Math.min(beats.length, labels.length);
-  const { track, pin, step, inView, goTo } = useStepScroll(count, reduced);
+  const story = beats.slice(0, count);
+  const { refs, active } = useActiveBeat(count);
+  const step = Math.max(0, active);
 
   // Furthest scene reached: it plays its intro once; everything before it stays finished.
   const [reached, setReached] = useState(-1);
-  const reach = inView ? step : -1;
-  if (reach > reached) setReached(reach);
+  if (active > reached) setReached(active);
   const ts = useScenePlayback(reached, reduced);
-  const sceneDone = ts[step] >= 1;
+  const meter = beatMeter(step, ts[step]);
+
+  const jumpTo = (i: number) => refs.current[i]?.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "center" });
 
   return (
-    // Track = panel height + one viewport-ish of scroll per step after the first.
-    <div ref={track} style={{ height: `calc(${(count - 1) * 90}vh + min(100svh - 6rem, 760px))` }} className="relative px-2 sm:px-4">
-      <div ref={pin} className="sticky top-[5.5rem] h-[min(100svh-6rem,760px)]">
-        <div className="relative isolate grid h-full w-full grid-rows-[auto_minmax(0,1fr)] overflow-hidden rounded-lg border border-border bg-bg lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:grid-rows-1">
-          {/* decoration */}
-          <div aria-hidden="true" className="absolute inset-0 -z-10">
-            <div data-parallax="0.02" className="absolute -right-24 -top-32 size-[30rem] rounded-full bg-surface-2/60" />
-            {/* colour behind the glass stage */}
-            <div data-parallax="-0.03" className="hero-aurora absolute right-[18%] top-[22%] size-72 rounded-full bg-purple/25 blur-3xl" />
-            <div data-parallax="0.03" className="hero-aurora absolute bottom-[10%] right-[6%] size-56 rounded-full bg-yellow/35 blur-3xl [animation-delay:-5s]" />
-            <div className="absolute bottom-6 left-6 grid grid-cols-6 gap-3 sm:bottom-10 sm:left-10">
-              {Array.from({ length: 18 }).map((_, i) => (
-                <span key={i} className="size-1 rounded-full bg-subtle/50" />
-              ))}
-            </div>
-          </div>
+    <div className="px-2 sm:px-4">
+      {/* phones and tablets: a stack of self-contained chapters, no pinning */}
+      <div className="flex flex-col gap-3 sm:gap-4 lg:hidden">
+        {story.map((beat, i) => (
+          <Chapter key={beat.punch} beat={beat} index={i} count={count} reduced={reduced} />
+        ))}
+        <NextUp className="mx-auto mt-4" />
+      </div>
 
-          {/* text column */}
-          <div className="relative flex flex-col justify-center px-5 pt-5 sm:px-10 lg:px-14 lg:pt-0">
-            {/* step progress: each segment jumps to its scene */}
-            <nav className="flex gap-2" aria-label="Story steps">
+      {/* desktop: the beats scroll natively on the left, the stage stays put on the right */}
+      <div className="relative isolate hidden overflow-clip rounded-lg border border-border bg-bg lg:grid lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
+        <div aria-hidden="true" className="absolute bottom-10 left-10 -z-10 grid grid-cols-6 gap-3">
+          {Array.from({ length: 18 }).map((_, i) => (
+            <span key={i} className="size-1 rounded-full bg-subtle/50" />
+          ))}
+        </div>
+
+        {/* beats, on a rail */}
+        <ol className="relative py-[14vh] pl-14 pr-6 xl:pl-20">
+          <span aria-hidden="true" className="absolute bottom-[14vh] left-[2.35rem] top-[14vh] w-px bg-border xl:left-[3.6rem]" />
+          {story.map((beat, i) => {
+            const on = i === step;
+            return (
+              <li
+                key={beat.punch}
+                data-beat={i}
+                ref={(el) => {
+                  refs.current[i] = el;
+                }}
+                aria-current={on ? "step" : undefined}
+                className="relative flex min-h-[68vh] flex-col justify-center transition-opacity duration-500 motion-reduce:transition-none"
+                style={{ opacity: on ? 1 : 0.28 }}
+              >
+                <span
+                  aria-hidden="true"
+                  className={`absolute -left-[1.3rem] top-1/2 size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 transition-[background-color,border-color,box-shadow] duration-500 ${
+                    on ? "border-accent-text bg-accent-text shadow-[0_0_0_6px_var(--accent-soft)]" : i < step ? "border-accent-text bg-bg" : "border-border-strong bg-bg"
+                  }`}
+                />
+                <p className="font-mono text-xs uppercase tracking-widest text-accent-text">
+                  {String(i + 1).padStart(2, "0")} · {labels[i]}
+                </p>
+                <p className="mt-4 text-xl text-muted">{beat.lead}</p>
+                <p className="mt-1 text-5xl font-bold leading-[1.02] tracking-[-0.035em] text-fg xl:text-6xl">{beat.punch}</p>
+                <p className="mt-5 max-w-md text-base leading-relaxed text-muted">{beat.caption}</p>
+                {i === count - 1 && <NextUp className="mt-8 w-fit" />}
+              </li>
+            );
+          })}
+        </ol>
+
+        {/* sticky stage: the viewport minus room for the navbar, so it never slides under it */}
+        <div className="relative">
+          <div className="sticky top-0 flex h-svh flex-col justify-center px-8 pb-6 pt-24 xl:px-12">
+            <div aria-hidden="true" className="absolute inset-0 -z-10 overflow-hidden">
+              <div data-parallax="0.02" className="absolute -right-24 -top-32 size-[30rem] rounded-full bg-surface-2/60" />
+              <div className="hero-aurora absolute right-[22%] top-[26%] size-72 rounded-full bg-purple/25 blur-3xl" />
+              <div className="hero-aurora absolute bottom-[12%] right-[6%] size-56 rounded-full bg-yellow/35 blur-3xl [animation-delay:-5s]" />
+            </div>
+
+            {/* chapter tabs: fill with each scene's intro, click to jump */}
+            <nav className="grid grid-cols-4 gap-2" aria-label="Story chapters">
               {labels.slice(0, count).map((label, i) => (
-                <button
-                  key={label}
-                  type="button"
-                  onClick={() => goTo(i)}
-                  aria-label={`${i + 1}. ${label}`}
-                  aria-current={i === step ? "step" : undefined}
-                  className="group flex-1 py-2"
-                >
+                <button key={label} type="button" onClick={() => jumpTo(i)} aria-current={i === step ? "step" : undefined} className="group text-left">
                   <span className="block h-1 overflow-hidden rounded-full bg-border-strong transition-colors group-hover:bg-subtle">
                     <span
                       className="block h-full origin-left bg-accent-text transition-transform duration-300"
                       style={{ transform: `scaleX(${i < step ? 1 : i === step ? Math.max(0.04, ts[i]) : 0})` }}
                     />
                   </span>
+                  <span className={`mt-2 block font-mono text-[11px] uppercase tracking-wider transition-colors ${i === step ? "text-fg" : "text-subtle group-hover:text-muted"}`}>
+                    {label}
+                  </span>
                 </button>
               ))}
             </nav>
-            <p key={step} className="story-label-in mt-2 font-mono text-xs uppercase tracking-widest text-accent-text">
-              {String(step + 1).padStart(2, "0")} / {String(count).padStart(2, "0")} · {labels[step]}
-            </p>
 
-            <div className="relative mt-4 min-h-[9.5rem] sm:min-h-[15rem] lg:mt-8 lg:min-h-[20rem]">
-              {beats.slice(0, count).map((beat, i) => {
-                const state = i === step ? "now" : i < step ? "past" : "next";
-                const meter = beatMeter(i, ts[i]);
-                return (
-                  <div
-                    key={beat.punch}
-                    aria-hidden={i !== step}
-                    className={`absolute inset-0 transition-[opacity,transform] ease-[cubic-bezier(0.2,0.7,0.2,1)] motion-reduce:transition-none ${
-                      state === "now"
-                        ? "opacity-100 delay-100 duration-500"
-                        : state === "past"
-                          ? "pointer-events-none -translate-y-4 opacity-0 duration-300 motion-reduce:translate-y-0"
-                          : "pointer-events-none translate-y-4 opacity-0 duration-300 motion-reduce:translate-y-0"
-                    }`}
-                  >
-                    <p className="text-base text-muted sm:text-xl">{beat.lead}</p>
-                    <p className="mt-1 text-3xl font-bold leading-[1.05] tracking-[-0.035em] text-fg sm:text-5xl lg:text-6xl">{beat.punch}</p>
-                    <p className="mt-3 max-w-md text-sm leading-relaxed text-muted sm:mt-5 sm:text-base">{beat.caption}</p>
-                    {/* live readout of what the stage is showing right now */}
-                    <p
-                      className="mt-5 hidden items-center gap-2 rounded-full border border-border bg-surface/60 px-3 py-1.5 font-mono text-xs tabular-nums text-fg sm:inline-flex"
-                      aria-hidden="true"
-                    >
-                      <span className="size-1.5 rounded-full" style={{ background: meter.color }} />
-                      {meter.text}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* nudge onward once the scene has finished playing */}
-            <button
-              type="button"
-              onClick={() => goTo(step + 1)}
-              tabIndex={step < count - 1 && sceneDone ? 0 : -1}
-              className={`hidden w-fit items-center gap-2 font-mono text-xs text-subtle transition-[opacity,color] duration-500 hover:text-fg lg:inline-flex ${
-                step < count - 1 && sceneDone ? "opacity-100" : "pointer-events-none opacity-0"
-              }`}
-            >
-              <ArrowDown className="size-3.5 motion-safe:animate-bounce" />
-              Scroll · next: {labels[Math.min(step + 1, count - 1)]}
-            </button>
-          </div>
-
-          {/* stage */}
-          <div className="relative flex min-h-0 flex-col p-4 sm:p-8 lg:p-10">
-            <div className="min-h-0 flex-1">
+            <div className="my-5 h-[min(552px,calc(100svh-15rem))]">
               <Stage step={step} ts={ts} reduced={reduced} />
             </div>
-            <div className="mt-2 flex justify-end">
+
+            <div className="flex items-center justify-between gap-3">
+              <p className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-3 py-1.5 font-mono text-xs tabular-nums text-fg" aria-hidden="true">
+                <span className="size-1.5 rounded-full" style={{ background: meter.color }} />
+                {meter.text}
+              </p>
               <IllustrativeTag />
             </div>
           </div>

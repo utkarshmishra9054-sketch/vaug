@@ -31,6 +31,10 @@ const GRAB_REACH = 16; // px beyond the disc a press can still pick a block up
 const MAX_SPEED = 28; // cap on a kicked block's velocity (px per step)
 const WALL_CATEGORY = 0x0002;
 const PARKED = { x: -5000, y: -5000 };
+const EDGE_SLACK = 1.5; // px a block may sink into a wall before contain() steps in
+const SETTLE_SPEED = 0.18; // below this speed (px per step) a block counts as resting...
+const SETTLE_SPIN = 0.004; // ...and below this spin (rad per step)...
+const SETTLE_STEPS = 24; // ...for this many steps in a row, then it is put to sleep
 
 const LOOK_CLASS: Record<Look, string> = {
   outline: "border border-yellow/20",
@@ -75,7 +79,7 @@ export function CtaBlocks() {
       // The runtime takes an `updateVelocity` flag the typings leave out.
       const setPosition = Body.setPosition as (body: Matter.Body, position: Matter.Vector, updateVelocity?: boolean) => void;
 
-      type Block = { el: HTMLDivElement; size: number; body: Matter.Body; added: boolean; entered: boolean; spawnAt: number };
+      type Block = { el: HTMLDivElement; size: number; body: Matter.Body; added: boolean; entered: boolean; spawnAt: number; calm: number };
       let engine: Matter.Engine | null = null;
       let blocks: Block[] = [];
       let nodes: HTMLDivElement[] = [];
@@ -166,34 +170,39 @@ export function CtaBlocks() {
           });
           Body.setVelocity(body, { x: (r() - 0.5) * 1.2, y: 4 });
           Body.setAngularVelocity(body, (r() - 0.5) * 0.06);
-          blocks.push({ el, size, body, added: false, entered: false, spawnAt: n * SPAWN_GAP });
+          blocks.push({ el, size, body, added: false, entered: false, spawnAt: n * SPAWN_GAP, calm: 0 });
         }
+      };
+
+      const place = (b: Block) => {
+        const { position, angle } = b.body;
+        b.el.style.transform = `translate3d(${position.x - b.size / 2}px, ${position.y - b.size / 2}px, 0) rotate(${angle}rad)`;
       };
 
       const sync = () => {
         for (const b of blocks) {
-          if (!b.added || b.body.isSleeping) continue;
-          const { position, angle } = b.body;
-          b.el.style.transform = `translate3d(${position.x - b.size / 2}px, ${position.y - b.size / 2}px, 0) rotate(${angle}rad)`;
+          if (b.added && !b.body.isSleeping) place(b);
         }
       };
 
       // Keep blocks inside the card: kicks, flings and drags can outrun (or
       // tunnel through) the walls, so push any escaping block back in and
-      // bounce it off the edge. The top only applies once a block has dropped in.
+      // bounce it off the edge. Resting contacts sink a hair into the walls, so
+      // small overlaps are left to the solver (correcting those every step is
+      // what made the heap shiver). The top only applies once a block has dropped in.
       const contain = () => {
         const W = root.clientWidth;
         const H = root.clientHeight;
         for (const b of blocks) {
-          if (!b.added) continue;
+          if (!b.added || b.body.isSleeping) continue;
           const { min, max } = b.body.bounds;
           if (!b.entered && min.y >= 0) b.entered = true;
           let dx = 0;
           let dy = 0;
-          if (min.x < 0) dx = -min.x;
-          else if (max.x > W) dx = W - max.x;
-          if (max.y > H) dy = H - max.y;
-          else if (b.entered && min.y < 0) dy = -min.y;
+          if (min.x < -EDGE_SLACK) dx = -min.x;
+          else if (max.x > W + EDGE_SLACK) dx = W - max.x;
+          if (max.y > H + EDGE_SLACK) dy = H - max.y;
+          else if (b.entered && min.y < -EDGE_SLACK) dy = -min.y;
           if (!dx && !dy) continue;
           Body.translate(b.body, { x: dx, y: dy });
           const v = b.body.velocity;
@@ -201,6 +210,45 @@ export function CtaBlocks() {
             x: dx ? Math.abs(v.x) * Math.sign(dx) * 0.5 : v.x,
             y: dy ? Math.abs(v.y) * Math.sign(dy) * 0.5 : v.y,
           });
+        }
+      };
+
+      // Put blocks to rest once they've barely moved for a moment. Matter's own
+      // sleeping rarely kicks in for a stacked heap, which leaves it shimmering
+      // forever; a sleeping block holds perfectly still. Blocks near the cursor
+      // disc or in a drag stay awake so they can still react.
+      const settle = () => {
+        const c = cursorBody;
+        const live = !!c && c.position.x !== PARKED.x;
+        for (const b of blocks) {
+          const body = b.body;
+          if (!b.added || body.isSleeping) continue;
+          const reach = CURSOR_RADIUS + b.size;
+          const near = live && Math.abs(body.position.x - c.position.x) < reach && Math.abs(body.position.y - c.position.y) < reach;
+          if (grab?.body === body || near || body.speed > SETTLE_SPEED || Math.abs(body.angularVelocity) > SETTLE_SPIN) {
+            b.calm = 0;
+            continue;
+          }
+          if (++b.calm < SETTLE_STEPS) continue;
+          b.calm = 0;
+          place(b);
+          Sleeping.set(body, true);
+        }
+      };
+
+      // A moving block wakes any sleeping block it touches, so nothing is left
+      // hanging in mid-air when the block holding it up gets knocked away.
+      const wakeNeighbours = () => {
+        for (const a of blocks) {
+          if (!a.added || a.body.isSleeping || a.body.speed < 0.4) continue;
+          const A = a.body.bounds;
+          for (const b of blocks) {
+            if (b === a || !b.added || !b.body.isSleeping) continue;
+            const B = b.body.bounds;
+            if (A.min.x - 6 < B.max.x && A.max.x + 6 > B.min.x && A.min.y - 6 < B.max.y && A.max.y + 6 > B.min.y) {
+              Sleeping.set(b.body, false);
+            }
+          }
         }
       };
 
@@ -255,6 +303,8 @@ export function CtaBlocks() {
           moveCursor();
           Engine.update(engine, STEP);
           contain();
+          wakeNeighbours();
+          settle();
           simTime += STEP;
           acc -= STEP;
           steps++;

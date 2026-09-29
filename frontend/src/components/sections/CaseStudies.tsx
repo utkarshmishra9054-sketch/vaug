@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 
 import type { CaseStudy } from "@/content/types";
@@ -77,12 +77,25 @@ export function ScreenMock({ study, compact = false }: { study: MockStudy; compa
   );
 }
 
+/** Tab label: the client name without asides, e.g. "Collective Benefits (now Onsi)" -> "Collective Benefits". */
+const shortName = (client: string) => client.replace(/\s*\(.*?\)\s*/g, " ").trim();
+
 export function CaseStudies({ studies }: { studies: CaseStudy[] }) {
   const industries = useMemo(() => ["Featured", ...new Set(studies.map((s) => s.industry))], [studies]);
   const [filter, setFilter] = useState("Featured");
   const list = filter === "Featured" ? studies : studies.filter((s) => s.industry === filter);
   const [index, setIndex] = useState(0);
-  const current = list[Math.min(index, list.length - 1)];
+  const i = Math.min(index, list.length - 1);
+  const current = list[i];
+  const stripRef = useRef<HTMLDivElement>(null);
+
+  // Keep the active tab visible in the strip without scrolling the page.
+  useEffect(() => {
+    const strip = stripRef.current;
+    const tab = strip?.querySelector<HTMLElement>('[data-active="true"]');
+    if (!strip || !tab) return;
+    strip.scrollTo({ left: tab.offsetLeft - (strip.clientWidth - tab.offsetWidth) / 2, behavior: "smooth" });
+  }, [i, filter]);
 
   const choose = (f: string) => {
     setFilter(f);
@@ -153,33 +166,38 @@ export function CaseStudies({ studies }: { studies: CaseStudy[] }) {
         </dl>
       </article>
 
-      {/* Switcher */}
+      {/* Switcher: arrows + counter on one row; short client-name tabs on sm+ */}
       {list.length > 1 && (
-        <div className="flex flex-wrap items-center justify-center gap-3 px-4 py-10">
-          <span className="w-full text-center font-mono text-xs tracking-[0.15em] text-muted sm:w-auto" aria-live="polite">
-            <span className="text-fg">{String(Math.min(index, list.length - 1) + 1).padStart(2, "0")}</span> / {String(list.length).padStart(2, "0")}
-          </span>
-          <button type="button" onClick={() => go(-1)} aria-label="Previous case study" className="inline-flex size-11 items-center justify-center rounded-md text-fg transition hover:bg-surface-2">
-            <ArrowLeft className="size-5" />
-          </button>
-          <div className="no-scrollbar flex max-w-full gap-1 overflow-x-auto rounded-md bg-surface-2 p-1.5">
-            {list.map((s, i) => (
+        <div className="frame-pad flex flex-col items-center gap-4 py-10">
+          <div className="flex items-center gap-2">
+            <button type="button" onClick={() => go(-1)} aria-label="Previous case study" className="inline-flex size-11 items-center justify-center rounded-md border border-border text-fg transition hover:bg-surface-2">
+              <ArrowLeft className="size-5" />
+            </button>
+            <span className="min-w-24 text-center font-mono text-xs tracking-[0.15em] text-muted" aria-live="polite">
+              <span className="text-fg">{String(i + 1).padStart(2, "0")}</span> / {String(list.length).padStart(2, "0")}
+              <span className="mt-1 block max-w-40 truncate font-sans text-sm tracking-normal text-fg sm:hidden">{shortName(current.client)}</span>
+            </span>
+            <button type="button" onClick={() => go(1)} aria-label="Next case study" className="inline-flex size-11 items-center justify-center rounded-md border border-border text-fg transition hover:bg-surface-2">
+              <ArrowRight className="size-5" />
+            </button>
+          </div>
+          <div ref={stripRef} className="no-scrollbar hidden max-w-full gap-1 overflow-x-auto rounded-md bg-surface-2 p-1.5 sm:flex">
+            {list.map((s, n) => (
               <button
                 key={s.slug}
                 type="button"
-                onClick={() => setIndex(i)}
-                aria-current={i === index}
-                className={`w-36 shrink-0 truncate rounded px-3 py-2 text-left text-sm transition-all sm:w-44 sm:text-base ${
-                  i === index ? "bg-surface text-fg shadow-sm" : "text-muted hover:text-fg"
+                data-active={n === i}
+                onClick={() => setIndex(n)}
+                aria-current={n === i}
+                title={s.title}
+                className={`shrink-0 whitespace-nowrap rounded px-3 py-2 text-sm transition-all ${
+                  n === i ? "bg-surface text-fg shadow-sm" : "text-muted hover:text-fg"
                 }`}
               >
-                {s.title}
+                {shortName(s.client)}
               </button>
             ))}
           </div>
-          <button type="button" onClick={() => go(1)} aria-label="Next case study" className="inline-flex size-11 items-center justify-center rounded-md text-fg transition hover:bg-surface-2">
-            <ArrowRight className="size-5" />
-          </button>
         </div>
       )}
     </div>

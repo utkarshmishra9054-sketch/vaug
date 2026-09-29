@@ -28,15 +28,19 @@ export function ShotZoom({ caption, children, large }: { caption: string; childr
         ref={ref}
         aria-label={caption}
         onClick={(e) => e.target === e.currentTarget && close()}
-        className="m-auto w-[min(92vw,1180px)] max-w-none overflow-visible bg-transparent p-0 backdrop:bg-ink/80 backdrop:backdrop-blur-sm"
+        className="m-auto max-h-[94dvh] w-[min(94vw,1180px)] max-w-none flex-col overflow-hidden bg-transparent p-0 open:flex backdrop:bg-ink/80 backdrop:backdrop-blur-sm"
       >
-        <div className="flex items-center justify-between gap-4 pb-3 text-white">
+        <div className="flex shrink-0 items-center justify-between gap-4 pb-3 text-white">
           <p className="text-sm leading-snug text-white/80">{caption}</p>
           <button type="button" onClick={close} aria-label="Close" className="inline-flex size-9 shrink-0 items-center justify-center rounded-md bg-white/10 transition hover:bg-white/20">
             <X className="size-5" />
           </button>
         </div>
-        {large}
+        {/* On narrow screens the shot keeps a readable width and pans sideways instead of shrinking. */}
+        <div className="min-h-0 overflow-auto overscroll-contain rounded-[10px]">
+          <div className="min-w-[760px]">{large}</div>
+        </div>
+        <p className="shrink-0 pt-3 text-center text-xs text-white/60 md:hidden">Swipe sideways to see the whole screen.</p>
       </dialog>
     </>
   );

@@ -34,7 +34,7 @@ export function SectorTiles({ items, columns = 3 }: { items: { slug: SectorSlug;
         return (
           <li key={s.slug} data-reveal style={{ "--reveal-delay": `${(i % columns) * 80}ms` } as Vars} className="border-b border-border sm:border-r">
             <Link href={routes.industry(s.slug)} data-glow data-cursor="Explore" className="group flex h-full flex-col transition-colors hover:bg-surface">
-              <div className="relative overflow-hidden border-b border-border bg-[radial-gradient(var(--border)_1px,transparent_1px)] p-5 [background-size:16px_16px]">
+              <div className="relative overflow-hidden border-b border-border bg-[radial-gradient(var(--border)_1px,transparent_1px)] p-5 pt-16 [background-size:16px_16px]">
                 <div className="transition-transform duration-700 ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:scale-[1.04]">
                   <SectorVisual sector={s.slug} />
                 </div>
