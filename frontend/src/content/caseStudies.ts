@@ -465,6 +465,193 @@ export const caseStudies: CaseStudyDetail[] = [
     ctaHeading: "Want an agent that answers every patient in seconds?",
   },
 
+  // ------------------------------------------------------------------ Startups · batch A
+  // Oreejoy MedTech: IIT Gandhinagar-incubated medtech startup (oreejoy.in), one of the
+  // startups VAUG built for (per Utkarsh, via the leader, 22 Nov 2026). Business facts are from
+  // oreejoy.in, read 22 Nov 2026. Results are qualitative or product facts: no invented metrics.
+  // TODO(content): confirm scope (website + clinician portal + companion app), stack, timeline,
+  // team, and consent to show the logo (CONTENT_GAPS.md). In-app numbers are illustrative.
+  {
+    slug: "gait-analysis-portal-gandhinagar",
+    client: "Oreejoy MedTech",
+    city: "Gandhinagar, Gujarat, India",
+    stage: "IIT Gandhinagar-incubated startup",
+    industry: "Healthcare · Medical devices",
+    model: "Build With Us",
+    icon: "heart",
+    title: "A Website and Clinician Portal That Turn Smart-Insole Data into Gait Reports",
+    summary:
+      "A research-grade website and a clinician portal for Instrole, Oreejoy's smart-insole gait system: foot-pressure maps, gait indices, freezing-of-gait events and fall-risk trends for every patient, fed by a companion app.",
+    metrics: [
+      { value: "4", label: "conditions covered in one portal" },
+      { value: "2 insoles", label: "one gait report per walk" },
+      { value: "9", label: "peer-reviewed papers on the site" },
+    ],
+    tint: "#1d4ed8",
+    // TODO(content): illustrative, sized for an early clinical pilot; matches the drawn screens.
+    screen: [
+      { label: "Patients monitored", value: "24" },
+      { label: "Walks analysed this week", value: "61" },
+      { label: "Freezing episodes flagged", value: "9" },
+    ],
+    logo: "/logos/oreejoy.webp",
+    sector: "healthcare",
+    service: "build-with-us",
+    clientType: "Startup",
+    region: "India",
+    domain: "Research website, clinician gait portal and companion app",
+    techStack: ["Next.js", "Python (FastAPI)", "PostgreSQL + TimescaleDB", "Flutter", "Bluetooth LE", "AWS"],
+    duration: "14 weeks",
+    team: "5 people: PM, designer, 2 full-stack devs, data engineer",
+    about:
+      "Oreejoy MedTech is a medical-technology startup incubated at IIT Gandhinagar and based in its Research Park at Palaj, Gujarat. Its product, Instrole, is an instrumented smart insole: ultra-thin, medically calibrated sensors in everyday footwear map foot pressure, onboard processing extracts gait markers, and cloud analytics track balance and movement over time. It is built for foot drop, freezing of gait in Parkinson's disease, fall risk in older adults and objective gait indexing validated against laboratory force plates. The company is led by Prof. Uttama Lahiri of IIT Gandhinagar with co-founder Dr. Neelesh Sharma, rests on a body of peer-reviewed research, and was named a national winner of Boeing BUILD 5.0.",
+    problems: [
+      f("Research, not yet a product.", "Years of published gait research had to read as a credible medical product to clinicians, hospitals and partners."),
+      f("Raw sensor streams.", "Each walk produced high-frequency pressure data from two insoles that clinicians couldn't read without engineering help."),
+      f("Evidence in pieces.", "Papers, awards, demonstrations and the founders' profiles lived in different places, with no single link to share."),
+      f("Clinical trust.", "Any portal had to show how each metric is measured and keep patient data private and access-controlled."),
+    ],
+    solution:
+      "We built two things. The first is oreejoy.in, a fast, research-grade website that explains Instrole from foot pressure to clinical insight: the technology, the four conditions it is built for, lab highlights, publications, the founders and a brochure download, all editable by the Oreejoy team. The second is a clinician portal for the Instrole system. A companion app pairs both insoles and uploads each walk, and the portal turns it into a gait report: foot-pressure maps for both feet, cadence, stride time, step-length asymmetry and stride variability, with freezing-of-gait episodes and the cues delivered marked on a timeline. A patient view tracks the same indices across weeks, so a clinician can see balance improving or degrading before a fall. Access is by role, and every report is traceable to the walk it came from.",
+    features: [
+      f("Research-grade website", "Technology, applications, lab highlights, publications and founders, edited by the Oreejoy team."),
+      f("Insole sync", "A companion app pairs both insoles over Bluetooth and uploads each recorded walk."),
+      f("Gait report", "Foot-pressure maps, cadence, stride time, asymmetry and variability for every session."),
+      f("Freezing-of-gait timeline", "Hesitation episodes and the cues delivered, second by second."),
+      f("Fall-risk trends", "Balance and gait indices across weeks, flagged when they start to degrade."),
+      f("Clinician workspace", "Patients by condition, session notes and PDF reports to share with the care team."),
+    ],
+    challenges: [
+      f("From signal to meaning", "We worked with the founders to map each sensor-derived marker to a plain clinical label and a reference range, so reports read like clinical notes, not engineering logs."),
+      f("High-frequency data", "Walks are stored as time series with pre-computed summaries, so a report opens instantly however long the session."),
+      f("Credibility with two audiences", "The website had to satisfy clinicians and research reviewers alike, so each application links to the published work behind it."),
+    ],
+    approach: [
+      p("Discovery", "Weeks 1–2", "Sessions with the founders on the research, the target conditions and what a clinician needs from a report."),
+      p("Website", "Weeks 3–5", "Designed and built oreejoy.in with editable highlights, publications and team pages."),
+      p("Portal and app", "Weeks 6–12", "Built insole sync, gait reports, the freezing timeline and trends in two-week sprints with demos."),
+      p("Pilot-ready", "Weeks 13–14", "Tested with the team's own recorded walks and clinician feedback, then handed over."),
+    ],
+    results: {
+      metrics: [
+        { value: "4", label: "conditions covered in one portal" },
+        { value: "2 insoles", label: "one gait report per walk" },
+        { value: "9", label: "peer-reviewed papers on the site" },
+        { value: "Live", label: "at oreejoy.in" },
+      ],
+      narrative:
+        "Oreejoy now has one place that explains Instrole and shows the evidence behind it, and a portal that turns a recorded walk into a report a clinician can read in minutes. The same platform carries its demonstrations to hospitals and clinical educators, and new sensors or indices can be added without rebuilding the reports.",
+    },
+    screenshots: [
+      "Oreejoy's website: the four conditions Instrole is built for",
+      "oreejoy.in on mobile: the home page and the applications",
+      "Clinician portal: patients by condition, with gait index, freezing episodes and fall-risk flags",
+      "Session report: foot-pressure maps from both insoles, gait cycle and asymmetry",
+      "Freezing-of-gait review: hesitations and cues across a 10-minute walk",
+      "Fall-risk trend: balance and gait indices over 12 weeks",
+      "Companion app: pairing the insoles and recording today's walk",
+      "Website editor on a laptop: lab highlights and publications, published by the Oreejoy team",
+    ],
+    images: [
+      { src: "/case-studies/gait-analysis-portal-gandhinagar/applications.webp", alt: "Oreejoy website: Built for Complex Movement Challenges, with foot drop support, Parkinson's gait freezing, elderly fall prediction and clinical gait indexing", width: 1440, height: 900 },
+      { src: "/case-studies/gait-analysis-portal-gandhinagar/mobile-site.webp", alt: "Oreejoy website on two phones: the home page and the targeted applications", width: 1440, height: 900 },
+    ],
+    website: { url: "https://oreejoy.in", image: { src: "/sites/oreejoy.webp", alt: "Oreejoy website home page: Transforming Gait Analysis into Real-Time Mobility Care", width: 1440, height: 900 } },
+    ctaHeading: "Turning research into a product clinicians can use?",
+    placeholder: true,
+  },
+
+  // Theronix Health: NHS discharge-coordination startup (theronixhealth.com, Theronix Ltd), one of
+  // the startups VAUG built for (per Utkarsh, via the leader, 22 Nov 2026). Product facts are from
+  // theronixhealth.com, read 22 Nov 2026. The product is at prototype stage; no outcomes are claimed.
+  // TODO(content): confirm scope (website + prototype), stack, timeline, team, city, and consent
+  // to show the logo (CONTENT_GAPS.md). Patients, agencies and numbers in the screens are illustrative.
+  {
+    slug: "nhs-discharge-platform-england",
+    client: "Theronix Health",
+    city: "South East England, UK",
+    stage: "Prototype-stage startup",
+    industry: "Healthcare · NHS discharge",
+    model: "Build With Us",
+    icon: "heart",
+    title: "A Discharge Platform That Has the Care Package Ready Before the Patient Is",
+    summary:
+      "The website and working prototype for Theronix Flow: a Pathway 1 prediction from Day 2 of admission, a care aggregator that finds spare domiciliary hours, one readiness board, and a clinician's approval before anything is activated.",
+    metrics: [
+      { value: "Day 2", label: "of admission, when the Pathway 1 score starts" },
+      { value: "5", label: "readiness checks on one board" },
+      { value: "0", label: "extra data entry for ward staff" },
+    ],
+    tint: "#7a22c7",
+    // TODO(content): illustrative prototype data for one ward; matches the drawn screens.
+    screen: [
+      { label: "Patients on Pathway 1", value: "14" },
+      { label: "Packages ready for review", value: "3" },
+      { label: "Spare agency hours today", value: "86" },
+    ],
+    logo: "/logos/theronix.webp",
+    sector: "healthcare",
+    service: "build-with-us",
+    clientType: "Startup",
+    region: "UK",
+    domain: "Discharge coordination platform (prototype) and website",
+    techStack: ["React", "TypeScript", "Python (FastAPI)", "PostgreSQL", "scikit-learn", "Azure (UK South)"],
+    duration: "12 weeks",
+    team: "4 people: PM, designer, full-stack dev, ML engineer",
+    about:
+      "Theronix Health builds Theronix Flow, a platform for NHS Pathway 1 discharge: patients who are medically fit to go home with short-term domiciliary care, but wait because the care package is only arranged after they reach No Criteria To Reside (NCTR). Theronix Flow predicts Pathway 1 needs from Day 2 of admission using routinely collected clinical data, finds unused domiciliary care hours across local CQC-registered agencies, and puts a proposed package in front of the discharge coordinator for approval. The company is in the Health Innovation KSS Discovery Programme 2026 cohort, is engaging care providers across Kent, Surrey and Sussex, and is at prototype stage with NHS system validation underway.",
+    problems: [
+      f("Reactive coordination.", "Care agencies were contacted only once a patient reached NCTR, so the wait began just as the clinical work ended."),
+      f("A complex story.", "The problem and the product had to make sense to clinicians, commissioners and care providers in under a minute."),
+      f("A prototype to prove.", "The prediction, the care aggregator and clinician sign-off needed a working product NHS teams could click through, not slides."),
+      f("Clinical safety.", "Nothing could be automated past a clinician: every proposal had to be explainable and reversible."),
+    ],
+    solution:
+      "We built theronixhealth.com and the Theronix Flow prototype. The website explains the problem, the three components and the five-step flow in plain language, with the NHS figures and their sources, and takes enquiries from teams interested in pilots. The prototype is a web platform for discharge coordinators. From Day 2 of admission it shows each patient's Pathway 1 probability, updated daily, with the signals behind it: MDT notes, frailty score, mobility, medication dependency and social circumstances. A care aggregator finds spare domiciliary hours across local CQC-registered agencies and assembles a provisional 7 to 14 day surge package. One readiness board tracks clinical stability, therapy sign-off, medications, transport and the package for every patient. When confidence passes the threshold, the coordinator approves, modifies or rejects the proposed package; every decision is logged, and nothing activates without sign-off.",
+    features: [
+      f("Pathway 1 prediction", "A daily probability score from Day 2, with the clinical signals that moved it."),
+      f("Care aggregator", "Spare hours across local CQC-registered agencies, matched to the patient's care needs."),
+      f("Readiness board", "Clinical, therapy, medicines, transport and package status for every patient in one view."),
+      f("Clinician approval", "Approve, modify or reject each proposed package, with a full audit trail."),
+      f("Surge package tracking", "The 7 to 14 day bridge from NCTR until the commissioned package starts."),
+      f("Website and pilot enquiries", "theronixhealth.com explains the flow and takes enquiries from NHS teams and providers."),
+    ],
+    challenges: [
+      f("Explainable scores", "Coordinators see why a score moved, not just the number, so the prediction supports their judgement instead of replacing it."),
+      f("No extra data entry", "The prototype uses only routinely collected data, so ward teams keep working exactly as they do now."),
+      f("Safe by design", "Packages stay provisional until a clinician signs off, and every change is recorded with who and when."),
+    ],
+    approach: [
+      p("Discovery", "Weeks 1–2", "Mapped the Pathway 1 journey with the founders: who decides, which data exists on Day 2, and where the wait happens."),
+      p("Website", "Weeks 3–4", "Wrote and built theronixhealth.com around the problem, the three components and the five steps."),
+      p("Prototype", "Weeks 5–10", "Built the score view, care aggregator, readiness board and approval flow in two-week sprints with demos."),
+      p("Demo-ready", "Weeks 11–12", "Prepared realistic demo data for walkthroughs with NHS teams and care providers, and refined from feedback."),
+    ],
+    results: {
+      metrics: [
+        { value: "Day 2", label: "of admission, when the Pathway 1 score starts" },
+        { value: "5", label: "readiness checks on one board" },
+        { value: "0", label: "extra data entry for ward staff" },
+        { value: "Every", label: "package approved by a clinician first" },
+      ],
+      narrative:
+        "Theronix has a website that explains a complex NHS problem in plain language and a working prototype NHS teams can click through, from the Day 2 score to the approved package. It supports the company's validation work with discharge teams and care providers in Kent, Surrey and Sussex.",
+    },
+    screenshots: [
+      "Theronix's website on mobile: the promise and the NHS problem in numbers",
+      "Discharge board: every Pathway 1 patient on the ward, with score and readiness",
+      "Patient view: the Pathway 1 score from Day 2, and the signals behind it",
+      "Care aggregator: spare domiciliary hours across local CQC-registered agencies",
+      "Proposed package: the coordinator approves, modifies or rejects",
+      "Surge package tracking: from NCTR to the commissioned package",
+      "The prototype on a laptop, with the coordinator's review alert on a phone",
+    ],
+    images: [{ src: "/case-studies/nhs-discharge-platform-england/mobile-site.webp", alt: "Theronix Flow website on two phones: the hero and the problem section", width: 1440, height: 900 }],
+    website: { url: "https://theronixhealth.com", image: { src: "/sites/theronix.webp", alt: "Theronix Flow website home page: Patients are ready to go home. The coordination hasn't caught up yet.", width: 1440, height: 900 } },
+    ctaHeading: "Building a product for NHS teams?",
+    placeholder: true,
+  },
+
   // ------------------------------------------------------------------ proposal · CareerNaksha
   // Source: 2023 VAUG proposal. TODO(content): confirm written consent to name this client.
   {

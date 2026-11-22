@@ -24,6 +24,8 @@ import { insuranceScreens } from "./insurance";
 import { marketplaceScreens } from "./marketplace";
 import { summerhillScreens } from "./summerhill";
 import { physioFitScreens } from "./physiofit";
+import { oreejoyScreens } from "./oreejoy";
+import { theronixScreens } from "./theronix";
 import { propertyBrandScreens } from "./propertyBrand";
 import { reconciliationScreens } from "./reconciliation";
 import { rentalRescueScreens } from "./rentalRescue";
@@ -36,6 +38,8 @@ export const SCREENS: Record<string, Screen[]> = {
   "freelancer-insurance-platform-london": insuranceScreens,
   "physio-booking-app-dubai": physioFitScreens,
   "patient-whatsapp-voice-agent-manchester": summerhillScreens,
+  "gait-analysis-portal-gandhinagar": oreejoyScreens,
+  "nhs-discharge-platform-england": theronixScreens,
   "family-office-property-brand-dubai": propertyBrandScreens,
   "rental-prototype-rescue-lisbon": rentalRescueScreens,
   "modest-fashion-marketplace-abu-dhabi": marketplaceScreens,

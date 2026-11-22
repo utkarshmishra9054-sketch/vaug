@@ -106,3 +106,21 @@ Process answers for US buyers (IACET, NVHC). Utkarsh to confirm:
 - **Insurance:** "certificates supplied before the contract is signed". fill-in-questions #25 (what cover VAUG holds) is still unanswered.
 - **Payment:** "milestones, net 30, USD by wire for US clients", from fill-answers.json.
 - Entity name and city are deliberately left out: fill-answers says Vadodara, but the site's contact page says Bengaluru.
+
+## Startups batch A: Oreejoy MedTech and Theronix Health (added 22 Nov 2026)
+
+Both are among the 20 startups Utkarsh says VAUG built for (relayed by the leader). Business and product facts come from their own sites (oreejoy.in, theronixhealth.com, read 22 Nov 2026). Both studies are `placeholder: true`. Results are qualitative or product facts only; nothing says or implies VAUG helped either company raise funding.
+
+### Consent (blocks showing these publicly)
+- Permission to show each logo and name each company as a VAUG client. The Theronix logo is a re-render of its live "Theronix Flow" wordmark (Pacifico, the site's gradient). The Oreejoy logo is the PNG from the site's header.
+
+### Oreejoy MedTech (`gait-analysis-portal-gandhinagar`)
+- **Scope:** assumed to be the website (oreejoy.in), a clinician portal for Instrole and a companion app. Confirm what VAUG actually built, especially whether the portal and app exist.
+- **Stack, 14 weeks, team of 5:** inferred.
+- **Screens:** the portal URL (portal.oreejoy.in), clinician name, patients (initials only), readings and charts are illustrative. The lab highlights and publication titles in the editor screen are real, from the site.
+
+### Theronix Health (`nhs-discharge-platform-england`)
+- **Scope:** assumed to be the website (theronixhealth.com) and the Theronix Flow prototype. Confirm.
+- **City:** shown as "South East England". The site doesn't say where the company is based.
+- **Stack, 12 weeks, team of 4:** inferred. Azure UK South is an assumption.
+- **Screens:** ward, patients (initials), coordinator name, agencies (anonymised provider codes), scores and hours are illustrative. The next-of-kin number uses the Ofcom drama range (07700 900xxx).
