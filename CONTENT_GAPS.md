@@ -47,6 +47,23 @@ All 13 are drafts (`placeholder: true`). Every figure other than those below is 
 | epi.logic | None | The real engagement and results |
 | Well Aliments Brazil | None | The real engagement and results |
 
+## Summerhill Health (`patient-whatsapp-voice-agent-manchester`, rewritten 22 Nov 2026)
+
+The study used to describe a nine-centre imaging network. It now describes the real business: a private GP clinic at 6 Broomfield Lane, Hale (Altrincham), led by Dr Natalie Summerhill. It is now a draft (`placeholder: true`), so it no longer shows in the home page "What Changed for Our Clients" strip, and its numbers must not be quoted as fact.
+
+**Taken from the clinic's own site (summerhillhealth.co.uk, read 22 Nov 2026):** services, fees (£135 20-min GP, £175 follow-up, £285 initial consultation, home visits from £165), opening hours (8 am–6 pm weekdays), the 6 pm-the-day-before cancellation rule, parking, Semble online booking, brand colours, Lato font, logo and screenshots.
+
+**Illustrative, needs Utkarsh to confirm or replace:**
+- [ ] What VAUG actually built for Summerhill, and when (the study assumes a 10-week build of a phone + WhatsApp agent integrated with Semble, by a team of 4).
+- [ ] Every figure: 78% resolved without staff, <5s answer time, −38% missed appointments, 93% questionnaires returned, 1,284 enquiries in October, 58 conversations a day, 14 bookings by the agent, 38% of enquiries out of hours, and all values in the six drawn screens.
+- [ ] Whether the clinic has a WhatsApp number (its site lists phone, email, an enquiry form and online booking only).
+- [ ] Client type: set to "Startup" as the closest of the four options for a single private clinic.
+- [ ] The site still shows a "We're closed right now, call you back?" form out of hours, so the study keeps the agent to phone and WhatsApp.
+- [ ] Everyone in the screens except Dr Summerhill is invented (patients, "Associate GP", "Practice nurse", "Front desk"). The Menopause Rating Scale is a real published scale; the answers are invented.
+- [ ] Consent to name Summerhill Health and show its logo, website and Dr Summerhill's photo (in the website screenshots).
+- [ ] A testimonial from Dr Summerhill, if she'll give one.
+- [ ] Real screenshots of the console, if any exist, to replace the drawn screens.
+
 ### Drawn screens (all case studies)
 Screens in `frontend/src/components/case-studies/screens/` copy real tools (Google Ads, Meta, Search Console, GA4, LinkedIn, HubSpot, Semrush…) using each client's real name, domain and logo. Every number, campaign, keyword, lead and person in them is illustrative (see the `TODO(content)` comments). Replace them with real exports where possible, and get client consent before publishing.
 - [ ] **Devgun:** phone number shown masked (`0XXXX XXXXX`); add the real Business Profile number or leave it masked.

@@ -352,84 +352,103 @@ export const caseStudies: CaseStudyDetail[] = [
   },
 
   // ------------------------------------------------------------------ 4
+  // Summerhill Health: a private GP clinic in Hale, Altrincham (summerhillhealth.co.uk).
+  // Business facts (services, fees, hours, Semble booking, location) are from the clinic's
+  // own website, read 22 Nov 2026. The engagement details and every figure are illustrative:
+  // TODO(content): confirm scope, timeline, team and all numbers with Utkarsh (see CONTENT_GAPS.md).
   {
     slug: "patient-whatsapp-voice-agent-manchester",
     client: "Summerhill Health",
-    city: "Manchester, UK",
-    stage: "Enterprise",
+    city: "Hale, Altrincham, UK",
+    stage: "Private GP clinic",
     industry: "Healthcare",
     model: "AI as a Service",
     icon: "message-square",
-    title: "A WhatsApp and Voice Agent That Answers Every Patient Call",
+    title: "A WhatsApp and Voice Agent That Answers Every Patient, Day or Night",
     summary:
-      "An AI agent that answers calls and WhatsApp messages, books scans, collects pre-scan questionnaires and sends reminders across 9 imaging centres.",
+      "An AI agent for a private GP clinic near Manchester that answers calls and WhatsApp messages, books same-day and new-patient appointments, sends pre-consultation questionnaires and reminders, and passes anything clinical to the doctors.",
+    // TODO(content): illustrative headline figures, confirm with the client.
     metrics: [
-      { value: "78%", label: "patient contacts resolved without staff" },
-      { value: "<5s", label: "answer time (down from 6 min)" },
+      { value: "78%", label: "patient enquiries resolved without staff" },
+      { value: "<5s", label: "answer time, evenings and weekends included" },
       { value: "-38%", label: "missed appointments" },
     ],
-    tint: "#0e7490",
+    tint: "#05868e",
+    // TODO(content): illustrative, matches the drawn console screen.
     screen: [
-      { label: "Conversations today", value: "1,146" },
-      { label: "Scans booked by agent", value: "214" },
-      { label: "Handed to staff", value: "61" },
+      { label: "Conversations today", value: "58" },
+      { label: "Appointments booked by agent", value: "14" },
+      { label: "Handed to the team", value: "6" },
     ],
     logo: "/logos/summerhill-health.webp",
     sector: "healthcare",
     service: "ai-as-a-service",
-    clientType: "Enterprise",
+    // TODO(content): confirm client type (a single private clinic, closest to "Startup" among the four).
+    clientType: "Startup",
     region: "UK",
-    domain: "AI voice + WhatsApp agent (patient intake and reminders)",
-    techStack: ["Python", "OpenAI", "Twilio", "WhatsApp Business API", "PostgreSQL", "Azure"],
-    duration: "12 weeks",
-    team: "5 people: PM, 2 AI engineers, integration engineer, QA",
+    domain: "AI voice + WhatsApp agent (patient booking, intake and reminders)",
+    techStack: ["Python", "OpenAI", "Twilio Voice", "WhatsApp Business API", "Semble API", "PostgreSQL", "Azure UK South"],
+    // TODO(content): illustrative engagement length and team.
+    duration: "10 weeks",
+    team: "4 people: PM, AI engineer, integration engineer, QA",
     about:
-      "Summerhill Health is a private diagnostic imaging network with nine centres across Greater Manchester and Cheshire, offering MRI, CT, ultrasound and X-ray to self-paying patients and through insurers and NHS referrals. Its central booking team of fourteen handled over 1,500 calls and messages a day. Long hold times meant patients abandoned calls, and many scans were delayed because pre-scan safety questionnaires weren't completed in time.",
+      "Summerhill Health is a private GP clinic on Broomfield Lane in Hale, near Altrincham, led by Dr Natalie Summerhill, a GP and menopause specialist. It offers same-day GP appointments, women's health (menopause and HRT, contraception, endometriosis and womb-cancer testing), men's health, family and children's care, home visits, blood tests and health screening to patients from across Greater Manchester and Cheshire. Patients book online, by phone or by email, and new patients who want longer-term care start with a 60-minute initial consultation. A small front-desk team answered every call and message while also looking after patients in the clinic.",
     problems: [
-      f("Long waits.", "Patients waited an average of six minutes on hold, and a quarter hung up."),
-      f("Repetitive questions.", "Most calls were about prices, preparation, directions or moving an appointment."),
-      f("Incomplete paperwork.", "MRI safety questionnaires were often missing on the day, causing delays and cancellations."),
-      f("Missed appointments.", "No-shows left expensive scanner time unused."),
+      f("One desk, every channel.", "The same small team answered the phone, replied to emails and enquiry forms, and checked patients in, so calls rang out at the busiest times."),
+      f("Closed evenings and weekends.", "The clinic is open 8 am to 6 pm on weekdays. Patients who got in touch after hours waited until the next working day for a reply."),
+      f("The same questions all day.", "Which appointment to book, what it costs, how to prepare for a blood test, where to park and whether a home visit reaches their postcode."),
+      f("Late paperwork and empty slots.", "New-patient histories often arrived on the day, and late cancellations left longer consultations unfilled."),
     ],
     solution:
-      "We deployed an AI agent that works on both phone and WhatsApp. It answers instantly, understands what the patient needs, and handles common requests end to end: booking and rescheduling scans against live scanner availability, explaining preparation, sharing prices and directions, and answering insurer questions. After booking, it sends the MRI safety questionnaire on WhatsApp and follows up until it's complete, flagging any safety answers for a radiographer. Reminders go out 48 hours and on the morning of the scan, with one-tap confirm or reschedule. Anything clinical or sensitive goes straight to a human with the full conversation attached.",
+      "We built an AI agent that answers the clinic's phone line and WhatsApp in seconds, day or night. It knows the clinic's appointment rules, so it books the right slot against the live Semble diary: a same-day 20-minute GP appointment, a 60-minute initial consultation for new patients, a blood test or a video call. It answers questions about fees, blood-test and screening preparation, directions and parking from the clinic's own published information. After an initial consultation is booked, it sends a pre-consultation questionnaire on WhatsApp, including a menopause symptom score where relevant, writes the answers into the patient's record and flags anything clinical for the doctor. Reminders go out two days and on the morning of each appointment with one-tap confirm or reschedule, home-visit requests are checked against the postcodes the clinic covers, and patients are invited to leave a review and join the newsletter after their visit. The agent never gives medical advice: clinical questions, complaints and anything sensitive go straight to the team with the conversation attached.",
     features: [
-      f("Voice agent", "Natural phone conversations with instant answer and no menus."),
-      f("WhatsApp agent", "Booking, rescheduling and FAQs in the patient's chat."),
-      f("Live scheduling", "Two-way sync with the RIS booking system for all nine centres."),
-      f("Pre-scan questionnaires", "Guided MRI safety forms with risk answers flagged to staff."),
-      f("Human handover", "Clinical, complaint and complex cases passed to staff with context."),
+      f("Voice agent", "Answers the clinic number instantly, with no menus, including evenings and weekends."),
+      f("WhatsApp agent", "Booking, rescheduling and questions in the patient's own chat."),
+      f("Live Semble booking", "Same-day GP slots, initial consultations, blood tests and video calls booked against the clinic's live diary."),
+      f("Pre-consultation questionnaires", "Medical history and menopause symptom scores collected before the appointment, with answers flagged for the doctor."),
+      f("Reminders and rescheduling", "Two-day and same-morning reminders with one-tap changes, inside the clinic's free-cancellation window."),
+      f("Team handover", "Clinical questions, complaints and home-visit requests outside the area passed to staff with the full conversation."),
     ],
     challenges: [
-      f("Clinical safety", "The agent must never give medical advice. We built strict guardrails and a clinical-topic detector that hands over immediately."),
-      f("Legacy booking system", "The RIS had a limited API. We built an integration layer that syncs availability every 30 seconds."),
-      f("Data protection", "Patient data is processed in UK-region Azure with GDPR-aligned retention and consent capture."),
+      f("Clinical safety", "The agent never gives medical advice. A clinical-topic detector hands over at once, and red-flag symptoms get an immediate 999 or NHS 111 message and an alert to the doctor."),
+      f("The right appointment", "We encoded the clinic's booking rules (initial consultations for new patients' longer-term care, direct booking for blood tests and contraception) so the agent books the right slot and quotes the right fee."),
+      f("Patient data", "Everything runs in UK-region Azure with GDPR-aligned retention and consent capture, and questionnaire answers live in the patient's Semble record, not in chat history."),
     ],
     approach: [
-      p("Discovery", "Weeks 1–2", "Analysed 5,000 anonymised call and message logs to find the top request types."),
-      p("Design", "Weeks 3–4", "Wrote conversation flows and safety rules with the clinical governance lead."),
-      p("Build", "Weeks 5–9", "Built the voice and WhatsApp agents, RIS integration and staff console."),
-      p("Pilot", "Weeks 10–11", "Ran at two centres, reviewing every handover and failed conversation."),
-      p("Roll-out & improve", "Week 12 onward", "Extended to all nine centres with weekly tuning."),
+      p("Discovery", "Weeks 1–2", "Reviewed three months of anonymised enquiries with the front desk and listed the 20 most common requests."),
+      p("Design", "Week 3", "Wrote conversation flows, booking rules and safety guardrails with Dr Summerhill."),
+      p("Build", "Weeks 4–7", "Built the voice and WhatsApp agents, the Semble integration, questionnaires, reminders and the clinic console."),
+      p("Pilot", "Weeks 8–9", "Ran evenings and weekends first, with the team reviewing every conversation each morning."),
+      p("Live and tuning", "Week 10 onward", "Switched on daytime overflow and tuned answers weekly from handover reasons."),
     ],
+    // TODO(content): illustrative results, confirm with the client.
     results: {
       metrics: [
-        { value: "78%", label: "of contacts resolved without staff" },
-        { value: "<5s", label: "answer time" },
+        { value: "78%", label: "of patient enquiries resolved without staff" },
+        { value: "<5s", label: "answer time, day or night" },
         { value: "-38%", label: "missed appointments" },
-        { value: "96%", label: "questionnaires completed before the scan" },
+        { value: "93%", label: "of questionnaires back before the appointment" },
       ],
       narrative:
-        "Patients now get an answer immediately at any hour, and most never need to speak to the booking team. Staff focus on referrals, insurer queries and patients who need a human. Completed questionnaires and reminders turned previously wasted scanner slots into billable scans.",
+        "Patients now get an answer in seconds, including evenings and weekends, and most never wait for a call back. The front desk spends its time with the patients in the clinic and the conversations that need a person. Questionnaires arrive before the consultation, so the doctor starts each new-patient appointment with the history in hand, and reminders with one-tap rescheduling keep the longer appointments filled.",
     },
     screenshots: [
-      "WhatsApp conversation showing a scan being booked and a questionnaire sent",
-      "Staff console with live conversations and handover queue",
-      "Analytics dashboard: contacts, resolution rate and bookings by centre",
-      "Flagged questionnaire review screen",
+      "Summerhill Health's fees page and Semble booking widget: the prices and slots the agent works from",
+      "The clinic's website on mobile: home page and appointments",
+      "WhatsApp: a same-day GP appointment booked, then an initial consultation with its questionnaire",
+      "Clinic console: live calls and chats, with the handover queue",
+      "Diary: Dr Summerhill and the team's day, with agent bookings and home visits",
+      "Questionnaire review: a menopause symptom score with flagged answers",
+      "Analytics on the practice laptop, with the morning summary on the practice manager's phone",
+      "Reminders and no-show tracker, with the waitlist that refills freed slots",
     ],
-    website: { url: "https://www.summerhillhealth.co.uk", image: { src: "/sites/summerhill-health.webp", alt: "Summerhill Health website home page", width: 1440, height: 900 } },
+    images: [
+      { src: "/case-studies/patient-whatsapp-voice-agent-manchester/fees-and-booking.webp", alt: "Summerhill Health private GP fees page with the consultation fee table and the online booking widget", width: 1440, height: 900 },
+      { src: "/case-studies/patient-whatsapp-voice-agent-manchester/mobile-site.webp", alt: "Summerhill Health website on two phones: the home page and the private GP appointments page", width: 1440, height: 900 },
+    ],
+    website: { url: "https://www.summerhillhealth.co.uk", image: { src: "/sites/summerhill-health.webp", alt: "Summerhill Health website home page: Your Private GP in Hale & Altrincham", width: 1440, height: 900 } },
     ctaHeading: "Want an agent that answers every patient in seconds?",
+    placeholder: true,
   },
 
   // ------------------------------------------------------------------ proposal · CareerNaksha

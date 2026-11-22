@@ -22,7 +22,7 @@ import { courierScreens } from "./courier";
 import { desertRetreatScreens } from "./desertRetreat";
 import { insuranceScreens } from "./insurance";
 import { marketplaceScreens } from "./marketplace";
-import { patientAgentScreens } from "./patientAgent";
+import { summerhillScreens } from "./summerhill";
 import { physioScreens } from "./physio";
 import { propertyBrandScreens } from "./propertyBrand";
 import { reconciliationScreens } from "./reconciliation";
@@ -35,7 +35,7 @@ export const SCREENS: Record<string, Screen[]> = {
   "reconciliation-agent-frankfurt-payments": reconciliationScreens,
   "freelancer-insurance-platform-london": insuranceScreens,
   "physio-booking-app-dubai": physioScreens,
-  "patient-whatsapp-voice-agent-manchester": patientAgentScreens,
+  "patient-whatsapp-voice-agent-manchester": summerhillScreens,
   "family-office-property-brand-dubai": propertyBrandScreens,
   "rental-prototype-rescue-lisbon": rentalRescueScreens,
   "modest-fashion-marketplace-abu-dhabi": marketplaceScreens,
