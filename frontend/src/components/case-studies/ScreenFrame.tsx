@@ -1,18 +1,32 @@
-import Image from "next/image";
-
 import type { CaseImage } from "@/content/types";
 import { SCREENS } from "./screens";
 import { ShotCanvas } from "./screens/kit";
-import { ShotZoom } from "./ShotZoom";
+import { ShotThumb, type GalleryItem } from "./ShotGallery";
 
 /**
  * One product screen on a case study page. A real screenshot (`image`) wins;
  * studies with bespoke screens (see `./screens`) render the drawn screen.
- * Both are click-to-enlarge. Otherwise a tinted
- * device frame with a skeleton UI stands in; the skeleton is picked from the
- * caption (chat, map, dashboard, table, board, detail, site, form) so every
- * screen in the gallery reads as a different view.
+ * Both open the shared viewer in `ShotGallery` (pinch / tap to zoom on
+ * phones). Otherwise a tinted device frame with a skeleton UI stands in; the
+ * skeleton is picked from the caption (chat, map, dashboard, table, board,
+ * detail, site, form) so every screen in the gallery reads as a different view.
  */
+
+/** What a gallery entry shows: a real screenshot, else the study's drawn screen at `screenIndex`, else nothing (skeleton). */
+export function galleryItem({ slug, tint, caption, screenIndex, image }: { slug: string; tint: string; caption: string; screenIndex: number; image?: CaseImage }): GalleryItem {
+  if (image) return { caption, image };
+  const Screen = SCREENS[slug]?.[screenIndex];
+  return Screen
+    ? {
+        caption,
+        node: (
+          <ShotCanvas>
+            <Screen tint={tint} />
+          </ShotCanvas>
+        ),
+      }
+    : { caption };
+}
 
 type Kind = "chat" | "map" | "chart" | "table" | "board" | "site" | "detail" | "form";
 
@@ -170,47 +184,20 @@ function Body({ kind, tint, phone }: { kind: Kind; tint: string; phone: boolean 
   }
 }
 
-/** `screenIndex` picks the drawn screen; studies with real `images` list them first, so drawn screens start after them. */
-export function ScreenFrame({
-  slug,
-  caption,
-  tint,
-  index,
-  screenIndex = index,
-  image,
-}: {
-  slug: string;
-  caption: string;
-  tint: string;
-  index: number;
-  screenIndex?: number;
-  image?: CaseImage;
-}) {
-  const Screen = SCREENS[slug]?.[screenIndex];
-  const shot = image ? (
-    <Image src={image.src} alt={image.alt} width={image.width} height={image.height} sizes="(min-width: 640px) 50vw, 100vw" className="block h-auto w-full bg-white" />
-  ) : Screen ? (
-    <ShotCanvas>
-      <Screen tint={tint} />
-    </ShotCanvas>
-  ) : null;
-  if (shot) {
+/** `index` is the entry's place in the `ShotGallery` items (and the number shown under it). */
+export function ScreenFrame({ item, tint, index }: { item: GalleryItem; tint: string; index: number }) {
+  const { caption } = item;
+  if (item.node || item.image) {
+    // Phones: the screen runs edge to edge in a thin tinted frame, so it's as large as the width allows.
     return (
-      <figure data-reveal style={{ "--reveal-delay": `${(index % 2) * 90}ms` } as React.CSSProperties} className="group flex h-full flex-col border-b border-border bg-surface p-6 sm:border-r lg:p-8">
-        <div className="relative overflow-hidden rounded-md p-4 sm:p-6" style={{ background: `linear-gradient(135deg, ${tint}, color-mix(in oklab, ${tint} 72%, #000))` }}>
+      <figure data-reveal style={{ "--reveal-delay": `${(index % 2) * 90}ms` } as React.CSSProperties} className="group flex h-full flex-col border-b border-border bg-surface py-6 sm:border-r sm:p-6 lg:p-8">
+        <div className="relative overflow-hidden p-2.5 sm:rounded-md sm:p-6" style={{ background: `linear-gradient(135deg, ${tint}, color-mix(in oklab, ${tint} 72%, #000))` }}>
           <div className="absolute inset-0 bg-[radial-gradient(rgb(255_255_255/0.14)_1px,transparent_1px)] [background-size:16px_16px]" aria-hidden="true" />
           <div className="relative transition-transform duration-500 group-hover:-translate-y-1">
-            <ShotZoom
-              caption={caption}
-              large={
-                <div className="overflow-hidden rounded-[10px] shadow-2xl">{shot}</div>
-              }
-            >
-              <div className="overflow-hidden rounded-[10px] shadow-[0_30px_60px_-24px_rgb(0_0_0/0.6)]">{shot}</div>
-            </ShotZoom>
+            <ShotThumb index={index} />
           </div>
         </div>
-        <figcaption className="mt-5 flex gap-3 text-sm leading-relaxed text-muted">
+        <figcaption className="mt-4 flex gap-3 px-5 text-sm leading-relaxed text-muted sm:mt-5 sm:px-0">
           <span className="font-mono text-xs text-accent-text">{String(index + 1).padStart(2, "0")}</span>
           {caption}
         </figcaption>

@@ -1471,6 +1471,14 @@
 @supports (scale: tan(atan2(1px, 1px))) {
   .shot-stage { scale: tan(atan2(100cqw, 640px)); }
 }
+/* Screen viewer (ShotGallery.tsx): fade in; the gesture hint shows for a few seconds, then fades. */
+@keyframes shot-viewer-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes shot-viewer-hint { 0%, 80% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
+.shot-viewer[open] { animation: shot-viewer-in 0.2s ease-out; }
+.shot-viewer-hint { animation: shot-viewer-hint 3.5s ease-in forwards; }
+@media (prefers-reduced-motion: reduce) {
+  .shot-viewer[open] { animation: none; }
+}
 
 /* ==================== Services + Agents area: completion bars (svc-/agents-) ==================== */
 /* Console tab bar: scale follows --p; each playback phase transitions it linearly. */

@@ -6,7 +6,8 @@ import { ArrowLeft, ArrowRight, Quote } from "lucide-react";
 
 import { engagementOption, routes, sectorBySlug, serviceBySlug } from "@/content/taxonomy";
 import { CaseToc } from "@/components/case-studies/CaseToc";
-import { ScreenFrame } from "@/components/case-studies/ScreenFrame";
+import { ScreenFrame, galleryItem } from "@/components/case-studies/ScreenFrame";
+import { ShotGallery, type GalleryItem } from "@/components/case-studies/ShotGallery";
 import { ContactSection, PageCta } from "@/components/page/Blocks";
 import { CaseStudyGrid } from "@/components/page/CaseStudyCards";
 import { MetricRow } from "@/components/page/FeatureGrid";
@@ -77,6 +78,15 @@ export default async function CaseStudyPage(props: PageProps<"/case-studies/[slu
     { label: "Duration", value: study.duration },
     { label: "Team", value: study.team },
   ].filter((f) => !!f && !!f.value) as { label: string; value: string; href?: string; external?: boolean }[];
+
+  // Gallery: real screenshots first, then the drawn screens, then the live website.
+  const shots = study.images?.length ?? 0;
+  const gallery: GalleryItem[] = [
+    ...study.screenshots.map((caption, n) => galleryItem({ slug: study.slug, tint: study.tint, caption, screenIndex: n - shots, image: study.images?.[n] })),
+    ...(study.website
+      ? [{ caption: `${study.client}'s website today: ${new URL(study.website.url).hostname.replace(/^www\./, "")}`, image: study.website.image }]
+      : []),
+  ];
 
   return (
     <>
@@ -276,31 +286,20 @@ export default async function CaseStudyPage(props: PageProps<"/case-studies/[slu
           }
           className="frame-pad py-16 lg:py-20"
         />
-        <div className="grid border-t border-border sm:grid-cols-2">
-          {study.screenshots.map((caption, n) => (
-            <ScreenFrame
-              key={caption}
-              slug={study.slug}
-              caption={caption}
-              tint={study.tint}
-              index={n}
-              screenIndex={n - (study.images?.length ?? 0)}
-              image={study.images?.[n]}
-            />
-          ))}
-          {study.website && (
-            // Spans both columns when it would otherwise sit alone in the last row.
-            <div className={study.screenshots.length % 2 === 0 ? "sm:col-span-2" : undefined}>
-              <ScreenFrame
-                slug={study.slug}
-                caption={`${study.client}'s website today: ${new URL(study.website.url).hostname.replace(/^www\./, "")}`}
-                tint={study.tint}
-                index={study.screenshots.length}
-                image={study.website.image}
-              />
-            </div>
-          )}
-        </div>
+        <ShotGallery items={gallery}>
+          <div className="grid border-t border-border sm:grid-cols-2">
+            {gallery.map((item, n) =>
+              n < study.screenshots.length ? (
+                <ScreenFrame key={item.caption} item={item} tint={study.tint} index={n} />
+              ) : (
+                // The website spans both columns when it would otherwise sit alone in the last row.
+                <div key="website" className={study.screenshots.length % 2 === 0 ? "sm:col-span-2" : undefined}>
+                  <ScreenFrame item={item} tint={study.tint} index={n} />
+                </div>
+              ),
+            )}
+          </div>
+        </ShotGallery>
       </Band>
 
       {/* Prev / next */}
