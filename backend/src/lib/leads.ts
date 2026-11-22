@@ -1,6 +1,7 @@
 
 import { randomUUID } from "node:crypto";
 
+import { sendMail } from "./mail.js";
 import { appendRecord, readRecords } from "./store.js";
 import type { LeadInput } from "./validation.js";
 
@@ -21,6 +22,26 @@ export async function createLead(input: LeadInput, source: string): Promise<Lead
   const lead: Lead = { ...fields, id: randomUUID(), createdAt: new Date().toISOString(), source };
   await appendRecord("leads", lead);
   await notify(`New VAUG lead: ${lead.name} <${lead.email}> — ${lead.engagement}`, lead);
+  await sendMail(
+    `New enquiry: ${lead.name} (${lead.engagement})`,
+    [
+      "New enquiry from vaug.in",
+      "",
+      `Name:       ${lead.name}`,
+      `Email:      ${lead.email}`,
+      `Company:    ${lead.company || "-"}`,
+      `Phone:      ${lead.phone || "-"}`,
+      `Interested: ${lead.engagement}`,
+      `Timeline:   ${lead.timeline ?? "-"}`,
+      "",
+      "Message:",
+      lead.message,
+      "",
+      "---",
+      `Sent ${lead.createdAt} from ${source}`,
+    ].join("\n"),
+    `${lead.name} <${lead.email}>`,
+  );
   return lead;
 }
 
@@ -42,7 +63,10 @@ export async function addSubscriber(email: string) {
     { email: normalized, createdAt: new Date().toISOString() },
     (s) => s.email === normalized,
   );
-  if (added) await notify(`New VAUG newsletter subscriber: ${normalized}`, { email: normalized });
+  if (added) {
+    await notify(`New VAUG newsletter subscriber: ${normalized}`, { email: normalized });
+    await sendMail(`New newsletter subscriber: ${normalized}`, `New newsletter sign-up on vaug.in: ${normalized}`);
+  }
   return added;
 }
 

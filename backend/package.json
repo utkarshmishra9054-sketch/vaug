@@ -13,10 +13,12 @@
   "dependencies": {
     "@hono/node-server": "^1.19.0",
     "hono": "^4.9.0",
+    "nodemailer": "^6.9.16",
     "zod": "^4.6.5"
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/nodemailer": "^6.4.17",
     "tsup": "^8.5.0",
     "tsx": "^4.20.0",
     "typescript": "^5"

@@ -22,6 +22,18 @@ Open http://localhost:3000. The browser only ever talks to the frontend; Next.js
 
 ## Deploying
 
+Live on Railway (project `vaug`, workspace My Projects). Every push to `main` on
+github.com/utkarshmishra9054-sketch/vaug redeploys automatically:
+
+- `vaug-web` (root `/frontend`) serves https://vaug.in and https://www.vaug.in
+- `vaug-api` (root `/backend`) is private; the web service reaches it at `vaug-api.railway.internal:4000`.
+  Leads and subscribers are stored on a volume mounted at `/data` and emailed to hello@vaug.in
+  once `SMTP_PASS` (the hello@vaug.in mailbox password) is set on the service.
+
+Each service only rebuilds when files in its own folder change.
+
+Other hosts:
+
 - **backend**: any Node host (Railway, Render, Fly.io, a VPS). Set `PORT`, `ADMIN_API_TOKEN`,
   `WEB_ORIGIN`, and optionally `LEAD_WEBHOOK_URL`. Leads are stored as JSON files in `data/`;
   on hosts without a persistent disk, swap `src/lib/store.ts` for a database.
