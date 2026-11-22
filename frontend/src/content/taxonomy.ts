@@ -62,6 +62,7 @@ export const routes = {
   careers: "/careers",
   career: (slug: string) => `/careers/${slug}`,
   howWeWork: "/how-we-work",
+  workingWithUs: "/working-with-us",
   security: "/security-and-compliance",
   contact: "/contact",
   privacy: "/privacy-policy",

@@ -49,6 +49,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entry(routes.careers, 0.6, "weekly"),
     ...roles.map((r) => entry(routes.career(r.slug), 0.5, "weekly")),
     entry(routes.howWeWork, 0.6),
+    entry(routes.workingWithUs, 0.6),
     entry(routes.security, 0.5),
     entry(routes.contact, 0.8),
 

@@ -95,3 +95,14 @@ Written for the NVHC proposal from the Sales Agent's "website asks"; Utkarsh to 
 - **Access:** "staff sign in with SSO or MFA", "access reviewed whenever someone joins or leaves", "content edits, permission changes and data exports are logged".
 - **BAA:** "we sign a business associate agreement before any PHI access" (requested via the leader for NVHC). Confirm VAUG is willing to sign BAAs.
 - **US hosting:** not on the page. The residency list still says EU, UK and UAE. Add a US region only once Utkarsh confirms it.
+
+## Working with us (`/working-with-us`, added 22 Nov 2026)
+
+Process answers for US buyers (IACET, NVHC). Utkarsh to confirm:
+- **US overlap:** "every weekday 9 a.m.–1 p.m. Eastern (6–10 a.m. Pacific)", "anything sent outside it is answered by the start of your next working day". Taken from the IACET proposal.
+- **Core hours:** "10:00–19:00 India time" (drives the overlap chart).
+- **Rhythm:** a daily written stand-up note in the client's Slack or Teams, and milestone sign-off before invoicing.
+- **Escalation contact:** "answers within one business day". Not named on the page.
+- **Insurance:** "certificates supplied before the contract is signed". fill-in-questions #25 (what cover VAUG holds) is still unanswered.
+- **Payment:** "milestones, net 30, USD by wire for US clients", from fill-answers.json.
+- Entity name and city are deliberately left out: fill-answers says Vadodara, but the site's contact page says Bengaluru.

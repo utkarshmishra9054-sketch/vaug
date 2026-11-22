@@ -74,6 +74,7 @@ export const navigation: NavItem[] = [
     menu: [
       { label: "About Us", href: routes.about, description: "Our story since 2019, values and offices" },
       { label: "How We Work", href: routes.howWeWork, description: "Clear commitments and visible progress" },
+      { label: "Working With Us", href: routes.workingWithUs, description: "Hours, weekly rhythm and contracts" },
       { label: "Culture", href: routes.culture, description: "Remote-first, demo-driven, always learning" },
       { label: "Team", href: routes.team, description: "The people behind every build" },
       { label: "Careers", href: routes.careers, description: "Open roles for builders and AI specialists" },
@@ -99,6 +100,7 @@ export const footerColumns: FooterColumn[] = [
     links: [
       { label: "About Us", href: routes.about },
       { label: "How We Work", href: routes.howWeWork },
+      { label: "Working With Us", href: routes.workingWithUs },
       { label: "Case Studies", href: routes.caseStudies },
       { label: "Culture", href: routes.culture },
       { label: "Team", href: routes.team },
