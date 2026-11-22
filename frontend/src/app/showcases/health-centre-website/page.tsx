@@ -182,6 +182,9 @@ export default async function HealthCentreShowcasePage() {
             <Link href={routes.accessibilityAudits} className="link-underline text-accent-text">
               How we test accessibility
             </Link>
+            <Link href={`${routes.security}#health-data`} className="link-underline text-accent-text">
+              How we handle health data
+            </Link>
           </div>
         </Section>
       )}

@@ -24,13 +24,13 @@ export interface LifecycleStage {
 
 export const security = {
   metaDescription:
-    "How VAUG handles security and compliance: GDPR and UK GDPR, OWASP ASVS, ISO 27001-aligned practices, NDAs, IP ownership, EU/UK/UAE data residency and careful AI data handling.",
+    "How VAUG handles security and compliance: hosting and tested backups, role-based portals, health data kept off marketing sites with BAAs where PHI is involved, GDPR and UK GDPR, OWASP ASVS, ISO 27001-aligned practices, NDAs, IP ownership and data residency.",
   hero: {
     eyebrow: "Security & compliance",
     title: { light: "Security that's designed in,", bold: "not bolted on." },
     subtitle:
       "We build for regulated sectors in the UK, Europe and the UAE. Security, privacy and data residency are decided at the start of a project, not patched in before launch.",
-    tags: ["GDPR & UK GDPR", "OWASP ASVS", "EU · UK · UAE hosting", "NDA on request"],
+    tags: ["GDPR & UK GDPR", "OWASP ASVS", "EU · UK · UAE hosting", "BAA for PHI work", "NDA on request"],
   } satisfies CompanyHero,
 
   /** Chips orbiting the hero shield. */
@@ -76,7 +76,7 @@ export const security = {
   sectorsSubtitle: "Every sector has its own rules. We know the common ones and work with your compliance team on the rest.",
   sectorStandards: {
     "fintech-insurance": ["PCI DSS via providers", "Strong customer authentication", "Audit trails"],
-    healthcare: ["Special category data", "Consent records", "Clinical data minimisation"],
+    healthcare: ["HIPAA: BAAs and no PHI on public sites", "Special category data (UK & EU)", "Clinical data minimisation"],
     "real-estate": ["KYC / AML workflows", "Document retention", "Tenant data rights"],
     "ecommerce-retail": ["PCI DSS via providers", "Cookie consent", "Fraud controls"],
     logistics: ["Driver & location data", "Role-based access", "Partner API security"],
@@ -98,6 +98,28 @@ export const security = {
     { region: "UK", note: "London" },
     { region: "UAE", note: "Dubai · Abu Dhabi" },
   ],
+
+  // TODO(content): backup retention (30 days), hosting in client accounts, SSO/MFA and logging need Utkarsh to confirm (CONTENT_GAPS.md).
+  hostingTitle: "Hosting, backups and access.",
+  hostingSubtitle: "What we set up on every site and portal we build and run, written into the handover so your team knows how it works.",
+  hosting: [
+    { title: "Hosting in your accounts", description: "Production runs in your own cloud or hosting account (AWS, Google Cloud, Azure or managed WordPress hosting) in the region agreed at scoping. You hold the keys; we get named access you can revoke.", icon: "cloud" },
+    { title: "Backups we've restored", description: "Automated daily backups of the database and uploaded files, stored apart from the live site and kept for 30 days unless you need longer. We restore one before launch to prove it works.", icon: "database" },
+    { title: "Encrypted in transit and at rest", description: "HTTPS on every page and API, encrypted databases and backups, and secrets kept in a secrets manager, never in code or chat.", icon: "shield" },
+    { title: "Role-based portals", description: "Patients, members, staff, editors and admins each see only what their role needs. Staff sign in with SSO or MFA, and access is reviewed whenever someone joins or leaves.", icon: "users" },
+    { title: "Audit trails", description: "Content edits, permission changes and data exports are logged with who and when, and kept for your own audits.", icon: "file-check" },
+    { title: "Patched and monitored", description: "Uptime and error alerts go to a named engineer. CMS core, plugins and dependencies are updated on a schedule, and security fixes go out as soon as they're tested.", icon: "refresh-cw" },
+  ] satisfies Feature[],
+
+  // TODO(content): Utkarsh to confirm VAUG signs BAAs (CONTENT_GAPS.md). No US hosting claim until he confirms it.
+  healthTitle: "Health data stays where it belongs.",
+  healthSubtitle: "For clinics, health centres and digital-health products. Most websites never need protected health information (PHI), so we design them not to touch it.",
+  health: [
+    { title: "No PHI on marketing sites", description: "Public websites don't collect or store health information. Contact and appointment-request forms ask only for what's needed to get in touch, and say so on the form.", icon: "globe" },
+    { title: "Analytics without patient data", description: "GA4 and Tag Manager are configured so names, contact details, conditions and appointment details are never sent. Events describe pages and buttons, not people.", icon: "gauge" },
+    { title: "Clinical features in HIPAA-eligible systems", description: "Patient portals, scheduling and anything that handles PHI stay in HIPAA-eligible services, such as your EHR's portal or cloud services covered by a BAA. The website links to them.", icon: "layers" },
+    { title: "A BAA before any PHI access", description: "If our team needs access to systems that hold PHI, we sign a business associate agreement with you first, and limit access to the people and data the work needs.", icon: "handshake" },
+  ] satisfies Feature[],
 
   procurementTitle: "Security reviews and procurement, handled.",
   procurementSubtitle: "Enterprise buyers need paperwork. We make it quick.",
@@ -126,6 +148,10 @@ export const security = {
     { question: "Who owns the code?", answer: "You do. IP is assigned to you in the contract, and code lives in your repositories from the first week." },
     { question: "Do you handle card payments?", answer: "Through certified providers such as Stripe, so card data never touches your servers. That keeps your PCI DSS scope as small as possible." },
     { question: "Can you support our penetration test?", answer: "Yes. We work with your chosen testers, or recommend one, and fix findings before launch." },
+    { question: "Will you sign a business associate agreement (BAA)?", answer: "Yes, whenever a project gives our team access to protected health information. We sign it before that access is granted. Most health-centre websites never touch PHI, and we design them that way." },
+    { question: "Are you HIPAA certified?", answer: "There is no official HIPAA certification, and we don't claim one. We follow the HIPAA rules that apply to our work: no PHI on public sites or in analytics, HIPAA-eligible services for clinical features, minimum necessary access and a BAA where PHI is involved." },
+    { question: "How are backups handled?", answer: "Automated daily backups of the database and uploaded files, stored separately from the live site and kept for 30 days unless you need longer. We test a restore before launch, and again whenever you ask." },
+    { question: "Can different staff see different things?", answer: "Yes. Portals and admin areas are role-based: each role (for example patient, member, editor, manager or admin) sees only what it needs. Staff accounts use SSO or MFA, and changes are logged." },
   ] satisfies Faq[],
 
   cta: {

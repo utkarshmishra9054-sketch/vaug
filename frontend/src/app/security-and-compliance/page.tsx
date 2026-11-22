@@ -75,6 +75,14 @@ export default async function SecurityPage() {
         <ResidencyStrip regions={c.residency} />
       </Section>
 
+      <Section tone="dark" id="hosting" eyebrow="Hosting & data handling" title={c.hostingTitle} subtitle={c.hostingSubtitle} flush>
+        <FeatureGrid columns={3} items={c.hosting} />
+      </Section>
+
+      <Section tone="light" id="health-data" eyebrow="Health data & HIPAA" title={c.healthTitle} subtitle={c.healthSubtitle} flush>
+        <FeatureGrid columns={2} items={c.health} />
+      </Section>
+
       <Section tone="dark" id="procurement" eyebrow="Procurement" title={c.procurementTitle} subtitle={c.procurementSubtitle} flush>
         <FeatureGrid columns={3} numbered items={c.procurement} />
       </Section>

@@ -86,3 +86,12 @@ Screens in `frontend/src/components/case-studies/screens/` copy real tools (Goog
 - [ ] **Jain Industries:** the domain `jainindustries.co.in` and product range (steel kitchenware) are guesses.
 - [ ] **CBD2Heal:** no website screenshot on file, so its hero still shows the generic illustrative mock.
 - [ ] **Invented competitors:** Some search-results screens show invented competitor names (Ntech's map pack, Devgun's local results).
+
+## Security & compliance page: hosting, backups and health data (added 22 Nov 2026)
+
+Written for the NVHC proposal from the Sales Agent's "website asks"; Utkarsh to confirm each line on `/security-and-compliance`:
+- **Backups:** "automated daily backups … kept for 30 days unless you need longer", "we restore one before launch". Confirm the default retention and that a restore test is part of every launch.
+- **Hosting:** "production runs in your own cloud or hosting account (AWS, Google Cloud, Azure or managed WordPress hosting)". Confirm this is the norm, not just an option.
+- **Access:** "staff sign in with SSO or MFA", "access reviewed whenever someone joins or leaves", "content edits, permission changes and data exports are logged".
+- **BAA:** "we sign a business associate agreement before any PHI access" (requested via the leader for NVHC). Confirm VAUG is willing to sign BAAs.
+- **US hosting:** not on the page. The residency list still says EU, UK and UAE. Add a US region only once Utkarsh confirms it.
