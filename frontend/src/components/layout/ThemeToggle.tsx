@@ -1,8 +1,17 @@
 "use client";
 
+import { useSyncExternalStore } from "react";
 import { Moon, Sun } from "lucide-react";
 
+import { prefersLessMotion } from "@/lib/motion";
 import { THEME_STORAGE_KEY } from "@/lib/theme";
+
+const THEME_EVENT = "vaug-theme";
+const subscribeTheme = (cb: () => void) => {
+  window.addEventListener(THEME_EVENT, cb);
+  return () => window.removeEventListener(THEME_EVENT, cb);
+};
+const isDark = () => document.documentElement.getAttribute("data-theme") === "dark";
 
 /**
  * Switches between the default alternating bands and an all-dark page.
@@ -10,8 +19,10 @@ import { THEME_STORAGE_KEY } from "@/lib/theme";
  * so the change is obvious even when the visible section is already dark.
  */
 export function ThemeToggle({ className = "" }: { className?: string }) {
+  const dark = useSyncExternalStore(subscribeTheme, isDark, () => false);
   function apply(next: string) {
     document.documentElement.setAttribute("data-theme", next);
+    window.dispatchEvent(new Event(THEME_EVENT));
     try {
       localStorage.setItem(THEME_STORAGE_KEY, next);
     } catch {
@@ -21,7 +32,7 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
 
   function toggle(e: React.MouseEvent<HTMLButtonElement>) {
     const next = document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light";
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduce = prefersLessMotion();
     if (!document.startViewTransition || reduce) {
       apply(next);
       return;
@@ -45,7 +56,8 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
     <button
       type="button"
       onClick={toggle}
-      aria-label="Toggle all-dark theme"
+      aria-label="All-dark theme"
+      aria-pressed={dark}
       className={`group relative inline-flex size-10 items-center justify-center rounded-md border border-border text-muted transition-colors hover:bg-surface-2 hover:text-fg ${className}`}
     >
       {/* Icons swap purely via CSS so server and client markup always match. */}

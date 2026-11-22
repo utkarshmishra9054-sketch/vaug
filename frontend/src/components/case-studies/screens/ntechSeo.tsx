@@ -508,7 +508,7 @@ export const ServicePage: Screen = () => (
         </div>
         <div className="absolute" style={{ left: 66, top: 34, width: 262, background: "#fff", padding: "18px 22px 18px" }}>
           <p style={{ fontSize: 7, color: NT_BLUE, fontWeight: 700 }}>Home › Services › Rapid Prototyping</p>
-          <h1 style={{ fontFamily: "Kanit, 'DM Sans', Arial, sans-serif", fontSize: 18, fontWeight: 600, lineHeight: 1.12, marginTop: 5 }}>Rapid Prototyping in Ahmedabad</h1>
+          <p style={{ fontFamily: "Kanit, 'DM Sans', Arial, sans-serif", fontSize: 18, fontWeight: 600, lineHeight: 1.12, marginTop: 5 }}>Rapid Prototyping in Ahmedabad</p>
           <p style={{ fontSize: 7.5, lineHeight: 1.6, color: "#374151", marginTop: 6 }}>
             Ntech Engineering Solutions turns CAD files into working prototypes in 24–72 hours, using FDM, SLA and industrial 3D printing for fit checks, functional testing and short production runs.
           </p>
@@ -518,7 +518,7 @@ export const ServicePage: Screen = () => (
         </div>
       </section>
       <section style={{ padding: "14px 66px 0" }}>
-        <h2 style={{ fontFamily: "Kanit, 'DM Sans', Arial, sans-serif", fontSize: 13, fontWeight: 600 }}>Rapid prototyping services we offer</h2>
+        <p style={{ fontFamily: "Kanit, 'DM Sans', Arial, sans-serif", fontSize: 13, fontWeight: 600 }}>Rapid prototyping services we offer</p>
         <div className="flex" style={{ gap: 10, marginTop: 8 }}>
           {[
             ["FDM prototyping", "PLA, ABS, PETG and nylon parts for form and fit checks, up to 300 × 300 × 400 mm."],

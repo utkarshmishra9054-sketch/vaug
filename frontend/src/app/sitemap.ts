@@ -32,6 +32,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entry(routes.whoWeServe, 0.8),
     ...audiences.map((a) => entry(routes.audience(a.slug), 0.7)),
     entry(routes.engineering, 0.8),
+    entry(routes.accessibilityAudits, 0.8),
+    entry(routes.accessibility, 0.4),
     ...engineering.map((e) => entry(routes.engineeringPage(e.slug), 0.7)),
 
     // Work

@@ -8,6 +8,7 @@ import type { ContactNeed } from "@/content/contact";
 import { routes } from "@/content/taxonomy";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { Icon } from "@/components/ui/Icon";
+import { prefersLessMotion } from "@/lib/motion";
 
 const PREFIX = "contact-page-";
 
@@ -39,7 +40,7 @@ export function NeedPicker({
     if (select) select.value = engagement;
     // On stacked layouts, bring the form into view once a choice is made.
     if (window.matchMedia("(max-width: 1023px)").matches) {
-      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const reduce = prefersLessMotion();
       formRef.current?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
     }
     document.getElementById(`${PREFIX}name`)?.focus({ preventScroll: true });

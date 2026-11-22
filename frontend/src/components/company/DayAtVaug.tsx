@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Pause, Play } from "lucide-react";
 
 import type { DayBeat } from "@/content/company";
+import { prefersLessMotion } from "@/lib/motion";
 
 /*
  * "A day at VAUG": a small illustrated studio. The sun travels along an arc
@@ -117,7 +118,7 @@ export function DayAtVaug({ beats }: { beats: DayBeat[] }) {
   useEffect(() => {
     const el = root.current;
     if (!el) return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduce = prefersLessMotion();
     const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting && !reduce), { threshold: 0.3 });
     io.observe(el);
     return () => io.disconnect();
@@ -143,7 +144,7 @@ export function DayAtVaug({ beats }: { beats: DayBeat[] }) {
   return (
     <div ref={root} className="grid lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
       {/* scene */}
-      <div className="border-b border-border p-4 sm:p-8 lg:border-b-0 lg:border-r" aria-hidden="true">
+      <div className="border-b border-border p-4 sm:p-8 lg:border-b-0 lg:border-r" aria-hidden="true" inert>
         <div className="relative aspect-[4/3] overflow-hidden rounded-lg border border-border bg-surface-2">
           {/* back wall + window */}
           <div className="absolute inset-x-[8%] top-[8%] h-[46%] overflow-hidden rounded-md border-4 border-surface">

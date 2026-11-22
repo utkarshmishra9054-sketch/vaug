@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from "react";
 import type { Milestone } from "@/content/company";
 import { DemoBadge } from "@/components/ui/DemoBadge";
 import { Icon } from "@/components/ui/Icon";
+import { prefersLessMotion } from "@/lib/motion";
+import { useLessMotion } from "@/lib/motionHooks";
 
 /**
  * Vertical company timeline. The spine fills as you scroll, and each
@@ -14,10 +16,11 @@ export function JourneyTimeline({ items }: { items: Milestone[] }) {
   const list = useRef<HTMLOListElement>(null);
   const [active, setActive] = useState(-1);
 
+  const lessMotion = useLessMotion(false);
   useEffect(() => {
     const el = list.current;
     if (!el) return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduce = prefersLessMotion();
     let raf = 0;
 
     const update = () => {
@@ -49,7 +52,7 @@ export function JourneyTimeline({ items }: { items: Milestone[] }) {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, [items.length]);
+  }, [items.length, lessMotion]);
 
   return (
     <div className="frame-pad pb-20 pt-4 lg:pb-28">
@@ -94,7 +97,7 @@ export function JourneyTimeline({ items }: { items: Milestone[] }) {
 
               {/* card */}
               <div
-                className={`row-start-1 translate-y-4 opacity-40 transition-all duration-700 ease-[cubic-bezier(0.2,0.8,0.2,1)] group-data-[active=true]:translate-y-0 group-data-[active=true]:opacity-100 ${
+                className={`row-start-1 translate-y-4 transition-all duration-700 ease-[cubic-bezier(0.2,0.8,0.2,1)] [&_:is(p,h3,li)]:text-subtle group-data-[active=true]:translate-y-0 group-data-[active=true]:[&_p]:text-muted group-data-[active=true]:[&_h3]:text-fg group-data-[active=true]:[&_li]:text-muted group-data-[active=true]:[&_p:first-child]:text-accent-text ${
                   right ? "lg:col-start-2" : "lg:col-start-1 lg:text-right"
                 }`}
               >

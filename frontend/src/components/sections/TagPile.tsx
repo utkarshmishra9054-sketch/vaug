@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type Matter from "matter-js";
+import { prefersLessMotion, subscribeMotion } from "@/lib/motion";
 
 /*
  * Tags that rain down like bricks when the section scrolls into view. A small
@@ -59,11 +60,9 @@ export function TagPile({ tags }: { tags: string[] }) {
   const [reduced, setReduced] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setReduced(mq.matches);
+    const update = () => setReduced(prefersLessMotion());
     update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
+    return subscribeMotion(update);
   }, []);
 
   useEffect(() => {

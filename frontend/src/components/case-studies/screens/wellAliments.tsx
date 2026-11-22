@@ -263,9 +263,9 @@ export const LandingPage: Screen = () => (
         <span className="relative" style={{ fontSize: 6.5, fontWeight: 700, letterSpacing: 1.3, padding: "4px 9px", border: "1px solid rgb(255 255 255 / 0.45)", borderRadius: 3, background: "rgb(0 0 0 / 0.08)" }}>
           MARCA PRÓPRIA · DO GRÃO À EMBALAGEM
         </span>
-        <h1 className="relative" style={{ fontSize: 21, fontWeight: 700, lineHeight: 1.12, marginTop: 9, letterSpacing: -0.4, maxWidth: 440 }}>
+        <p className="relative" style={{ fontSize: 21, fontWeight: 700, lineHeight: 1.12, marginTop: 9, letterSpacing: -0.4, maxWidth: 440 }}>
           Seu café com a sua marca, produzido no Brasil
-        </h1>
+        </p>
         <p className="relative" style={{ fontSize: 8.5, lineHeight: 1.5, marginTop: 7, opacity: 0.92, maxWidth: 400 }}>
           Torra, moagem, blend, embalagem e rótulo em uma só fábrica em São Paulo. Envie o seu volume e receba uma proposta em até 24 horas.
         </p>

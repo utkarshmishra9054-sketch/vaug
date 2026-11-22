@@ -162,7 +162,7 @@ export const LandingPage: Screen = () => (
         <div className="relative flex" style={{ padding: "12px 22px 0", gap: 20 }}>
           <div className="min-w-0 flex-1">
             <p style={{ fontSize: 7, letterSpacing: 1, color: "#b9b9bd" }}>AHMEDABAD · GUJARAT</p>
-            <h1 style={{ fontSize: 20, fontWeight: 700, color: RED, lineHeight: 1.15, letterSpacing: -0.5, marginTop: 4 }}>3D Printing Service in Ahmedabad</h1>
+            <p style={{ fontSize: 20, fontWeight: 700, color: RED, lineHeight: 1.15, letterSpacing: -0.5, marginTop: 4 }}>3D Printing Service in Ahmedabad</p>
             <p style={{ fontSize: 9, lineHeight: 1.5, marginTop: 7, maxWidth: 300 }}>From single prototype to multiple end parts in just a matter of days.</p>
             <ul style={{ marginTop: 8, fontSize: 7.5, lineHeight: 1.9, color: "#d6d6da" }}>
               {["FDM, SLA, SLS, MJF and metal 3D printing", "Rapid prototyping and low-volume production", "Delivery across Ahmedabad and Gujarat"].map((t) => (

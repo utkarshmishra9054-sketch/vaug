@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { prefersLessMotion } from "@/lib/motion";
 
 /** A number that counts up once it scrolls into view. Renders the final value without JS. */
 export function CountUp({ value, suffix = "", duration = 1400 }: { value: number; suffix?: string; duration?: number }) {
@@ -9,7 +10,7 @@ export function CountUp({ value, suffix = "", duration = 1400 }: { value: number
 
   useEffect(() => {
     const el = ref.current;
-    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!el || prefersLessMotion()) return;
     let frame = 0;
     const io = new IntersectionObserver(
       ([entry]) => {

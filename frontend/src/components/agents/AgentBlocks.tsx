@@ -29,7 +29,8 @@ export function ApprovalQueue({ items }: { items: { action: string; reason: stri
                   <p className="mt-1 font-semibold text-fg">{it.action}</p>
                   <p className="mt-0.5 text-xs text-muted">{it.reason}</p>
                 </div>
-                <span className="relative inline-flex h-7 w-[5.5rem] shrink-0">
+                <span className="sr-only">Approved by a person</span>
+                <span className="relative inline-flex h-7 w-[5.5rem] shrink-0" aria-hidden="true" inert>
                   <span className="agents-q-pending absolute inset-0 inline-flex items-center justify-center gap-1 rounded-sm border border-border font-mono text-[10px] text-muted">
                     <Clock className="size-3" aria-hidden="true" /> Waiting
                   </span>

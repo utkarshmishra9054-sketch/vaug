@@ -67,6 +67,9 @@ export const routes = {
   privacy: "/privacy-policy",
   terms: "/terms",
   cookies: "/cookie-policy",
+  accessibility: "/accessibility",
+  accessibilityAudits: "/accessibility-audits",
+  showcase: (slug: string) => `/showcases/${slug}`,
 } as const;
 
 export const serviceBySlug = (slug: ServiceSlug) => services.find((s) => s.slug === slug)!;

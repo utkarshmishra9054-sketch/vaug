@@ -112,7 +112,7 @@ export function ClientGrid({ clients }: { clients: ClientItem[] }) {
                 }`}
               >
                 {chip.label}
-                <span className={`font-mono text-[10px] ${active ? "text-accent" : "text-subtle"}`}>{chip.count}</span>
+                <span className={`font-mono text-[10px] ${active ? "text-bg/75" : "text-subtle"}`}>{chip.count}</span>
               </button>
             );
           })}

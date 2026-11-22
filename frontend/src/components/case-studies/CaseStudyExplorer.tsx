@@ -119,6 +119,8 @@ export function CaseStudyExplorer({ studies }: { studies: CaseStudyDetail[] }) {
       </div>
 
       {/* Grid: re-keyed on the result set, not the raw filters, so typing doesn't replay the entrance on every keystroke. */}
+      {/* Heading for the result cards (their titles are h3), so the outline never skips a level. */}
+      <h2 className="sr-only">Case studies</h2>
       {list.length > 0 ? (
         <ul key={list.map((s) => s.slug).join()} className="grid sm:grid-cols-2 lg:grid-cols-3">
           {list.map((s, i) => (

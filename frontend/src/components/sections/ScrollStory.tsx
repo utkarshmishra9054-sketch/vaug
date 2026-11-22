@@ -44,7 +44,8 @@ export function RevealWordmark({ text, badge }: { text: string; badge: string })
 
   return (
     <h2 ref={ref} data-cursor="VAUG" className="flex flex-wrap items-center justify-center gap-x-3 text-5xl font-bold tracking-[-0.04em] sm:text-7xl lg:text-8xl">
-      <span aria-label={text}>
+      <span>
+        <span className="sr-only">{text}</span>
         {letters.map((ch, i) => {
           const t = Math.min(1, Math.max(0, progress * 1.6 - (i / letters.length) * 0.9));
           return (

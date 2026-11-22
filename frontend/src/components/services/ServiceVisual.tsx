@@ -336,5 +336,11 @@ const visuals: Record<ServiceSlug, () => React.ReactElement> = {
 
 export function ServiceVisual({ slug }: { slug: ServiceSlug }) {
   const Visual = visuals[slug];
-  return <Visual />;
+  // Decorative illustration beside the service hero: hidden from assistive tech and inert,
+  // so its small animated UI text is treated as part of the picture.
+  return (
+    <div aria-hidden="true" inert>
+      <Visual />
+    </div>
+  );
 }

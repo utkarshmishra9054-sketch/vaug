@@ -241,7 +241,7 @@ export const CollectionPage: Screen = () => (
           </span>
         </header>
         <section style={{ padding: "16px 64px 0" }}>
-          <h1 style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: 17, fontWeight: 500, letterSpacing: 0.4 }}>Collection: Yoga Mat Bags</h1>
+          <p style={{ fontFamily: "Montserrat, Arial, sans-serif", fontSize: 17, fontWeight: 500, letterSpacing: 0.4 }}>Collection: Yoga Mat Bags</p>
           <p style={{ fontSize: 8, lineHeight: 1.6, color: "#4a4a4a", marginTop: 6, maxWidth: 460 }}>
             Handcrafted canvas yoga mat bags and carriers with leather trims, built to take a standard 4–6 mm mat to class and back. Each bag has a zip pocket for your phone and keys, an adjustable shoulder strap, and free monogramming of your initials.
           </p>

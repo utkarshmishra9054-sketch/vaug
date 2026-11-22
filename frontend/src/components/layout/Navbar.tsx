@@ -8,6 +8,7 @@ import { ArrowUpRight, ChevronDown, Menu, X } from "lucide-react";
 import type { NavItem } from "@/content/types";
 import { ArrowBox, arrowButtonClass } from "@/components/ui/Button";
 import { Logo } from "@/components/ui/Logo";
+import { MotionToggle } from "./MotionToggle";
 import { ThemeToggle } from "./ThemeToggle";
 
 export function Navbar({ items }: { items: NavItem[] }) {
@@ -16,6 +17,9 @@ export function Navbar({ items }: { items: NavItem[] }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const pathname = usePathname();
+  const headerRef = useRef<HTMLElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const triggers = useRef(new Map<string, HTMLButtonElement>());
 
   // Hover intent: menus open after a short pause and close shortly after the
   // pointer leaves, so sweeping across the header never opens the wrong one.
@@ -48,7 +52,9 @@ export function Navbar({ items }: { items: NavItem[] }) {
           const b = el.getBoundingClientRect();
           return b.top < 80 && b.bottom > window.innerHeight;
         });
-        setHidden(!pinned && y > lastY && y > 400);
+        // Never slide the header away while keyboard focus is inside it.
+        const focusInside = !!headerRef.current?.contains(document.activeElement);
+        setHidden(!pinned && !focusInside && y > lastY && y > 400);
         lastY = y;
       }
     };
@@ -75,10 +81,53 @@ export function Navbar({ items }: { items: NavItem[] }) {
   const activeItem = items.find((i) => i.label === openMenu && i.menu);
   const activeMenu = activeItem?.menu;
 
+  /* Keyboard: the menus follow the disclosure pattern. Tab from an open trigger
+     enters its panel (rendered below the bar), Tab past the last link moves on
+     to the next item in the bar, Shift+Tab from the first link returns to the
+     trigger, and Escape closes the menu and returns focus to its trigger. */
+  const panelLinks = () => Array.from(panelRef.current?.querySelectorAll<HTMLElement>("a[href], button:not([disabled])") ?? []);
+  const barItems = () => Array.from(headerRef.current?.querySelectorAll<HTMLElement>("nav a[href], nav button:not([disabled])") ?? []).filter((el) => el.offsetParent !== null);
+  const focusAfter = (label: string) => {
+    const trigger = triggers.current.get(label);
+    const bar = barItems();
+    const next = trigger ? bar[bar.indexOf(trigger) + 1] : undefined;
+    setOpenMenu(null);
+    next?.focus();
+  };
+  const onTriggerKey = (label: string) => (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    if ((e.key === "Tab" && !e.shiftKey && openMenu === label) || e.key === "ArrowDown") {
+      e.preventDefault();
+      if (openMenu !== label) setOpenMenu(label);
+      requestAnimationFrame(() => panelLinks()[0]?.focus());
+    }
+  };
+  const onPanelKey = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!openMenu) return;
+    const links = panelLinks();
+    const at = links.indexOf(document.activeElement as HTMLElement);
+    if (e.key === "Escape") {
+      e.preventDefault();
+      const trigger = triggers.current.get(openMenu);
+      setOpenMenu(null);
+      trigger?.focus();
+    } else if (e.key === "Tab" && e.shiftKey && at === 0) {
+      e.preventDefault();
+      triggers.current.get(openMenu)?.focus();
+    } else if (e.key === "Tab" && !e.shiftKey && at === links.length - 1) {
+      e.preventDefault();
+      focusAfter(openMenu);
+    }
+  };
+
   return (
     <header
+      ref={headerRef}
       data-tone="dark"
       onMouseLeave={() => hoverTo(null)}
+      onBlur={(e) => {
+        // Focus left the header entirely (keyboard or click elsewhere): close any open menu.
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setOpenMenu(null);
+      }}
       className={`nav-glass fixed inset-x-0 top-0 z-50 text-fg transition-[translate,box-shadow] duration-300 ${scrolled || openMenu || mobileOpen ? "is-scrolled" : ""} ${
         hidden && !mobileOpen && !openMenu ? "-translate-y-full" : "translate-y-0"
       }`}
@@ -92,8 +141,14 @@ export function Navbar({ items }: { items: NavItem[] }) {
               item.menu ? (
                 <li key={item.label} onMouseEnter={() => hoverTo(item.label)}>
                   <button
+                    ref={(el) => {
+                      if (el) triggers.current.set(item.label, el);
+                      else triggers.current.delete(item.label);
+                    }}
                     type="button"
                     aria-expanded={openMenu === item.label}
+                    aria-controls="mega-menu"
+                    onKeyDown={onTriggerKey(item.label)}
                     onClick={() => {
                       clearTimeout(intent.current);
                       setOpenMenu(openMenu === item.label ? null : item.label);
@@ -122,6 +177,7 @@ export function Navbar({ items }: { items: NavItem[] }) {
           </ul>
 
           <div className="flex items-center gap-2" onMouseEnter={() => hoverTo(null, 0)}>
+            <MotionToggle />
             <ThemeToggle />
             <div className="hidden sm:block">
               <a href="#contact" data-magnetic className={arrowButtonClass("outline", "border-border")}>
@@ -134,6 +190,7 @@ export function Navbar({ items }: { items: NavItem[] }) {
               className="inline-flex size-10 items-center justify-center rounded-md border border-border text-fg lg:hidden"
               aria-label={mobileOpen ? "Close menu" : "Open menu"}
               aria-expanded={mobileOpen}
+              aria-controls="mobile-menu"
               onClick={() => setMobileOpen((v) => !v)}
             >
               {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
@@ -142,8 +199,14 @@ export function Navbar({ items }: { items: NavItem[] }) {
         </nav>
       </div>
 
-      {/* Desktop mega-menu */}
+      {/* Desktop mega-menu (inert while closed, so its links are never tabbable while hidden) */}
       <div
+        id="mega-menu"
+        ref={panelRef}
+        inert={!activeMenu}
+        onKeyDown={onPanelKey}
+        aria-label={activeItem ? `${activeItem.label} menu` : undefined}
+        role={activeItem ? "region" : undefined}
         className={`hidden overflow-hidden border-t border-border bg-bg transition-[max-height,opacity] duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)] lg:block ${
           activeMenu ? "max-h-[40rem] opacity-100" : "max-h-0 border-t-transparent opacity-0"
         }`}
@@ -188,8 +251,10 @@ export function Navbar({ items }: { items: NavItem[] }) {
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu (inert while closed) */}
       <div
+        id="mobile-menu"
+        inert={!mobileOpen}
         className={`overflow-y-auto border-t border-border bg-bg transition-[max-height,opacity] duration-300 lg:hidden ${
           mobileOpen ? "max-h-[calc(100dvh-4rem)] opacity-100" : "max-h-0 border-t-transparent opacity-0"
         }`}

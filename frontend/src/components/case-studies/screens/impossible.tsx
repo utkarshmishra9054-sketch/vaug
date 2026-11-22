@@ -434,7 +434,7 @@ export const MerchantFeed: Screen = () => (
             </div>
           ))}
         </nav>
-        <main className="min-w-0 flex-1" style={{ padding: "8px 12px 0", background: "#fff" }}>
+        <div className="min-w-0 flex-1" style={{ padding: "8px 12px 0", background: "#fff" }}>
           <div className="flex items-center" style={{ gap: 8 }}>
             <span style={{ fontFamily: FONT.googleSans, fontSize: 14 }}>All products</span>
             <span className="ml-auto flex items-center" style={{ gap: 4, fontSize: 8, color: "#0b57d0", fontWeight: 500, border: `1px solid ${G.border}`, borderRadius: 12, padding: "3px 9px" }}>
@@ -543,7 +543,7 @@ export const MerchantFeed: Screen = () => (
               </div>
             ))}
           </div>
-        </main>
+        </div>
       </div>
     </div>
   </BrowserChrome>

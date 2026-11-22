@@ -174,7 +174,7 @@ export const RfqLanding: Screen = () => (
       <section className="flex" style={{ background: "#f3f5fb", padding: "14px 20px 16px", gap: 18, height: 262 }}>
         <div className="min-w-0 flex-1">
           <p style={{ fontSize: 7, color: "#6b7280" }}>Home › Divisions › Pre-Engineered Buildings</p>
-          <h1 style={{ fontSize: 19, fontWeight: 700, lineHeight: 1.15, marginTop: 6, color: "#111827", letterSpacing: -0.2 }}>Pre-Engineered Buildings for factories, warehouses and industrial sheds</h1>
+          <p style={{ fontSize: 19, fontWeight: 700, lineHeight: 1.15, marginTop: 6, color: "#111827", letterSpacing: -0.2 }}>Pre-Engineered Buildings for factories, warehouses and industrial sheds</p>
           <p style={{ fontSize: 8, lineHeight: 1.55, marginTop: 6, color: "#4b5563" }}>Design, manufacture, supply and erection of complete steel building systems, from primary framing to roof and wall cladding.</p>
           <div className="flex" style={{ gap: 10, marginTop: 10 }}>
             <div className="shrink-0 overflow-hidden" style={{ width: 92, height: 118 }}>

@@ -20,7 +20,7 @@ function WebsiteShot({ study, compact }: { study: MockStudy; compact: boolean })
   const host = new URL(url).hostname.replace(/^www\./, "");
   return (
     <div className={`site-shot absolute inset-x-0 bottom-0 flex flex-col overflow-hidden rounded-t-[10px] bg-white shadow-[0_30px_60px_-20px_rgb(0_0_0/0.55)] ${compact ? "top-6 mx-5" : "top-8 mx-6 sm:top-10 sm:mx-10 lg:mx-12"}`}>
-      <div className="flex h-7 shrink-0 items-center gap-3 border-b border-black/[0.08] bg-[#f3f3f1] px-3">
+      <div inert className="flex h-7 shrink-0 items-center gap-3 border-b border-black/[0.08] bg-[#f3f3f1] px-3">
         <span className="flex gap-1.5" aria-hidden="true">
           <span className="size-2 rounded-full bg-[#ff5f57]" />
           <span className="size-2 rounded-full bg-[#febc2e]" />

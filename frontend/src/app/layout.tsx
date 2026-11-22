@@ -7,6 +7,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Interactions } from "@/components/ui/Interactions";
 import { RevealObserver } from "@/components/ui/RevealObserver";
 import { getFooterColumns, getLegalLinks, getNavigation, getSiteConfig } from "@/lib/content";
+import { motionInitScript } from "@/lib/motion";
 import { themeInitScript } from "@/lib/theme";
 import "./globals.css";
 
@@ -41,7 +42,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" data-theme="light" suppressHydrationWarning className={`${body.variable} ${code.variable} overflow-x-clip`}>
       <head>
         {/* suppressHydrationWarning: browser extensions often inject into <head> scripts */}
-        <script suppressHydrationWarning dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <script suppressHydrationWarning dangerouslySetInnerHTML={{ __html: themeInitScript + motionInitScript }} />
       </head>
       <body className="min-h-dvh overflow-x-clip">
         <a
@@ -52,7 +53,9 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         </a>
         <ContactProvider email={site.email}>
           <Navbar items={navigation} />
-          <main id="main">{children}</main>
+          <main id="main" tabIndex={-1} className="outline-none">
+            {children}
+          </main>
           <Footer site={site} columns={footerColumns} legal={legal} />
         </ContactProvider>
         <RevealObserver />

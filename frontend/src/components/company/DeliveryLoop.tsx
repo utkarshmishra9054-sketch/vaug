@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 
 import type { CycleStage } from "@/content/howWeWork";
+import { prefersLessMotion } from "@/lib/motion";
+import { useLessMotion } from "@/lib/motionHooks";
 
 /**
  * The weekly delivery cycle as a loop: stages sit on a ring, a comet travels
@@ -15,14 +17,15 @@ export function DeliveryLoop({ stages }: { stages: CycleStage[] }) {
   const root = useRef<HTMLDivElement>(null);
   const n = stages.length;
 
+  const lessMotion = useLessMotion(false);
   useEffect(() => {
     const el = root.current;
     if (!el) return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduce = prefersLessMotion();
     const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting && !reduce), { threshold: 0.3 });
     io.observe(el);
     return () => io.disconnect();
-  }, []);
+  }, [lessMotion]);
 
   useEffect(() => {
     if (!auto || !visible) return;

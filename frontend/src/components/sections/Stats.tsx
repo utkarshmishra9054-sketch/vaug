@@ -7,6 +7,7 @@ import type { Stat } from "@/content/types";
 import { DemoBadge } from "@/components/ui/DemoBadge";
 import { Icon } from "@/components/ui/Icon";
 import { HeroConsole } from "./HeroConsole";
+import { prefersLessMotion } from "@/lib/motion";
 
 /** Counts up when scrolled into view, and again on each hover. */
 function Counter({ value, suffix, replay }: { value: number; suffix: string; replay: number }) {
@@ -23,7 +24,7 @@ function Counter({ value, suffix, replay }: { value: number; suffix: string; rep
   }, []);
 
   useEffect(() => {
-    if (!seen || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!seen || prefersLessMotion()) return;
     let frame = 0;
     const start = performance.now();
     const tick = (now: number) => {

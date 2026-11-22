@@ -19,10 +19,15 @@ export const SHOT_H = 400;
 export type ScreenProps = { tint: string };
 export type Screen = ComponentType<ScreenProps>;
 
-/** Scales a 640 x 400 design canvas to the width of its box. */
+/**
+ * Scales a 640 x 400 design canvas to the width of its box. The canvas is a
+ * picture of a product, so it is `inert`: out of the accessibility tree and the
+ * tab order (whoever shows it gives it a text alternative, e.g. the gallery's
+ * caption), and its small UI text counts as text in an image.
+ */
 export function ShotCanvas({ children }: { children: ReactNode }) {
   return (
-    <div className="shot">
+    <div className="shot" inert>
       <div className="shot-stage">{children}</div>
     </div>
   );

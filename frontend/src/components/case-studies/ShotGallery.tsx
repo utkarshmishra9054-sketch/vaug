@@ -5,6 +5,7 @@ import { createContext, useCallback, useContext, useEffect, useLayoutEffect, use
 import { ChevronLeft, ChevronRight, Maximize2, Minus, Plus, X } from "lucide-react";
 
 import type { CaseImage } from "@/content/types";
+import { prefersLessMotion } from "@/lib/motion";
 
 /**
  * The "Inside the product" gallery on case study pages.
@@ -189,7 +190,7 @@ function ShotViewer({ items, start, onClose }: { items: GalleryItem[]; start: { 
       cancelAnimationFrame(anim.current);
       const v = view.current;
       const from = { z: v.z, x: v.x, y: v.y };
-      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const reduced = prefersLessMotion();
       const t0 = performance.now();
       const D = reduced ? 0 : 240;
       const step = (now: number) => {
@@ -512,7 +513,7 @@ function ShotViewer({ items, start, onClose }: { items: GalleryItem[]; start: { 
           onPointerCancel={onPointerUp}
           className={`relative min-h-0 flex-1 touch-none select-none overflow-hidden [-webkit-touch-callout:none] ${ui.zoomed ? "cursor-grab active:cursor-grabbing" : "cursor-zoom-in"}`}
         >
-          <div ref={content} className="absolute left-0 top-0 overflow-hidden rounded-[10px] bg-white shadow-[0_30px_80px_-20px_rgb(0_0_0/0.7)]">
+          <div ref={content} role="img" aria-label={item.caption} className="absolute left-0 top-0 overflow-hidden rounded-[10px] bg-white shadow-[0_30px_80px_-20px_rgb(0_0_0/0.7)]">
             <Content key={index} item={item} />
           </div>
 

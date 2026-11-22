@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 
 import type { Outcome } from "@/content/types";
+import { prefersLessMotion } from "@/lib/motion";
+import { useLessMotion } from "@/lib/motionHooks";
 
 /**
  * Results pulled from real case studies. A spotlight glides from card to card
@@ -25,11 +27,12 @@ export function Outcomes({ outcomes }: { outcomes: Outcome[] }) {
     return () => io.disconnect();
   }, []);
 
+  const lessMotion = useLessMotion(false);
   useEffect(() => {
-    if (!inView || paused || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!inView || paused || prefersLessMotion()) return;
     const id = setInterval(() => setActive((i) => (i + 1) % outcomes.length), 2800);
     return () => clearInterval(id);
-  }, [inView, paused, outcomes.length]);
+  }, [inView, paused, outcomes.length, lessMotion]);
 
   return (
     <ul ref={root} onMouseLeave={() => setPaused(false)} className="grid border-t border-border sm:grid-cols-2 lg:grid-cols-3">

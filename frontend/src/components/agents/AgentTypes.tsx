@@ -6,6 +6,7 @@ import { ArrowDown, ArrowRight, Check, Zap } from "lucide-react";
 import type { AgentType } from "@/content/agents";
 import { ArrowLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
+import { prefersLessMotion, subscribeMotion } from "@/lib/motion";
 
 const INTERVAL_MS = 6000;
 
@@ -31,13 +32,12 @@ export function AgentTypes({ types }: { types: AgentType[] }) {
 
   // Auto-advance only when motion is welcome (set after mount, so SSR matches).
   useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const sync = () => setAuto(!mq.matches);
+    const sync = () => setAuto(!prefersLessMotion());
     const t0 = setTimeout(sync, 0);
-    mq.addEventListener("change", sync);
+    const unsubscribe = subscribeMotion(sync);
     return () => {
       clearTimeout(t0);
-      mq.removeEventListener("change", sync);
+      unsubscribe();
     };
   }, []);
 

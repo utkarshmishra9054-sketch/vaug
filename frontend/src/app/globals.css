@@ -23,11 +23,11 @@
   --border-strong: rgb(255 255 255 / 0.2);
   --fg: #f4f2f7;
   --muted: #a39eab;
-  --subtle: #6e6977;
-  --accent: #8b5cf6;
-  --accent-hover: #9d74f8;
+  --subtle: #918c99; /* 4.5:1+ on every dark surface (was #6e6977) */
+  --accent: #7c4dee; /* white text 5.1:1 (was #8b5cf6, 4.2:1) */
+  --accent-hover: #6c3ce0;
   --accent-fg: #ffffff;
-  --accent-soft: rgb(139 92 246 / 0.16);
+  --accent-soft: rgb(124 77 238 / 0.16);
   --accent-text: #b69cff;
   --mark: rgb(139 92 246 / 0.45);
   --btn-bg: #f4f2f7;
@@ -47,7 +47,7 @@
   --border-strong: rgb(19 17 22 / 0.22);
   --fg: #131116;
   --muted: #5d5864;
-  --subtle: #8f8a96;
+  --subtle: #69646f; /* 4.5:1+ on every light surface (was #8f8a96) */
   --accent: #ffd23f;
   --accent-hover: #ffc814;
   --accent-fg: #131116;
@@ -71,7 +71,7 @@
   --border-strong: rgb(255 255 255 / 0.2);
   --fg: #f4f2f7;
   --muted: #a39eab;
-  --subtle: #6e6977;
+  --subtle: #918c99; /* 4.5:1+ on every dark surface (was #6e6977) */
   --accent-text: #ffd23f;
   --accent-soft: rgb(255 210 63 / 0.14);
   --mark: rgb(255 210 63 / 0.35);
@@ -227,9 +227,11 @@
   }
 
   /* Scroll reveal: only hidden once JS has marked the page ready. */
-  /* Entrance recipe used everywhere: short, starts partly visible, never blocks reading. */
+  /* Entrance recipe used everywhere: short, and never blocks reading (reveals as soon as any part is in view).
+     Starts fully transparent, not half-faded: half-faded text would fail contrast checks
+     (WCAG 1.4.3) for anyone testing the page before scrolling. */
   .js-ready [data-reveal] {
-    opacity: 0.35;
+    opacity: 0;
     transform: translateY(14px);
     transition: opacity 0.25s ease-out, transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
     transition-delay: min(var(--reveal-delay, 0ms), 240ms);
@@ -1604,8 +1606,8 @@
 /* ---------- Engagement models: scroll-driven stepper (EngagementModels.tsx) ---------- */
 .models-stepper { display: none; }
 @media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
-  .models-stepper { display: block; }
-  .models-stack { display: none; }
+  :root:not([data-motion="reduced"]) .models-stepper { display: block; }
+  :root:not([data-motion="reduced"]) .models-stack { display: none; }
 }
 .models-stage {
   height: calc(100vh - 80px);
@@ -1794,7 +1796,7 @@
   letter-spacing: -0.02em;
   line-height: 1;
   color: var(--fg);
-  opacity: 0.5;
+  opacity: 0.7; /* 0.5 fell below 4.5:1 on the light background */
   transform-origin: left bottom;
   transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.5s ease;
 }
@@ -1846,3 +1848,56 @@
 @media (prefers-reduced-motion: reduce) {
   .site-shot, .site-shot-img { transition: none; transform: none !important; }
 }
+
+/* ==================== "Pause animations" (MotionToggle, lib/motion.ts) ====================
+ * The same rules as every prefers-reduced-motion block above, for visitors who pause
+ * animations on the site itself (WCAG 2.2.2). Generated from those blocks: keep in step. */
+:root[data-motion="reduced"] *, :root[data-motion="reduced"] *::before, :root[data-motion="reduced"] *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  :root[data-motion="reduced"].js-ready [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+  :root[data-motion="reduced"].js-ready .draw:not(.is-visible) :is(path, line, circle, rect, ellipse, polyline, polygon) {
+    stroke-dashoffset: 0;
+  }
+:root[data-motion="reduced"]::view-transition-group(*), :root[data-motion="reduced"]::view-transition-old(*), :root[data-motion="reduced"]::view-transition-new(*) {
+    animation: none !important;
+  }
+:root[data-motion="reduced"] [class*="eng-a-"] { animation: none !important; }
+  :root[data-motion="reduced"] .eng-gauge-arc, :root[data-motion="reduced"] .eng-rail-line { transition: none !important; }
+:root[data-motion="reduced"] .cs-float, :root[data-motion="reduced"] .cs-bar, :root[data-motion="reduced"] .cs-shimmer::after { animation: none; }
+  :root[data-motion="reduced"] .cs-bar { width: 60%; }
+:root[data-motion="reduced"] .contact-map-comets { display: none; }
+  :root[data-motion="reduced"] .contact-map-ping, :root[data-motion="reduced"] .contact-map-breathe, :root[data-motion="reduced"] .contact-map-dots circle, :root[data-motion="reduced"] .contact-step-node, :root[data-motion="reduced"] .legal-doc-scan, :root[data-motion="reduced"] .nf-orbit, :root[data-motion="reduced"] .nf-counter, :root[data-motion="reduced"] .nf-digit, :root[data-motion="reduced"] .nf-search, :root[data-motion="reduced"] .nf-caret { animation: none; }
+  :root[data-motion="reduced"] .legal-doc-scan { display: none; }
+:root[data-motion="reduced"] :is([class^="ind-"], [class*=" ind-"], [class^="aud-"], [class*=" aud-"]) { animation: none !important; }
+  :root[data-motion="reduced"] .ind-feed, :root[data-motion="reduced"] .ind-stop-a, :root[data-motion="reduced"] .ind-stop-b, :root[data-motion="reduced"] .aud-milestone, :root[data-motion="reduced"] .ind-arc { opacity: 1; }
+  :root[data-motion="reduced"] .ind-blink, :root[data-motion="reduced"] .ind-window, :root[data-motion="reduced"] .aud-node-pulse { opacity: 0; }
+  :root[data-motion="reduced"] .ind-truck { transform: translate(180px, 160px); }
+  :root[data-motion="reduced"] .ind-arc { transform: rotate(0deg); }
+  :root[data-motion="reduced"].js-ready .aud-journey:not(.is-visible) :is(.aud-rail-x, .aud-rail-y, .aud-stage) { opacity: 1; transform: none; }
+:root[data-motion="reduced"] .svc-runner { display: none; }
+  :root[data-motion="reduced"] .svc-rail-fill { transform: none; }
+:root[data-motion="reduced"] .company-fan { animation: none; }
+  :root[data-motion="reduced"] .company-rise, :root[data-motion="reduced"] .company-ring { opacity: 0.8; }
+:root[data-motion="reduced"] .story-label-in { animation: none; }
+:root[data-motion="reduced"] .mock-tablet, :root[data-motion="reduced"] .mock-phone { transition: none; }
+  :root[data-motion="reduced"] .mock-fade, :root[data-motion="reduced"] .mock-pulse, :root[data-motion="reduced"] .mock-line, :root[data-motion="reduced"] .mock-notify { animation: none; }
+  :root[data-motion="reduced"] .mock-line { stroke-dashoffset: 0; }
+:root[data-motion="reduced"] .prin-line { transform: none; transition: none; }
+:root[data-motion="reduced"] .mock2-tilt { transition: none; }
+  :root[data-motion="reduced"] .mock2-wave > span, :root[data-motion="reduced"] .mock2-typing > span, :root[data-motion="reduced"] .mock2-dash { animation: none; }
+:root[data-motion="reduced"] .shot-viewer[open] { animation: none; }
+:root[data-motion="reduced"] .svc-start-runner { display: none; }
+:root[data-motion="reduced"] .fmark * { animation: none !important; }
+:root[data-motion="reduced"] .ind-q, :root[data-motion="reduced"] .ind-qw, :root[data-motion="reduced"] .ind-sweep-label { animation: none !important; opacity: 1; clip-path: none; }
+  :root[data-motion="reduced"] .ind-eng-type { animation: none !important; max-width: none; }
+:root[data-motion="reduced"] .company-pulse2, :root[data-motion="reduced"] .company-gate2, :root[data-motion="reduced"] .company-drift2, :root[data-motion="reduced"] .company-wave2 { animation: none; }
+  :root[data-motion="reduced"] .company-pulse2 { opacity: 0; }
+:root[data-motion="reduced"] .client-wall.is-in :is(.client-tile, .client-logo, .client-wordmark) { animation: none; }
+  :root[data-motion="reduced"] .client-tile:is(:hover, :focus-within) :is(.client-logo, .client-wordmark) { transform: none; }
+:root[data-motion="reduced"] .site-shot, :root[data-motion="reduced"] .site-shot-img { transition: none; transform: none !important; }

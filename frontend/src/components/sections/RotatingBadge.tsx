@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { prefersLessMotion } from "@/lib/motion";
+import { useLessMotion } from "@/lib/motionHooks";
 
 /**
  * Circular text badge around the VAUG mark. Drifts slowly on its own and
@@ -9,8 +11,9 @@ import { useEffect, useRef } from "react";
 export function RotatingBadge({ words }: { words: string[] }) {
   const ring = useRef<SVGGElement>(null);
 
+  const lessMotion = useLessMotion(false);
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (prefersLessMotion()) return;
     let frame = 0;
     let angle = 0;
     let lastScroll = window.scrollY;
@@ -27,7 +30,7 @@ export function RotatingBadge({ words }: { words: string[] }) {
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, []);
+  }, [lessMotion]);
 
   const text = words.map((w) => `${w}  •  `).join("").repeat(2);
 

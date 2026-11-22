@@ -65,7 +65,7 @@ export function Footer({ site, columns, legal }: { site: SiteConfig; columns: Fo
           <div className="grid grid-cols-2 lg:grid-cols-4">
             {columns.map((col, i) => (
               <div key={col.title} data-reveal style={{ "--reveal-delay": `${i * 70}ms` } as React.CSSProperties} className="border-border p-8 max-lg:border-b max-lg:[&:nth-child(odd)]:border-r lg:border-r lg:last:border-r-0 lg:p-8">
-                <h3 className="text-lg font-medium text-fg">{col.title}</h3>
+                <h2 className="text-lg font-medium text-fg">{col.title}</h2>
                 <ul className="mt-6 flex flex-col gap-3.5 text-[15px]">
                   {col.links.map((link) => (
                     <li key={link.label}>

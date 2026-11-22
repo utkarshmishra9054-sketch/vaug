@@ -8,6 +8,8 @@ import type { EngineeringSlug, IconName } from "@/content/types";
 import { ArrowLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { DisciplineVisual } from "./Visuals";
+import { prefersLessMotion } from "@/lib/motion";
+import { useLessMotion } from "@/lib/motionHooks";
 
 export interface ExplorerItem {
   slug: EngineeringSlug;
@@ -43,11 +45,12 @@ export function DisciplineExplorer({ items }: { items: ExplorerItem[] }) {
     return () => io.disconnect();
   }, []);
 
+  const lessMotion = useLessMotion(false);
   useEffect(() => {
-    if (!autoplay || !inView || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!autoplay || !inView || prefersLessMotion()) return;
     const t = setTimeout(() => setActive((a) => (a + 1) % items.length), AUTOPLAY_MS);
     return () => clearTimeout(t);
-  }, [active, autoplay, inView, items.length]);
+  }, [active, autoplay, inView, items.length, lessMotion]);
 
   // On phones the tab list scrolls sideways: keep the active tab visible as autoplay advances.
   useEffect(() => {

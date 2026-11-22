@@ -358,7 +358,7 @@ const LAYOUTS: Record<string, (p: LayoutProps) => ReactNode> = {
 export function MockScene({ study, v, alt = false }: { study: MockStudy; v: Variant; alt?: boolean }) {
   const Layout = LAYOUTS[study.slug] ?? DashboardMock;
   return (
-    <div className={`mock2-stage mock2-${v} ${alt ? "mock2-alt" : ""} font-sans text-[#15151a]`} aria-hidden="true">
+    <div className={`mock2-stage mock2-${v} ${alt ? "mock2-alt" : ""} font-sans text-[#15151a]`} aria-hidden="true" inert>
       <Layout study={study} v={v} />
     </div>
   );

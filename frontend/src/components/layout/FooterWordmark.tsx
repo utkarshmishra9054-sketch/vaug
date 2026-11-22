@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { prefersLessMotion } from "@/lib/motion";
+import { useLessMotion } from "@/lib/motionHooks";
 
 /* Glyph x-offsets for Geist 900 at font-size 400 with -0.07em tracking (measured). */
 const LETTERS = [
@@ -28,9 +30,10 @@ const SPARKS = [-80, -35, 10, 55, 100, 145];
 export function FooterWordmark() {
   const ref = useRef<SVGSVGElement>(null);
 
+  const lessMotion = useLessMotion(false);
   useEffect(() => {
     const el = ref.current;
-    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!el || prefersLessMotion()) return;
     el.classList.add("is-armed");
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -41,7 +44,7 @@ export function FooterWordmark() {
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [lessMotion]);
 
   return (
     <svg ref={ref} className="fmark" viewBox="-12 66 1446 342" role="img" aria-label="VAUG">

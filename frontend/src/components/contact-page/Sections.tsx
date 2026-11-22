@@ -205,7 +205,7 @@ export function Closing({ content, email }: { content: ContactPageContent["closi
     <Band tone="dark" frameClassName="overflow-hidden" label="Say hello">
       <div className="p-3 sm:p-4">
         <div className="relative isolate overflow-hidden rounded-xl bg-purple px-6 py-20 text-center text-white sm:py-28">
-          <div aria-hidden="true" className="absolute inset-0 -z-10 flex flex-col justify-center gap-4 opacity-[0.12]">
+          <div aria-hidden="true" inert className="absolute inset-0 -z-10 flex flex-col justify-center gap-4 opacity-[0.12]">
             {[0, 1].map((r) => (
               <div key={r} className="flex w-max animate-marquee gap-10 whitespace-nowrap text-7xl font-black uppercase tracking-tight sm:text-9xl" style={{ "--marquee-duration": r ? "55s" : "40s", animationDirection: r ? "reverse" : "normal" } as React.CSSProperties}>
                 {[...row, ...row].map((w, i) => (

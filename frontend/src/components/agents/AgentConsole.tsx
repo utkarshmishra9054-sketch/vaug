@@ -6,6 +6,7 @@ import { ArrowRightLeft, Bot, Check, CircleCheck, Hand, Loader2, User } from "lu
 import type { ConsoleEvent, ConsoleScript } from "@/content/agents";
 import { Icon } from "@/components/ui/Icon";
 import { IllustrativeTag } from "@/components/ui/IllustrativeTag";
+import { prefersLessMotion } from "@/lib/motion";
 
 const STREAM_STEP = 3; // characters per tick
 const STREAM_MS = 28;
@@ -125,7 +126,7 @@ export function AgentConsole({ scripts }: { scripts: ConsoleScript[] }) {
 
   // Respect reduced motion: show every script complete, no auto-advance.
   useEffect(() => {
-    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!prefersLessMotion()) return;
     const t = setTimeout(() => setStill(true), 0);
     return () => clearTimeout(t);
   }, []);

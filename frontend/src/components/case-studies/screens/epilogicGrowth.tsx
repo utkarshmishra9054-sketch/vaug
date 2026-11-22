@@ -129,9 +129,9 @@ function ShopifyAdmin({ active, children }: { active: string; children: ReactNod
               Settings
             </div>
           </nav>
-          <main className="min-w-0 flex-1 overflow-hidden" style={{ padding: "10px 14px 0" }}>
+          <div className="min-w-0 flex-1 overflow-hidden" style={{ padding: "10px 14px 0" }}>
             {children}
-          </main>
+          </div>
         </div>
       </div>
     </BrowserChrome>
@@ -438,7 +438,7 @@ export const ProductPage: Screen = () => (
         </div>
         <div className="min-w-0 flex-1" style={{ padding: "16px 24px 0" }}>
           <p style={{ fontSize: 7, color: "#6b6b6b" }}>Shop / Face oils</p>
-          <h1 style={{ fontSize: 17, fontWeight: 700, marginTop: 5, letterSpacing: -0.3 }}>daily dose</h1>
+          <p style={{ fontSize: 17, fontWeight: 700, marginTop: 5, letterSpacing: -0.3 }}>daily dose</p>
           <p style={{ fontSize: 9, marginTop: 1 }}>Multi-Vitamin Face Oil · 30 ml</p>
           <p className="flex items-center" style={{ gap: 4, fontSize: 7.5, marginTop: 5 }}>
             <Stars rating={4.9} size={7.5} color="#111" />
@@ -552,7 +552,7 @@ export const KlaviyoFlows: Screen = () => (
           })}
         </div>
       </nav>
-      <main className="min-w-0 flex-1" style={{ padding: "10px 14px 0", background: "#fff" }}>
+      <div className="min-w-0 flex-1" style={{ padding: "10px 14px 0", background: "#fff" }}>
         <div className="flex items-center">
           <span style={{ fontSize: 14, fontWeight: 600 }}>Flows</span>
           <span className="ml-auto flex items-center" style={{ gap: 5 }}>
@@ -619,7 +619,7 @@ export const KlaviyoFlows: Screen = () => (
             </div>
           ))}
         </div>
-      </main>
+      </div>
     </div>
   </BrowserChrome>
 );

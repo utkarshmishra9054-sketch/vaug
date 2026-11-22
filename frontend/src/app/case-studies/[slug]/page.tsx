@@ -45,9 +45,9 @@ const toc = [
 function Block({ id, index, title, children }: { id: string; index: number; title: string; children: React.ReactNode }) {
   return (
     <section id={id} className="scroll-mt-28 border-b border-border py-14 last:border-b-0 lg:py-16">
-      <p data-reveal className="font-mono text-xs uppercase tracking-[0.2em] text-accent-text">
+      <h2 data-reveal className="font-mono text-xs uppercase tracking-[0.2em] text-accent-text">
         {String(index).padStart(2, "0")} · {title}
-      </p>
+      </h2>
       <div className="mt-6">{children}</div>
     </section>
   );

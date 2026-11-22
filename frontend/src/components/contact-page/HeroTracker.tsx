@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 
 import { IllustrativeTag } from "@/components/ui/IllustrativeTag";
+import { prefersLessMotion } from "@/lib/motion";
+import { useLessMotion } from "@/lib/motionHooks";
 
 /** Friendlier timing copy for the short labels stored in content. */
 const timing: Record<string, string> = {
@@ -25,11 +27,12 @@ export function HeroTracker({ title, events }: { title: string; events: { label:
   // Step being previewed; -1 means none (initial render and reduced motion).
   const [active, setActive] = useState(-1);
 
+  const lessMotion = useLessMotion(false);
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (prefersLessMotion()) return;
     const id = setInterval(() => setActive((i) => (i + 1) % events.length), STEP_MS);
     return () => clearInterval(id);
-  }, [events.length]);
+  }, [events.length, lessMotion]);
 
   return (
     <div data-tilt className="glass relative mx-auto w-full max-w-md overflow-hidden rounded-xl border border-border p-5 sm:p-7">

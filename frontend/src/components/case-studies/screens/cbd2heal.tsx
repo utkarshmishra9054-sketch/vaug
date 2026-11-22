@@ -289,7 +289,7 @@ export const ProductPage: Screen = () => (
           </div>
         </div>
         <div className="min-w-0 flex-1" style={{ paddingTop: 2 }}>
-          <h1 style={{ fontSize: 17, fontWeight: 700, color: PINK, lineHeight: 1.15, letterSpacing: -0.2 }}>Pure CBD Oil Tincture</h1>
+          <p style={{ fontSize: 17, fontWeight: 700, color: PINK, lineHeight: 1.15, letterSpacing: -0.2 }}>Pure CBD Oil Tincture</p>
           <p className="flex items-center" style={{ gap: 4, marginTop: 5, fontSize: 7, color: "#777" }}>
             {/* TODO(content): illustrative rating and review count */}
             <Stars rating={4.8} size={8} color="#f5a623" />

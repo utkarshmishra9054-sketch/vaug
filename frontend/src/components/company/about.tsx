@@ -60,7 +60,7 @@ export function AboutOrbit() {
       <div className="absolute inset-[40%] flex flex-col items-center justify-center rounded-full bg-purple text-white shadow-[0_0_80px_rgb(124_58_237/0.6)]">
         <span className="absolute inset-0 animate-ping rounded-full bg-purple/40 [animation-duration:3s]" />
         <span className="relative text-lg font-black tracking-[-0.06em] sm:text-2xl">VAUG</span>
-        <span className="relative font-mono text-[9px] uppercase tracking-[0.2em] text-white/75 sm:text-[10px]">est. 2019</span>
+        <span className="relative font-mono text-[9px] uppercase tracking-[0.2em] text-white sm:text-[10px]">est. 2019</span>
       </div>
     </div>
   );

@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { Bot, CircleCheck } from "lucide-react";
 
 import { IllustrativeTag } from "@/components/ui/IllustrativeTag";
+import { prefersLessMotion } from "@/lib/motion";
+import { useLessMotion } from "@/lib/motionHooks";
 
 const events = [
   { agent: "Lead Qualifier", action: "Scored 42 new leads and routed 9 to sales" },
@@ -21,11 +23,12 @@ const VISIBLE = 3;
 export function HeroConsole() {
   const [tick, setTick] = useState(0);
 
+  const lessMotion = useLessMotion(false);
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (prefersLessMotion()) return;
     const id = setInterval(() => setTick((t) => t + 1), 2800);
     return () => clearInterval(id);
-  }, []);
+  }, [lessMotion]);
 
   const rows = Array.from({ length: VISIBLE }, (_, i) => {
     const n = tick - i;
@@ -51,7 +54,7 @@ export function HeroConsole() {
             Live
           </span>
         </div>
-        <ul className="mt-4 flex flex-col gap-2" aria-live="off">
+        <ul className="mt-4 flex flex-col gap-2" aria-hidden="true" inert>
           {rows.map((item, i) => (
             <li
               key={item.key}

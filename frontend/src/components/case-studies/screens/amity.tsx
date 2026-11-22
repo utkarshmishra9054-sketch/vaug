@@ -289,11 +289,11 @@ export const LandingPage: Screen = () => (
         </div>
         <div className="relative flex-1" style={{ color: "#fff", paddingTop: 6 }}>
           <p style={{ fontSize: 7.5, fontWeight: 700, letterSpacing: 0.8, color: GOLD }}>ADMISSIONS OPEN 2025–26</p>
-          <h1 style={{ fontSize: 22, fontWeight: 700, lineHeight: 1.12, marginTop: 5, letterSpacing: -0.3 }}>
+          <p style={{ fontSize: 22, fontWeight: 700, lineHeight: 1.12, marginTop: 5, letterSpacing: -0.3 }}>
             B.Tech at Amity University,
             <br />
             Noida
-          </h1>
+          </p>
           <p style={{ fontSize: 8.5, lineHeight: 1.5, marginTop: 7, opacity: 0.88, maxWidth: 300 }}>Computer Science &amp; Engineering, AI &amp; Machine Learning, Electronics &amp; Communication, Mechanical, Civil and Biotechnology.</p>
           <ul style={{ marginTop: 9, fontSize: 8, lineHeight: 1.9 }}>
             {["Accredited by WASC (USA) and QAA (UK)", "Merit scholarships on Class 12 and JEE scores", "Industry projects and internships from year two"].map((t) => (
@@ -332,7 +332,7 @@ export const LandingPage: Screen = () => (
         ))}
       </div>
       <section style={{ padding: "10px 20px" }}>
-        <h2 style={{ fontSize: 12, fontWeight: 700, color: "#111827" }}>Why B.Tech at Amity?</h2>
+        <p style={{ fontSize: 12, fontWeight: 700, color: "#111827" }}>Why B.Tech at Amity?</p>
         <p style={{ fontSize: 8, lineHeight: 1.55, color: "#4b5563", marginTop: 4, maxWidth: 520 }}>
           A four-year programme taught in labs and project studios on the Noida campus, with electives in cloud computing, cyber security and data science, and a dedicated placement cell working with recruiters across India.
         </p>

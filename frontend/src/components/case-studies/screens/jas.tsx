@@ -325,11 +325,11 @@ export const LandingPage: Screen = () => (
         <div className="relative flex" style={{ padding: "18px 28px 0", gap: 26 }}>
           <div className="flex-1" style={{ color: "#fff" }}>
             <span style={{ display: "inline-block", fontSize: 6.5, fontWeight: 600, letterSpacing: 0.6, color: "#e0793f", border: "1px solid rgb(224 121 63 / 0.6)", borderRadius: 10, padding: "3px 8px" }}>PESO LICENSING · VADODARA &amp; GUJARAT</span>
-            <h1 style={{ fontFamily: "'Arial Black', 'Helvetica Neue', Arial, sans-serif", fontWeight: 900, fontSize: 25, lineHeight: 1.02, marginTop: 9, letterSpacing: 0.4 }}>
+            <p style={{ fontFamily: "'Arial Black', 'Helvetica Neue', Arial, sans-serif", fontWeight: 900, fontSize: 25, lineHeight: 1.02, marginTop: 9, letterSpacing: 0.4 }}>
               PESO LICENCE
               <br />
               GRANT &amp; RENEWAL
-            </h1>
+            </p>
             <p style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: "italic", fontSize: 24, color: "#d98a2b", lineHeight: 1.1, marginTop: 2 }}>handled end to end</p>
             <ul style={{ marginTop: 10, fontSize: 8, lineHeight: 1.85, color: "rgb(255 255 255 / 0.85)" }}>
               {["Plan layout drawings as per Gas Cylinder Rules 2016", "NOC from the District Authority", "Application, inspection and follow-up with PESO"].map((t) => (

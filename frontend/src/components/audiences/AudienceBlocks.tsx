@@ -107,7 +107,7 @@ export function Journey({ stages }: { stages: JourneyStage[] }) {
         {stages.map((s, i) => (
           <li key={s.stage} className="aud-stage relative flex gap-6 py-8 pl-4 pr-4 sm:pl-8 sm:pr-8 lg:flex-col lg:gap-0 lg:border-r lg:border-border lg:px-8 lg:pb-10 lg:pt-12 lg:last:border-r-0" style={{ "--i": String(i) } as Vars}>
             <span className="relative z-10 flex size-10 shrink-0 items-center justify-center rounded-full border-2 border-accent-text bg-bg font-mono text-sm font-semibold text-fg">
-              <span aria-hidden="true" className="aud-node-pulse absolute inset-0 rounded-full bg-accent" style={{ "--d": `${i * 0.8}s` } as Vars} />
+              <span aria-hidden="true" className="aud-node-pulse absolute -inset-0.5 rounded-full border-2 border-accent" style={{ "--d": `${i * 0.8}s` } as Vars} />
               <span className="relative">{String(i + 1).padStart(2, "0")}</span>
             </span>
             <div className="min-w-0 lg:mt-8">

@@ -732,7 +732,7 @@ export function GoogleAdsShell({
               ))}
             </nav>
           )}
-          <main className="flex min-w-0 flex-1 flex-col" style={{ background: "#fff" }}>
+          <div className="flex min-w-0 flex-1 flex-col" style={{ background: "#fff" }}>
             <div className="flex shrink-0 items-center" style={{ height: 27, padding: "0 12px", gap: 8 }}>
               <span style={{ fontFamily: FONT.googleSans, fontSize: 14, color: G.text }}>{title}</span>
               <span className="ml-auto flex items-center" style={{ gap: 6, fontSize: 8, color: G.grey, whiteSpace: "nowrap" }}>
@@ -756,7 +756,7 @@ export function GoogleAdsShell({
             <div className="min-h-0 flex-1 overflow-hidden" style={{ padding: "2px 12px 0" }}>
               {children}
             </div>
-          </main>
+          </div>
         </div>
       </div>
     </BrowserChrome>
@@ -1405,7 +1405,7 @@ export function SearchConsole({
             </div>
           ))}
         </nav>
-        <main className="min-w-0 flex-1" style={{ background: "#f8f9fa" }}>
+        <div className="min-w-0 flex-1" style={{ background: "#f8f9fa" }}>
           <div className="flex items-center" style={{ height: 32, padding: "0 14px", background: "#fff", borderBottom: `1px solid ${G.line}` }}>
             <span style={{ fontFamily: FONT.googleSans, fontSize: 12 }}>Performance on Search results</span>
             <span className="ml-auto flex items-center" style={{ gap: 4, fontSize: 8, fontWeight: 500, color: G.link }}>
@@ -1459,7 +1459,7 @@ export function SearchConsole({
             </div>
             <Grid cols={cols} rows={rows} s={{ font: FONT.google, size: 8, color: G.text, rowH: 20, headH: 22, pad: 8, line: G.line, head: { fontSize: 7.5, color: G.grey, fontWeight: 500 } }} />
           </div>
-        </main>
+        </div>
       </div>
     </BrowserChrome>
   );
@@ -1554,7 +1554,7 @@ export function GA4Shell({
               );
             })}
           </nav>
-          <main className="min-w-0 flex-1" style={{ background: "#f8f9fa", padding: "0 12px" }}>
+          <div className="min-w-0 flex-1" style={{ background: "#f8f9fa", padding: "0 12px" }}>
             <div className="flex items-center" style={{ height: 34, gap: 6 }}>
               <span className="truncate" style={{ fontFamily: FONT.googleSans, fontSize: 12 }}>
                 {title}
@@ -1566,7 +1566,7 @@ export function GA4Shell({
               </span>
             </div>
             {children}
-          </main>
+          </div>
         </div>
       </div>
     </BrowserChrome>
@@ -1817,9 +1817,9 @@ export function LinkedInPageAdmin({ page, followers, logo, active = "Content", c
               </div>
             </div>
           </aside>
-          <main className="flex min-w-0 flex-1 flex-col" style={{ gap: 8 }}>
+          <div className="flex min-w-0 flex-1 flex-col" style={{ gap: 8 }}>
             {children}
-          </main>
+          </div>
         </div>
       </div>
     </BrowserChrome>
@@ -1916,9 +1916,9 @@ export function CampaignManagerFrame({ account, accountId, url, children }: { ac
               </div>
             ))}
           </nav>
-          <main className="flex min-w-0 flex-1 flex-col" style={{ padding: "8px 10px 0" }}>
+          <div className="flex min-w-0 flex-1 flex-col" style={{ padding: "8px 10px 0" }}>
             {children}
-          </main>
+          </div>
         </div>
       </div>
     </BrowserChrome>
@@ -2409,7 +2409,7 @@ export function NotionCalendar({
             );
           })}
         </aside>
-        <main className="flex min-w-0 flex-1 flex-col">
+        <div className="flex min-w-0 flex-1 flex-col">
           <div className="flex shrink-0 items-center" style={{ height: 26, padding: "0 10px", gap: 4, fontSize: 8, color: T }}>
             {breadcrumb.map((b, i) => (
               <span key={b} className="flex items-center" style={{ gap: 4 }}>
@@ -2483,7 +2483,7 @@ export function NotionCalendar({
               })}
             </div>
           </div>
-        </main>
+        </div>
       </div>
     </BrowserChrome>
   );

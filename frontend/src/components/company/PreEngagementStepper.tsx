@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 
 import type { Feature } from "@/content/types";
+import { prefersLessMotion } from "@/lib/motion";
+import { useLessMotion } from "@/lib/motionHooks";
 
 /**
  * Eight pre-engagement steps as an animated stepper: a rail with numbered
@@ -16,14 +18,15 @@ export function PreEngagementStepper({ steps }: { steps: Feature[] }) {
   const root = useRef<HTMLDivElement>(null);
   const rail = useRef<HTMLDivElement>(null);
 
+  const lessMotion = useLessMotion(false);
   useEffect(() => {
     const el = root.current;
     if (!el) return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduce = prefersLessMotion();
     const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting && !reduce), { threshold: 0.35 });
     io.observe(el);
     return () => io.disconnect();
-  }, []);
+  }, [lessMotion]);
 
   useEffect(() => {
     if (!auto || !visible) return;
@@ -40,9 +43,9 @@ export function PreEngagementStepper({ steps }: { steps: Feature[] }) {
     const b = btn.getBoundingClientRect();
     const r = sc.getBoundingClientRect();
     const target = sc.scrollLeft + (b.left + b.width / 2) - (r.left + r.width / 2);
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduce = prefersLessMotion();
     sc.scrollTo({ left: target, behavior: reduce ? "auto" : "smooth" });
-  }, [index]);
+  }, [index, lessMotion]);
 
   const step = steps[index];
   const pct = steps.length > 1 ? (index / (steps.length - 1)) * 100 : 0;

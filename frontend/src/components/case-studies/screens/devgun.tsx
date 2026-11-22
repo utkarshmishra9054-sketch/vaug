@@ -330,11 +330,11 @@ export const QuoteLandingPage: Screen = () => (
         </div>
         <div className="relative flex-1" style={{ color: "#fff", paddingTop: 8 }}>
           <p style={{ fontFamily: "Oswald, 'Arial Narrow', Arial, sans-serif", fontSize: 8, fontWeight: 700, letterSpacing: 1, color: "#ff4b52" }}>FOR OFFICES, SHOWROOMS &amp; WAREHOUSES</p>
-          <h1 style={{ fontFamily: "Oswald, 'Arial Narrow', Arial, sans-serif", fontSize: 24, fontWeight: 700, lineHeight: 1.1, marginTop: 5 }}>
+          <p style={{ fontFamily: "Oswald, 'Arial Narrow', Arial, sans-serif", fontSize: 24, fontWeight: 700, lineHeight: 1.1, marginTop: 5 }}>
             Office &amp; Corporate
             <br />
             Relocation
-          </h1>
+          </p>
           <p style={{ fontSize: 8, lineHeight: 1.55, marginTop: 7, opacity: 0.88, maxWidth: 230 }}>Planned, packed and moved over a weekend, so your team is back at work on Monday. Local, intercity and PAN India.</p>
           <ul style={{ marginTop: 8, fontSize: 7.5, lineHeight: 1.9 }}>
             {["Free site survey by a move manager", "Workstations, IT and server racks", "Transit insurance and GST invoice"].map((t) => (
@@ -369,7 +369,7 @@ export const QuoteLandingPage: Screen = () => (
         </form>
       </section>
       <section style={{ padding: "12px 80px 0", textAlign: "center" }}>
-        <h2 style={{ fontFamily: "Oswald, 'Arial Narrow', Arial, sans-serif", fontSize: 15, fontWeight: 700, color: NAVY, letterSpacing: 0.4 }}>WHAT WE MOVE FOR BUSINESSES</h2>
+        <p style={{ fontFamily: "Oswald, 'Arial Narrow', Arial, sans-serif", fontSize: 15, fontWeight: 700, color: NAVY, letterSpacing: 0.4 }}>WHAT WE MOVE FOR BUSINESSES</p>
         <p style={{ fontSize: 7.5, color: "#666", lineHeight: 1.5, marginTop: 4 }}>Corporate offices, bank branches, showrooms, clinics, factories and warehouses, within Haryana and across India.</p>
       </section>
       <span className="absolute flex items-center" style={{ left: 10, bottom: 10, gap: 5 }}>

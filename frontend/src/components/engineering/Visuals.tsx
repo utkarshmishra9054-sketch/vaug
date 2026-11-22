@@ -28,7 +28,7 @@ export function VisualFrame({ label, title, children }: { label: string; title: 
           live
         </span>
       </div>
-      <div aria-hidden="true" className="relative h-[20rem] overflow-hidden sm:h-[22rem]">
+      <div aria-hidden="true" inert className="relative h-[20rem] overflow-hidden sm:h-[22rem]">
         {children}
       </div>
       <div aria-hidden="true" className="flex justify-end border-t border-border px-4 py-2">

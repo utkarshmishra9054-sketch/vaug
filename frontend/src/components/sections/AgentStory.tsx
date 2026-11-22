@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { ArrowDown, Check, Clock, Copy, Flame, Snowflake, Thermometer, UserRound } from "lucide-react";
 
 import { IllustrativeTag } from "@/components/ui/IllustrativeTag";
 import type { StoryBeat } from "@/content/types";
+import { useLessMotion } from "@/lib/motionHooks";
 
 /*
  * Scroll story in four scenes, driven by plain native scrolling (no scroll
@@ -116,19 +117,9 @@ function beatMeter(i: number, t: number): { text: string; color: string } {
 
 /* ---------- motion helpers ---------- */
 
-const reducedQuery = "(prefers-reduced-motion: reduce)";
-const subscribeReduced = (cb: () => void) => {
-  const mq = window.matchMedia(reducedQuery);
-  mq.addEventListener("change", cb);
-  return () => mq.removeEventListener("change", cb);
-};
-/** True when the visitor asked for reduced motion (false during SSR). */
+/** True when the visitor asked for reduced motion or paused animations (false during SSR). */
 function useReducedMotion() {
-  return useSyncExternalStore(
-    subscribeReduced,
-    () => window.matchMedia(reducedQuery).matches,
-    () => false,
-  );
+  return useLessMotion(false);
 }
 
 /**
@@ -655,7 +646,8 @@ function Chapter({ beat, index, count, reduced }: { beat: StoryBeat; index: numb
         <p className="mt-3 text-sm leading-relaxed text-muted sm:text-base">{beat.caption}</p>
       </div>
       <div className="relative border-t border-border bg-surface-2/40 px-3 pb-3 pt-3 sm:px-6 sm:pb-6 sm:pt-6">
-        <div ref={canvasBox} className="relative" style={{ height: 460 * scale }}>
+        {/* Drawn scene: decorative, described by the caption above. */}
+        <div ref={canvasBox} className="relative" style={{ height: 460 * scale }} aria-hidden="true" inert>
           <div className="absolute left-0 top-0 h-[460px] origin-top-left" style={{ width: canvasW, transform: `scale(${scale})` }}>
             <Window className="border border-border bg-surface shadow-[0_18px_40px_-28px_rgb(0_0_0/0.45)]">{sceneFor(index, t, reduced)}</Window>
           </div>
@@ -735,8 +727,8 @@ export function AgentStory({ beats }: { beats: StoryBeat[] }) {
                   refs.current[i] = el;
                 }}
                 aria-current={on ? "step" : undefined}
-                className="relative flex min-h-[68vh] flex-col justify-center transition-opacity duration-500 motion-reduce:transition-none"
-                style={{ opacity: on ? 1 : 0.28 }}
+                // Inactive beats are dimmed by colour, not opacity, so their text keeps 4.5:1 contrast.
+                className={`relative flex min-h-[68vh] flex-col justify-center transition-colors duration-500 motion-reduce:transition-none ${on ? "" : "[&_p]:!text-subtle"}`}
               >
                 <span
                   aria-hidden="true"
@@ -782,7 +774,8 @@ export function AgentStory({ beats }: { beats: StoryBeat[] }) {
               ))}
             </nav>
 
-            <div className="my-5 h-[min(552px,calc(100svh-15rem))]">
+            {/* Drawn scenes: decorative, the beats beside them carry the story. */}
+            <div className="my-5 h-[min(552px,calc(100svh-15rem))]" aria-hidden="true" inert>
               <Stage step={step} ts={ts} reduced={reduced} />
             </div>
 

@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { prefersLessMotion } from "@/lib/motion";
+import { useLessMotion } from "@/lib/motionHooks";
 
 /**
  * Big moving ticker. Drifts on its own, speeds up and skews with scroll
@@ -9,9 +11,10 @@ import { useEffect, useRef } from "react";
 export function TickerBand({ items }: { items: string[] }) {
   const track = useRef<HTMLDivElement>(null);
 
+  const lessMotion = useLessMotion(false);
   useEffect(() => {
     const el = track.current;
-    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!el || prefersLessMotion()) return;
     let x = 0;
     let dir = 1;
     let boost = 0;
@@ -33,7 +36,7 @@ export function TickerBand({ items }: { items: string[] }) {
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [lessMotion]);
 
   const row = [...items, ...items];
 

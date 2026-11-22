@@ -339,7 +339,7 @@ export const LandingPage: Screen = () => (
         </div>
         <div className="relative" style={{ width: 250, color: "#fff" }}>
           <p style={{ fontSize: 7.5, fontWeight: 500, letterSpacing: 0.4, color: SKY }}>INVOICE FINANCING FOR SINGAPORE SMEs</p>
-          <h1 style={{ fontSize: 21, fontWeight: 500, lineHeight: 1.12, marginTop: 7, letterSpacing: -0.2 }}>Check if your business qualifies in 2 minutes</h1>
+          <p style={{ fontSize: 21, fontWeight: 500, lineHeight: 1.12, marginTop: 7, letterSpacing: -0.2 }}>Check if your business qualifies in 2 minutes</p>
           <p style={{ fontSize: 8.5, lineHeight: 1.5, marginTop: 8, opacity: 0.88 }}>Answer a few questions about your company and invoices. No credit check and no documents at this step.</p>
           <ul style={{ marginTop: 10, fontSize: 8, lineHeight: 1.9, opacity: 0.95 }}>
             {["Advance on invoices from 30 to 120 days", "No property collateral required", "Decision within 2 business days"].map((t) => (

@@ -113,7 +113,7 @@ export function SemrushShell({
               </div>
             ))}
           </nav>
-          <main className="min-w-0 flex-1 overflow-hidden" style={{ padding: "6px 12px 0" }}>
+          <div className="min-w-0 flex-1 overflow-hidden" style={{ padding: "6px 12px 0" }}>
             <div className="flex items-center truncate" style={{ fontSize: 7, color: SEM.grey, gap: 3 }}>
               {crumbs.map((c, i) => (
                 <span key={c} style={{ color: i < crumbs.length - 1 ? SEM.link : SEM.grey }}>
@@ -123,16 +123,16 @@ export function SemrushShell({
               ))}
             </div>
             <div className="flex items-center" style={{ marginTop: 4, gap: 6 }}>
-              <h1 className="truncate" style={{ fontSize: 14, fontWeight: 700, letterSpacing: -0.2 }}>
+              <p className="truncate" style={{ fontSize: 14, fontWeight: 700, letterSpacing: -0.2 }}>
                 {title}
-              </h1>
+              </p>
               {titleExtra}
               <span className="ml-auto flex items-center" style={{ gap: 5 }}>
                 {right}
               </span>
             </div>
             {children}
-          </main>
+          </div>
         </div>
       </div>
     </BrowserChrome>

@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { prefersLessMotion } from "@/lib/motion";
+import { useLessMotion } from "@/lib/motionHooks";
 
 /**
  * Cycles through phrases. Letters roll up one after another inside a clipped
@@ -14,11 +16,12 @@ export function RotatingWords({ words, interval = 3400 }: { words: string[]; int
   const [lineWidth, setLineWidth] = useState<number | null>(null);
   const wordRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
+  const lessMotion = useLessMotion(false);
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (prefersLessMotion()) return;
     const id = setInterval(() => setIndex((i) => (i + 1) % words.length), interval);
     return () => clearInterval(id);
-  }, [words.length, interval]);
+  }, [words.length, interval, lessMotion]);
 
   // Measure the current phrase so the underline matches it, not the longest one.
   useLayoutEffect(() => {

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ArrowUp } from "lucide-react";
+import { prefersLessMotion } from "@/lib/motion";
 
 /*
  * Page-wide motion layer:
@@ -73,7 +74,7 @@ export function Interactions() {
   }, [pathname]);
 
   useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduce = prefersLessMotion();
     const fine = window.matchMedia("(pointer: fine)").matches;
     let loaded = false;
     let frame = 0;
