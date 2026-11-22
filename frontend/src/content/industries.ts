@@ -241,7 +241,7 @@ export const sectorPages: SectorPage[] = [
     ],
     faqs: [
       { question: "Can a patient agent give medical advice?", answer: "No. Our agents handle bookings, admin questions and routing. Anything clinical is passed to a qualified person, and that rule is built into the agent." },
-      { question: "Where is patient data stored?", answer: "In the region you need: UK, EU or UAE. We choose cloud regions and providers to match your data residency obligations." },
+      { question: "Where is patient data stored?", answer: "In the region you need: UK, EU, UAE or, on request, a US region. We choose cloud regions and providers to match your data residency obligations." },
       { question: "Can you integrate with our practice management system?", answer: "Usually, yes. We've worked with APIs, HL7/FHIR feeds and, when needed, secure exports. We confirm what's possible in the first week." },
       { question: "Do you help with NHS DSPT or DTAC?", answer: "We design and document to those standards and provide the technical evidence. Submission and clinical safety sign-off stay with your organisation." },
       { question: "How long does a booking app take?", answer: "A focused booking and reminders product typically takes six to ten weeks at a fixed price, including launch support." },

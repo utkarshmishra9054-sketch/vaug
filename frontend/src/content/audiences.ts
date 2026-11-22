@@ -249,7 +249,7 @@ export const audiencePages: AudiencePage[] = [
     termsSubtitle: "We make it easy for your security, legal and procurement teams to say yes.",
     terms: [
       { title: "Security questionnaires", description: "We complete your questionnaires and share our security practices up front.", icon: "shield", href: routes.security },
-      { title: "Data stays where you say", description: "UK, EU or UAE hosting, in your cloud account if you prefer.", icon: "cloud", href: routes.security },
+      { title: "Data stays where you say", description: "UK, EU, UAE or US hosting, in your cloud account if you prefer.", icon: "cloud", href: routes.security },
       { title: "MSA, DPA and SOWs", description: "Standard enterprise contracts, including data processing agreements.", icon: "file-check", href: routes.terms },
       { title: "SLAs and support", description: "Agreed response times and a named lead for escalations.", icon: "gauge", href: routes.howWeWork },
       { title: "Access you control", description: "SSO, least-privilege access and audit logs, removed on day one of offboarding.", icon: "users", href: routes.security },

@@ -94,7 +94,7 @@ Written for the NVHC proposal from the Sales Agent's "website asks"; Utkarsh to 
 - **Hosting:** "production runs in your own cloud or hosting account (AWS, Google Cloud, Azure or managed WordPress hosting)". Confirm this is the norm, not just an option.
 - **Access:** "staff sign in with SSO or MFA", "access reviewed whenever someone joins or leaves", "content edits, permission changes and data exports are logged".
 - **BAA:** "we sign a business associate agreement before any PHI access" (requested via the leader for NVHC). Confirm VAUG is willing to sign BAAs.
-- **US hosting:** not on the page. The residency list still says EU, UK and UAE. Add a US region only once Utkarsh confirms it.
+- **US hosting:** confirmed by Utkarsh on 22 Nov 2026 ("US region on request", e.g. AWS or Azure US regions). It's now on the page.
 
 ## Working with us (`/working-with-us`, added 22 Nov 2026)
 

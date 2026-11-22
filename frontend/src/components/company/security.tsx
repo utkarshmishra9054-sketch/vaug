@@ -207,7 +207,7 @@ export function ResidencyStrip({ regions }: { regions: { region: string; note: s
   return (
     <div className="frame-pad flex flex-col gap-4 border-t border-border py-10 lg:flex-row lg:items-center lg:gap-10">
       <p className="shrink-0 font-mono text-xs uppercase tracking-[0.2em] text-accent-text">Host your data in</p>
-      <ul className="grid flex-1 gap-3 sm:grid-cols-3">
+      <ul className="grid flex-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {regions.map((r, i) => (
           <li key={r.region} data-reveal style={{ "--reveal-delay": `${i * 100}ms` } as React.CSSProperties} className="group relative overflow-hidden rounded-md border border-border bg-surface px-5 py-4">
             <span aria-hidden="true" className="company-ping-dot absolute right-4 top-4 size-2 rounded-full bg-emerald-400" />

@@ -24,17 +24,17 @@ export interface LifecycleStage {
 
 export const security = {
   metaDescription:
-    "How VAUG handles security and compliance: hosting and tested backups, role-based portals, health data kept off marketing sites with BAAs where PHI is involved, GDPR and UK GDPR, OWASP ASVS, ISO 27001-aligned practices, NDAs, IP ownership and data residency.",
+    "How VAUG handles security and compliance: hosting and tested backups, role-based portals, health data kept off marketing sites with BAAs where PHI is involved, GDPR and UK GDPR, OWASP ASVS, ISO 27001-aligned practices, NDAs, IP ownership and data residency in the EU, UK, UAE or, on request, the US.",
   hero: {
     eyebrow: "Security & compliance",
     title: { light: "Security that's designed in,", bold: "not bolted on." },
     subtitle:
       "We build for regulated sectors in the UK, Europe and the UAE. Security, privacy and data residency are decided at the start of a project, not patched in before launch.",
-    tags: ["GDPR & UK GDPR", "OWASP ASVS", "EU · UK · UAE hosting", "BAA for PHI work", "NDA on request"],
+    tags: ["GDPR & UK GDPR", "OWASP ASVS", "EU · UK · UAE · US hosting", "BAA for PHI work", "NDA on request"],
   } satisfies CompanyHero,
 
   /** Chips orbiting the hero shield. */
-  heroChips: ["GDPR", "UK GDPR", "OWASP ASVS", "PCI DSS via Stripe", "ISO 27001-aligned", "EU · UK · UAE"],
+  heroChips: ["GDPR", "UK GDPR", "OWASP ASVS", "PCI DSS via Stripe", "ISO 27001-aligned", "EU · UK · UAE · US"],
 
   intro: {
     eyebrow: "Our approach",
@@ -87,7 +87,7 @@ export const security = {
   safeguards: [
     { title: "NDAs on request", description: "We sign an NDA, ours or yours, before you share anything sensitive, usually the same day.", icon: "file-check" },
     { title: "You own the IP", description: "Contracts assign all IP to you. Code lives in your repositories and accounts from week one.", icon: "crown" },
-    { title: "Data residency", description: "Host in the EU, the UK or the UAE, agreed at scoping. We use regional cloud services to keep data where it belongs.", icon: "globe" },
+    { title: "Data residency", description: "Host in the EU, the UK, the UAE or, on request, a US region, agreed at scoping. We use regional cloud services to keep data where it belongs.", icon: "globe" },
     { title: "Access control", description: "Named accounts, least privilege, MFA everywhere, and access removed the day someone leaves the project.", icon: "shield" },
     { title: "AI data handling", description: "Business-tier AI APIs that don't train on your data, no sensitive data in prompts unless agreed, and redaction where it matters.", icon: "brain" },
     { title: "Incident response", description: "A written runbook, named contacts and prompt notification if anything goes wrong.", icon: "zap" },
@@ -97,6 +97,7 @@ export const security = {
     { region: "EU", note: "Frankfurt · Dublin · Paris" },
     { region: "UK", note: "London" },
     { region: "UAE", note: "Dubai · Abu Dhabi" },
+    { region: "US", note: "On request · AWS or Azure US regions" },
   ],
 
   // TODO(content): backup retention (30 days), hosting in client accounts, SSO/MFA and logging need Utkarsh to confirm (CONTENT_GAPS.md).
@@ -111,7 +112,7 @@ export const security = {
     { title: "Patched and monitored", description: "Uptime and error alerts go to a named engineer. CMS core, plugins and dependencies are updated on a schedule, and security fixes go out as soon as they're tested.", icon: "refresh-cw" },
   ] satisfies Feature[],
 
-  // TODO(content): Utkarsh to confirm VAUG signs BAAs (CONTENT_GAPS.md). No US hosting claim until he confirms it.
+  // TODO(content): Utkarsh to confirm VAUG signs BAAs (CONTENT_GAPS.md). US-region hosting on request was confirmed by him on 22 Nov 2026.
   healthTitle: "Health data stays where it belongs.",
   healthSubtitle: "For clinics, health centres and digital-health products. Most websites never need protected health information (PHI), so we design them not to touch it.",
   health: [
@@ -142,7 +143,7 @@ export const security = {
 
   faqs: [
     { question: "Is VAUG ISO 27001 or SOC 2 certified?", answer: "Not yet. Our practices are aligned with ISO 27001 controls and formal certification is on our roadmap. We're happy to complete your security questionnaire and share our policies under NDA." },
-    { question: "Can you host our data in the UK, EU or UAE?", answer: "Yes. We agree the hosting region during scoping and use regional cloud services so data stays where it needs to be." },
+    { question: "Can you host our data in the UK, EU, UAE or US?", answer: "Yes. We agree the hosting region during scoping and use regional cloud services so data stays where it needs to be. US regions (for example on AWS or Azure) are available on request." },
     { question: "Do you send our data to AI providers?", answer: "Only when agreed, only what's needed, and only through business-tier APIs that don't train on your data. Sensitive fields can be redacted before any AI call." },
     { question: "Will you sign our NDA?", answer: "Yes. We'll sign yours or offer ours, usually the same day, before you share anything sensitive." },
     { question: "Who owns the code?", answer: "You do. IP is assigned to you in the contract, and code lives in your repositories from the first week." },
