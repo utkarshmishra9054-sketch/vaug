@@ -272,82 +272,97 @@ export const caseStudies: CaseStudyDetail[] = [
   },
 
   // ------------------------------------------------------------------ 3
+  // PhysioFit Sports & Rehab Clinic, Business Bay, Dubai (physiofitdxb.com). Clinic facts
+  // (one boutique clinic in Bay View Tower, owner-physio Shereen Hassam, physio + chiropractic +
+  // sports massage + a visiting orthopaedic surgeon, hours, website form + WhatsApp booking) are
+  // from the clinic's site, read 22 Nov 2026. Headline results are as confirmed by Utkarsh.
+  // TODO(content): confirm the in-app numbers on `screen` and in the drawn screens.
   {
     slug: "physio-booking-app-dubai",
     client: "PhysioFit Sports & Rehab",
-    city: "Dubai, UAE",
-    stage: "Seed",
+    city: "Business Bay, Dubai, UAE",
+    stage: "Boutique clinic",
     industry: "Healthcare",
     model: "Custom Development",
     icon: "heart",
     title: "A Booking App That Filled a Physio Clinic's Calendar in 90 Days",
     summary:
-      "A bilingual booking app for clinic and home-visit physiotherapy, delivered at a fixed price, with therapist scheduling, payments and session notes.",
+      "A bilingual booking app for a boutique physiotherapy and chiropractic clinic in Business Bay, delivered at a fixed price, with practitioner scheduling, deposits, reminders and exercise plans.",
     metrics: [
-      { value: "84%", label: "therapist utilisation (up from 51%)" },
+      { value: "84%", label: "practitioner utilisation (up from 51%)" },
       { value: "68%", label: "bookings made in-app" },
       { value: "-45%", label: "no-shows" },
     ],
-    tint: "#0f766e",
+    tint: "#074f57",
+    // TODO(content): illustrative, sized for one clinic with four practitioners; matches the drawn screens.
     screen: [
-      { label: "Sessions this week", value: "312" },
-      { label: "Home visits", value: "74" },
-      { label: "Slots open", value: "19" },
+      { label: "Sessions this week", value: "148" },
+      { label: "Booked in-app", value: "101" },
+      { label: "Slots open", value: "28" },
     ],
     logo: "/logos/physiofit.webp",
     sector: "healthcare",
     service: "custom-development",
     clientType: "Startup",
     region: "UAE",
-    domain: "Patient booking app (web + iOS + Android)",
-    techStack: ["Flutter", "Node.js", "MongoDB", "Firebase", "Stripe", "Google Maps API"],
+    domain: "Patient booking app (iOS + Android) and clinic admin",
+    techStack: ["Flutter", "Node.js", "MongoDB", "Firebase", "Stripe", "WhatsApp Business API"],
     duration: "12 weeks",
     team: "4 people: PM, designer, Flutter dev, backend dev",
     about:
-      "PhysioFit Sports & Rehab is a Dubai-based physiotherapy startup with two clinics and a growing home-visit service covering Dubai Marina, JLT and Downtown. Its therapists treat sports injuries, post-surgery rehab and back pain. Bookings came through WhatsApp and phone, managed by one receptionist and a shared calendar. With therapists travelling between clinics and homes, gaps and double bookings were common, and the founders wanted patients to book, pay and rebook on their own.",
+      "PhysioFit Sports & Rehab is a boutique, owner-managed clinic in Bay View Tower, Business Bay, overlooking the Dubai Canal. It is led by physiotherapist Shereen Hassam, in Dubai since 2008, with a team that covers physiotherapy and dry needling, chiropractic, sports massage and a visiting orthopaedic surgeon. Runners, padel and tennis players and people with long-standing back, neck and post-surgery problems come to it, many by word of mouth. Bookings arrived by phone, WhatsApp and the website's request form, and one front-desk coordinator matched them to a shared calendar by hand.",
     problems: [
-      f("Manual booking.", "Every appointment was arranged through WhatsApp messages, taking hours of reception time each day."),
-      f("Empty slots.", "Therapist calendars had gaps that were never filled because patients couldn't see availability."),
+      f("Manual booking.", "Every appointment was arranged over WhatsApp, phone or a website form that only sent a request, taking hours of front-desk time each day."),
+      f("Empty slots.", "Practitioner calendars had gaps that were never filled because patients couldn't see availability."),
       f("No-shows.", "Around one in five sessions was missed, with no reminder system or deposit."),
-      f("Fixed budget.", "As a seed-stage company, they needed a clear price and a fixed delivery date."),
+      f("Fixed budget.", "As an owner-run clinic, PhysioFit needed a clear price and a fixed delivery date."),
     ],
     solution:
-      "We scoped and delivered a fixed-price booking product: a patient app for iOS and Android, a web booking page, and an admin panel for the clinic team. Patients choose clinic or home visit, pick a therapist and time, and pay a deposit by card. Home-visit slots account for travel time using Google Maps, so therapists aren't double-booked across the city. Automated reminders go out 24 hours and 2 hours before each session. Therapists see their day on a simple mobile view and add session notes and exercise plans that patients can open in the app. The app runs in English and Arabic.",
+      "We scoped and delivered a fixed-price booking product: a patient app for iOS and Android and an admin panel for the clinic team. Patients pick a treatment (physiotherapy, sports rehab, chiropractic or sports massage), a practitioner and a time, and pay a deposit by card or Apple Pay. Requests from the website form and WhatsApp land in the same front-desk inbox with suggested slots, so they are confirmed in one tap instead of a chain of messages. Reminders go out 24 hours and 2 hours before each session, and freed slots are offered to a waitlist. Practitioners see their day on a simple mobile view and add session notes and exercise plans that patients open in the app, where they also track each milestone of their recovery. The app runs in English and Arabic.",
     features: [
-      f("Clinic and home-visit booking", "Live availability with travel-aware scheduling."),
-      f("Deposits and packages", "Card payment for single sessions and discounted session bundles."),
-      f("Automated reminders", "Push and SMS reminders to cut no-shows."),
-      f("Therapist view", "Daily schedule, patient history and session notes on mobile."),
-      f("Exercise plans", "Home exercise programmes shared with patients after each session."),
+      f("Treatment and practitioner booking", "Live availability across physiotherapy, chiropractic and massage, by practitioner and room."),
+      f("Deposits and packages", "Card and Apple Pay for single sessions and discounted session bundles."),
+      f("Front-desk inbox", "Website form, WhatsApp and app requests in one queue with suggested slots."),
+      f("Automated reminders", "Push and SMS reminders, plus a waitlist that refills cancelled slots."),
+      f("Practitioner view", "Daily schedule, patient history and session notes on mobile."),
+      f("Exercise plans and milestones", "Home programmes shared after each session, with progress patients can see."),
     ],
     challenges: [
-      f("Travel time between visits", "We calculated drive times between appointments so home visits could be booked back to back without clashes."),
+      f("Rooms and practitioners", "Each treatment needs the right practitioner and room (treatment beds, the chiropractic table, the rehab gym), so the scheduler books both and never double-books either."),
       f("Scope creep on a fixed price", "We agreed a clear feature list upfront and kept a \"phase two\" list for everything else, delivering on the agreed date."),
       f("Patient data privacy", "We stored health notes with encryption and role-based access in line with UAE health-data rules."),
     ],
     approach: [
-      p("Discovery", "Week 1", "Fixed the scope, price and timeline with the founders."),
-      p("Design", "Weeks 2–3", "Designed bilingual patient and therapist screens and tested them with clinic staff."),
+      p("Discovery", "Week 1", "Fixed the scope, price and timeline with the clinic owner."),
+      p("Design", "Weeks 2–3", "Designed bilingual patient and practitioner screens and tested them with clinic staff."),
       p("Build", "Weeks 4–10", "Built the apps, admin panel, payments and reminders in two-week sprints with demos."),
       p("Launch", "Weeks 11–12", "App store release, staff training and migration of existing patients."),
     ],
     results: {
       metrics: [
-        { value: "84%", label: "therapist utilisation" },
+        { value: "84%", label: "practitioner utilisation" },
         { value: "68%", label: "of bookings made in-app" },
         { value: "-45%", label: "no-shows" },
         { value: "On time", label: "and on budget" },
       ],
       narrative:
-        "Within 90 days, most patients were booking themselves and therapist calendars were close to full. Deposits and reminders nearly halved no-shows. The receptionist moved to patient care, and the clinic opened a third location six months later using the same app.",
+        "Within 90 days, most patients were booking themselves and practitioner calendars were close to full. Deposits and reminders nearly halved no-shows. The front desk moved from chasing messages to looking after patients, and as the team grew, new practitioners were added to the same app without new development.",
     },
     screenshots: [
-      "Patient app booking screen with clinic / home-visit toggle",
-      "Therapist daily schedule on mobile",
-      "Admin calendar showing all therapists and utilisation",
-      "Patient exercise plan screen",
+      "PhysioFit's website booking form: requests now land in the app's front-desk inbox",
+      "The clinic's website on mobile: home page and booking form",
+      "Patient app: choosing a treatment and practitioner, then paying the deposit",
+      "Front-desk inbox: website form, WhatsApp and app requests confirmed in one tap",
+      "Clinic calendar: every practitioner's day and utilisation",
+      "Practitioner app: the day's list and a session note with dry-needling points",
+      "Patient app: home exercise plan and recovery milestones, in English and Arabic",
+      "Owner dashboard on a laptop, with the next-day summary on the owner's phone",
     ],
-    website: { url: "https://physiofitdxb.com", image: { src: "/sites/physiofit.webp", alt: "PhysioFit Sports & Rehab website home page", width: 1440, height: 900 } },
+    images: [
+      { src: "/case-studies/physio-booking-app-dubai/booking-form.webp", alt: "PhysioFit website Book an appointment form with name, email, contact number, treatment and date", width: 1440, height: 900 },
+      { src: "/case-studies/physio-booking-app-dubai/mobile-site.webp", alt: "PhysioFit website on two phones: the home page and the booking form", width: 1440, height: 900 },
+    ],
+    website: { url: "https://physiofitdxb.com", image: { src: "/sites/physiofit.webp", alt: "PhysioFit Sports & Rehab website home page: Expert Physiotherapy in Dubai", width: 1440, height: 900 } },
     ctaHeading: "Want a booking app delivered at a fixed price?",
   },
 

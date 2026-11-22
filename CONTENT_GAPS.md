@@ -64,6 +64,19 @@ The study used to describe a nine-centre imaging network. It now describes the r
 - [ ] A testimonial from Dr Summerhill, if she'll give one.
 - [ ] Real screenshots of the console, if any exist, to replace the drawn screens.
 
+## PhysioFit Sports & Rehab (`physio-booking-app-dubai`, upgraded 22 Nov 2026)
+
+Still a finished study (not a draft): the headline results (utilisation 51% → 84%, 68% booked in-app, −45% no-shows) are unchanged. The write-up now matches the real clinic: one boutique clinic in Bay View Tower, Business Bay, led by physiotherapist Shereen Hassam, with physiotherapy and dry needling, chiropractic, sports massage and a visiting orthopaedic surgeon. Removed because the clinic's site contradicts them: "two clinics", the home-visit service (Dubai Marina, JLT, Downtown), travel-time scheduling and "opened a third location six months later".
+
+**Taken from the clinic's site (physiofitdxb.com, read 22 Nov 2026):** location, team roles, treatments, hours (Sun–Thu 8:30–6, Fri 8:30–1, Sat closed), the website booking form fields and WhatsApp booking, brand colours, logo and screenshots.
+
+**To confirm with Utkarsh:**
+- [ ] The public site still books through a request form and WhatsApp, and links to no app. The study says VAUG built a patient app and admin panel, with form and WhatsApp requests landing in its inbox.
+- [ ] The site's footer credits another agency ("Digital Motion") for the website, so the study claims the booking app only, not the site.
+- [ ] Illustrative: the `screen` values (148 sessions a week, 101 booked in-app, 28 open slots), every number in the six drawn screens, the prices (AED 450 follow-up, AED 100 deposit, AED 2,340 six-session pack) and the WhatsApp Business API in the stack.
+- [ ] Everyone in the screens except Shereen Hassam is invented; other practitioners appear by role only.
+- [ ] Consent to name PhysioFit and show its logo and website.
+
 ### Drawn screens (all case studies)
 Screens in `frontend/src/components/case-studies/screens/` copy real tools (Google Ads, Meta, Search Console, GA4, LinkedIn, HubSpot, Semrush…) using each client's real name, domain and logo. Every number, campaign, keyword, lead and person in them is illustrative (see the `TODO(content)` comments). Replace them with real exports where possible, and get client consent before publishing.
 - [ ] **Devgun:** phone number shown masked (`0XXXX XXXXX`); add the real Business Profile number or leave it masked.
