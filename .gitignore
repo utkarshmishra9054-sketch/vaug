@@ -1,0 +1,15 @@
+# OS files
+.DS_Store
+
+# Next.js build output and dev cache
+.next/
+out/
+
+# Dependencies and env
+node_modules/
+.env
+.env*.local
+*.log
+
+# Private outreach data (lead lists with people's contact details)
+docs/outreach/
