@@ -11,6 +11,8 @@ import { CaseStudyGrid } from "@/components/page/CaseStudyCards";
 import { FeatureGrid, LinkTiles, TechGroups } from "@/components/page/FeatureGrid";
 import { PageHero } from "@/components/page/PageHero";
 import { Section } from "@/components/page/Section";
+import { CapabilityLinks } from "@/components/showcases/CapabilityLinks";
+import { capabilityLinks } from "@/content/showcases";
 import { TickerBand } from "@/components/sections/TickerBand";
 import { Band } from "@/components/ui/Band";
 import { ArrowLink } from "@/components/ui/Button";
@@ -48,6 +50,7 @@ export default async function EngineeringDisciplinePage(props: PageProps<"/engin
   const meta = engineering.find((e) => e.slug === d.slug)!;
   const studies = relatedWork(await getCaseStudies(), d.caseTech);
   const others = engineering.filter((e) => e.slug !== d.slug);
+  const demos = capabilityLinks({ engineering: d.slug });
 
   return (
     <>
@@ -92,6 +95,12 @@ export default async function EngineeringDisciplinePage(props: PageProps<"/engin
               All case studies
             </ArrowLink>
           </div>
+          <CapabilityLinks items={demos} />
+        </Section>
+      )}
+      {studies.length === 0 && demos.length > 0 && (
+        <Section tone="light" id="demos" eyebrow="Try it" title="See How We Build." flush>
+          <CapabilityLinks items={demos} title="Capability demos" />
         </Section>
       )}
 

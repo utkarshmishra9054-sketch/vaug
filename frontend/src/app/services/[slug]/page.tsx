@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { serviceDetailBySlug, serviceDetails } from "@/content/services";
+import { capabilityLinks } from "@/content/showcases";
 import { audiences, engineering, routes, sectors, services } from "@/content/taxonomy";
 import { ContactSection, FaqSection, PageCta } from "@/components/page/Blocks";
 import { CaseStudyGrid } from "@/components/page/CaseStudyCards";
@@ -10,6 +11,7 @@ import { PageHero } from "@/components/page/PageHero";
 import { Section } from "@/components/page/Section";
 import { Deliverables, FactStrip, StartPaths } from "@/components/services/ServiceBlocks";
 import { ServiceVisual } from "@/components/services/ServiceVisual";
+import { CapabilityLinks } from "@/components/showcases/CapabilityLinks";
 import { Band } from "@/components/ui/Band";
 import { ArrowLink } from "@/components/ui/Button";
 import { getCaseStudiesBy, getHomeContent } from "@/lib/content";
@@ -46,6 +48,8 @@ export default async function ServicePage(props: PageProps<"/services/[slug]">) 
   });
   const otherServices = services.filter((x) => x.slug !== s.slug).map((x) => ({ label: x.label, short: x.short, href: routes.service(x.slug), icon: x.icon }))
     .concat({ label: "Compare all six", short: "Take the quick quiz or see every model side by side.", href: `${routes.services}#chooser`, icon: "layers" });
+
+  const demos = capabilityLinks({ service: s.slug });
 
   return (
     <>
@@ -98,6 +102,12 @@ export default async function ServicePage(props: PageProps<"/services/[slug]">) 
           <div className="frame-pad pt-10">
             <ArrowLink href={routes.caseStudies}>See all case studies</ArrowLink>
           </div>
+          <CapabilityLinks items={demos} />
+        </Section>
+      )}
+      {studies.length === 0 && demos.length > 0 && (
+        <Section tone="light" id="demos" eyebrow="Try it" title="See How We Build." flush>
+          <CapabilityLinks items={demos} title="Capability demos" />
         </Section>
       )}
 

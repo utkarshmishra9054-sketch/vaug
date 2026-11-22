@@ -16,6 +16,8 @@ import { Testimonials } from "@/components/sections/Testimonials";
 import { TickerBand } from "@/components/sections/TickerBand";
 import { Band, SectionTitle } from "@/components/ui/Band";
 import { ArrowLink } from "@/components/ui/Button";
+import { LinkTiles } from "@/components/page/FeatureGrid";
+import { capabilityLinks } from "@/content/showcases";
 import { SectionRail } from "@/components/ui/SectionRail";
 import { getHomeContent } from "@/lib/content";
 
@@ -29,6 +31,7 @@ export default async function HomePage() {
           { id: "agents", label: "VAUG Agents" },
           { id: "models", label: "Ways to work" },
           { id: "work", label: "Case studies" },
+          { id: "demos", label: "Try a demo" },
           { id: "tech", label: "Technology" },
           { id: "process", label: "How we work" },
           { id: "audiences", label: "Who we serve" },
@@ -60,6 +63,11 @@ export default async function HomePage() {
             View all {c.caseStudies.length} case studies
           </ArrowLink>
         </div>
+      </Band>
+
+      <Band tone="dark" id="demos" label="Capability demos">
+        <SectionTitle title="Try what we build." subtitle="Working demos with invented data, and our own accessibility audit. Use them the way your customers would." className="frame-pad pb-10 pt-20 lg:pt-24" />
+        <LinkTiles items={capabilityLinks()} columns={2} />
       </Band>
 
       <Band tone="light" id="tech" label="Technology">

@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { roles } from "@/content/careers";
 import { audiences, engineering, routes, sectors, services } from "@/content/taxonomy";
+import { showcases } from "@/content/showcases";
 import { getCaseStudies, getSiteConfig } from "@/lib/content";
 
 type Entry = MetadataRoute.Sitemap[number];
@@ -33,6 +34,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...audiences.map((a) => entry(routes.audience(a.slug), 0.7)),
     entry(routes.engineering, 0.8),
     entry(routes.accessibilityAudits, 0.8),
+    ...showcases.map((s) => entry(routes.showcase(s.slug), 0.8)),
     entry(routes.accessibility, 0.4),
     ...engineering.map((e) => entry(routes.engineeringPage(e.slug), 0.7)),
 

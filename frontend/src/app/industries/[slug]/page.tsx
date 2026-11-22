@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { sectorPageBySlug, sectorPages } from "@/content/industries";
+import { showcases } from "@/content/showcases";
 import { routes, sectorBySlug, serviceBySlug } from "@/content/taxonomy";
 import { CaseSpotlight, ComplianceGrid, ProblemCards, SectorTiles, TechLinks, toServiceTabs } from "@/components/industries/IndustryBlocks";
 import { SectorVisual } from "@/components/industries/SectorVisual";
@@ -70,6 +71,17 @@ export default async function IndustryPage(props: PageProps<"/industries/[slug]"
           <CaseSpotlight study={spotlight} />
         </Section>
       )}
+
+      {showcases
+        .filter((sc) => sc.sector === page.slug)
+        .map((sc) => (
+          <Section key={sc.slug} tone="dark" id="showcase" eyebrow="Capability showcase · try it" title={`${sc.title}.`} subtitle={sc.summary}>
+            <div className="frame-pad flex flex-wrap items-center gap-4">
+              <ArrowLink href={routes.showcase(sc.slug)}>Open the demo</ArrowLink>
+              <span className="text-sm text-muted">Fictional brand and invented data: it shows what we build.</span>
+            </div>
+          </Section>
+        ))}
 
       <Section tone="light" id="solutions" eyebrow="What we build" title={page.solutionsTitle} flush>
         <FeatureGrid
