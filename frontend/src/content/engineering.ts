@@ -176,7 +176,7 @@ export const engineeringIndex: EngineeringIndexContent = {
   metricsTitle: "Engineering by the Numbers.",
   metrics: [
     { value: "120+", label: "Products shipped", detail: "Web, mobile and AI builds since 2019", placeholder: true },
-    { value: "40+", label: "Engineers and designers", detail: "Senior-led squads across disciplines", placeholder: true },
+    { value: "18", label: "People on the team", detail: "Engineers, designers, testers and delivery leads" },
     { value: "100%", label: "Pull requests reviewed", detail: "No change merges without a second engineer" },
     { value: "<1 day", label: "Median time to production", detail: "From merged pull request to live", placeholder: true },
   ],

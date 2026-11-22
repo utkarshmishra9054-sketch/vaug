@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
-    "a11y": "node scripts/a11y-audit.mjs"
+    "a11y": "node scripts/a11y-audit.mjs",
+    "no-prospects": "node scripts/no-prospects.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.48.0",

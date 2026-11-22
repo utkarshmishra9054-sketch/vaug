@@ -11,7 +11,9 @@ The Sales Agent uses these studies as proof in proposals, matched to the industr
 - **VAUG built it end to end.** Write in the first person plural ("we built"). Never use the Apidel name. Never mention Utkarsh's day job.
 - **No prices, no certifications.** Say "built to GDPR, aligned with ISO 27001" if compliance comes up. Never "certified".
 - **Invented numbers are drafts.** Anything Utkarsh didn't give you is illustrative: set `placeholder: true`, mark each invented figure with `// TODO(content): …`, and add the study to `CONTENT_GAPS.md`. Drafts stay live on purpose; never hide or delete them.
-- **Don't "fix" the site's other contradictions** (60+ projects vs 120+ clients, 40+ people vs a team of seven, and so on). They're Utkarsh's call.
+- **Team size is 18.** Utkarsh confirmed it on 22 Nov 2026: say "18 people" or "a team of 18" wherever the site states VAUG's size. Don't touch client headcounts inside case studies.
+- **Don't "fix" the site's other contradictions** (60+ projects vs 120+ clients, and so on). They're Utkarsh's call.
+- **No prospect as a client, ever.** No company we are pitching may appear on vaug.in as a client: not in logos, case studies, testimonials or capability demos. The Sales Agent keeps the names in `docs/outreach/vaug-sales/prospects.json` (private, not in git). Demos use fictional or generic brands, never a lead's name, logo, colours or screenshots, and carry a visible "Illustrative demo" label. Run `npm run no-prospects` (from `frontend/`) before every deploy; it exits 1 on any match.
 - **Upgrade in place.** If the client already has a study, rewrite that one under its existing slug. Never add a second study for the same client.
 - **Don't copy third-party UIs** (Google, Meta, HubSpot, Linear, WhatsApp's own app chrome) in *new* screens. A WhatsApp-style chat bubble is fine; a pixel copy of WhatsApp Web is not. Older screens in `screens/tools.tsx` copy Google Ads, Meta and Search Console. Don't extend that pattern.
 
@@ -139,8 +141,9 @@ Add the study to `CONTENT_GAPS.md` with what's confirmed, what's illustrative, a
 
 From `frontend/`:
 ```bash
-npm run lint && npm run typecheck && npm run build
+npm run lint && npm run typecheck && npm run build && npm run no-prospects
 ```
+For accessibility, start the build (`npm run start -- --port 3400`) and run `npm run a11y -- http://localhost:3400` on the pages you changed (`A11Y_FILTER=/case-studies/<slug>`); it exits 1 on any axe violation.
 Then from the repo root, stage **only your files by path** (the Sales Agent writes untracked files under `docs/outreach/`; never `git add -A` or `git add .`), commit, and push:
 ```bash
 git push new-origin main

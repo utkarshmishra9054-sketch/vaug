@@ -117,7 +117,7 @@ export const about = {
     eyebrow: "About VAUG",
     title: { light: "We build the agents and software", bold: "that keep businesses moving." },
     subtitle:
-      "VAUG is a team of engineers, designers and AI specialists. Since 2019 we have shipped products, rescued prototypes and put agents to work for clients in the UK, Europe, the UAE, India and Canada.",
+      "VAUG is a team of 18 engineers, designers and AI specialists. Since 2019 we have shipped products, rescued prototypes and put agents to work for clients in the UK, Europe, the UAE, India and Canada.",
     tags: ["Since 2019", "Registered 2021", "UK · Europe · UAE · India", "Automate · Build · Scale"],
   } satisfies CompanyHero,
 
@@ -400,7 +400,7 @@ export const team = {
   } satisfies CompanyHero,
 
   /** Shown in the hero visual. */
-  headcount: { value: "40+", label: "people", placeholder: true },
+  headcount: { value: "18", label: "people" },
 
   leadershipTitle: "Leadership.",
   leadershipSubtitle: "The people accountable for how VAUG works, and for every project we take on.",
