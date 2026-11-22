@@ -369,8 +369,8 @@ export const caseStudies: CaseStudyDetail[] = [
   // ------------------------------------------------------------------ 4
   // Summerhill Health: a private GP clinic in Hale, Altrincham (summerhillhealth.co.uk).
   // Business facts (services, fees, hours, Semble booking, location) are from the clinic's
-  // own website, read 22 Nov 2026. The engagement details and every figure are illustrative:
-  // TODO(content): confirm scope, timeline, team and all numbers with Utkarsh (see CONTENT_GAPS.md).
+  // own website, read 22 Nov 2026. Headline results (78%, <5s, -38%, 96%) are confirmed by Utkarsh.
+  // TODO(content): confirm scope, timeline, team and the volume figures in `screen` and the drawn screens (see CONTENT_GAPS.md).
   {
     slug: "patient-whatsapp-voice-agent-manchester",
     client: "Summerhill Health",
@@ -382,7 +382,7 @@ export const caseStudies: CaseStudyDetail[] = [
     title: "A WhatsApp and Voice Agent That Answers Every Patient, Day or Night",
     summary:
       "An AI agent for a private GP clinic near Manchester that answers calls and WhatsApp messages, books same-day and new-patient appointments, sends pre-consultation questionnaires and reminders, and passes anything clinical to the doctors.",
-    // TODO(content): illustrative headline figures, confirm with the client.
+    // Headline figures confirmed by Utkarsh, 22 Nov 2026.
     metrics: [
       { value: "78%", label: "patient enquiries resolved without staff" },
       { value: "<5s", label: "answer time, evenings and weekends included" },
@@ -436,13 +436,13 @@ export const caseStudies: CaseStudyDetail[] = [
       p("Pilot", "Weeks 8–9", "Ran evenings and weekends first, with the team reviewing every conversation each morning."),
       p("Live and tuning", "Week 10 onward", "Switched on daytime overflow and tuned answers weekly from handover reasons."),
     ],
-    // TODO(content): illustrative results, confirm with the client.
+    // Results confirmed by Utkarsh, 22 Nov 2026 (96% is from the original study).
     results: {
       metrics: [
         { value: "78%", label: "of patient enquiries resolved without staff" },
         { value: "<5s", label: "answer time, day or night" },
         { value: "-38%", label: "missed appointments" },
-        { value: "93%", label: "of questionnaires back before the appointment" },
+        { value: "96%", label: "of questionnaires back before the appointment" },
       ],
       narrative:
         "Patients now get an answer in seconds, including evenings and weekends, and most never wait for a call back. The front desk spends its time with the patients in the clinic and the conversations that need a person. Questionnaires arrive before the consultation, so the doctor starts each new-patient appointment with the history in hand, and reminders with one-tap rescheduling keep the longer appointments filled.",
@@ -463,7 +463,6 @@ export const caseStudies: CaseStudyDetail[] = [
     ],
     website: { url: "https://www.summerhillhealth.co.uk", image: { src: "/sites/summerhill-health.webp", alt: "Summerhill Health website home page: Your Private GP in Hale & Altrincham", width: 1440, height: 900 } },
     ctaHeading: "Want an agent that answers every patient in seconds?",
-    placeholder: true,
   },
 
   // ------------------------------------------------------------------ proposal · CareerNaksha

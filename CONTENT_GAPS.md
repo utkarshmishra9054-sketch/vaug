@@ -49,13 +49,15 @@ All 13 are drafts (`placeholder: true`). Every figure other than those below is 
 
 ## Summerhill Health (`patient-whatsapp-voice-agent-manchester`, rewritten 22 Nov 2026)
 
-The study used to describe a nine-centre imaging network. It now describes the real business: a private GP clinic at 6 Broomfield Lane, Hale (Altrincham), led by Dr Natalie Summerhill. It is now a draft (`placeholder: true`), so it no longer shows in the home page "What Changed for Our Clients" strip, and its numbers must not be quoted as fact.
+The study used to describe a nine-centre imaging network. It now describes the real business: a private GP clinic at 6 Broomfield Lane, Hale (Altrincham), led by Dr Natalie Summerhill. It is a finished study (not a draft) and shows in the home page "What Changed for Our Clients" strip.
+
+**Confirmed by Utkarsh (22 Nov 2026):** 78% of patient enquiries resolved without staff, under 5 seconds to answer, 38% fewer missed appointments. The fourth metric, 96% of questionnaires back before the appointment, is from the original version of the study.
 
 **Taken from the clinic's own site (summerhillhealth.co.uk, read 22 Nov 2026):** services, fees (£135 20-min GP, £175 follow-up, £285 initial consultation, home visits from £165), opening hours (8 am–6 pm weekdays), the 6 pm-the-day-before cancellation rule, parking, Semble online booking, brand colours, Lato font, logo and screenshots.
 
 **Illustrative, needs Utkarsh to confirm or replace:**
 - [ ] What VAUG actually built for Summerhill, and when (the study assumes a 10-week build of a phone + WhatsApp agent integrated with Semble, by a team of 4).
-- [ ] Every figure: 78% resolved without staff, <5s answer time, −38% missed appointments, 93% questionnaires returned, 1,284 enquiries in October, 58 conversations a day, 14 bookings by the agent, 38% of enquiries out of hours, and all values in the six drawn screens.
+- [ ] The volume figures, which are illustrative: 1,284 enquiries in October, 58 conversations a day, 14 bookings by the agent, 38% of enquiries out of hours, and the other values in the six drawn screens.
 - [ ] Whether the clinic has a WhatsApp number (its site lists phone, email, an enquiry form and online booking only).
 - [ ] Client type: set to "Startup" as the closest of the four options for a single private clinic.
 - [ ] The site still shows a "We're closed right now, call you back?" form out of hours, so the study keeps the agent to phone and WhatsApp.
