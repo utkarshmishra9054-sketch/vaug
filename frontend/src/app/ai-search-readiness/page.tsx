@@ -42,7 +42,7 @@ export default async function AiSearchReadinessPage() {
   const orgJson = JSON.stringify(ld(organizationSchema()), null, 2);
 
   const coverage: [string, string, string][] = [
-    ["Organization + WebSite", "Every page", "Who VAUG is, contacts and offices, in the root layout"],
+    ["Organization + WebSite", "Every page", "Who VAUG is, contacts and location, in the root layout"],
     ["BreadcrumbList", "Every page with breadcrumbs", "The trail shown at the top of the page"],
     ["FAQPage", "Every page with an FAQ block", "The same questions and answers shown on the page"],
     ["Service", `${services.length} service pages`, "Each engagement model, provided by VAUG"],

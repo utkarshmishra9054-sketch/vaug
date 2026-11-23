@@ -84,18 +84,46 @@ export function Offices({ content, site }: { content: ContactPageContent; site: 
           </div>
           <div className="relative mt-2 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 px-4 font-mono text-[11px] uppercase tracking-[0.15em] text-paper/70">
             <span className="inline-flex items-center gap-2">
-              <span className="size-2.5 rounded-full bg-yellow" aria-hidden="true" /> {offices.legendOffice}: India · UK · USA
+              <span className="size-2.5 rounded-full bg-yellow" aria-hidden="true" /> {offices.legendOffice}: {pins.filter((p) => p.kind === "office").map((p) => p.label).join(" · ")}
             </span>
             <span className="inline-flex items-center gap-2">
-              <span className="size-2.5 rounded-full border-2 border-purple-light" aria-hidden="true" /> {offices.legendClient}: UK · Europe · UAE
+              <span className="size-2.5 rounded-full border-2 border-purple-light" aria-hidden="true" /> {offices.legendClient}: {pins.filter((p) => p.kind === "client").map((p) => p.label).join(" · ")}
             </span>
           </div>
         </div>
       </div>
 
-      <ul className="mt-12 grid border-t border-border md:grid-cols-3">
+      <ul className={`mt-12 grid border-t border-border ${site.offices.length > 1 ? "md:grid-cols-3" : ""}`}>
         {site.offices.map((office, i) => {
           const extra = officeExtras.find((e) => e.entity === office.entity);
+          if (site.offices.length === 1)
+            return (
+              <li key={office.entity} data-reveal className="border-b border-border">
+                <div data-glow className="flex flex-col gap-6 p-8 transition-colors hover:bg-surface md:flex-row md:items-center md:justify-between lg:px-10">
+                  <div className="flex items-center gap-5">
+                    <span className="text-4xl" aria-hidden="true">
+                      {office.flag}
+                    </span>
+                    <div>
+                      <h3 className="text-2xl font-semibold tracking-[-0.02em] text-fg">{office.entity}</h3>
+                      {extra && <p className="mt-1 font-mono text-xs uppercase tracking-[0.15em] text-accent-text">{extra.role}</p>}
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-x-8 gap-y-3 font-mono text-[13px] text-muted">
+                    <span>{office.address}</span>
+                    {office.phone && (
+                      <a href={`tel:${office.phone.replace(/\s/g, "")}`} className="inline-flex items-center gap-2.5 transition-colors hover:text-fg">
+                        <Phone className="size-4" aria-hidden="true" /> {office.phone}
+                      </a>
+                    )}
+                    <a href={`mailto:${office.email}`} className="inline-flex items-center gap-2.5 transition-colors hover:text-fg">
+                      <Mail className="size-4" aria-hidden="true" /> {office.email}
+                    </a>
+                    {extra && <LocalTime timeZone={extra.timeZone} />}
+                  </div>
+                </div>
+              </li>
+            );
           return (
             <li key={office.entity} data-reveal style={{ "--reveal-delay": `${i * 120}ms` } as React.CSSProperties} className="border-b border-border md:border-r md:last:border-r-0">
               <div data-glow className="group flex h-full flex-col p-8 transition-colors hover:bg-surface lg:p-10">

@@ -27,6 +27,11 @@ const nextConfig: NextConfig = STATIC_EXPORT
       async rewrites() {
         return [{ source: "/api/:path*", destination: `${API_URL}/api/:path*` }];
       },
+      // Email-signature banners (public/email) are linked from webmail signatures, so they get a long cache.
+      // To change one, upload it under a new file name rather than overwriting it.
+      async headers() {
+        return [{ source: "/email/:path*", headers: [{ key: "Cache-Control", value: "public, max-age=2592000, stale-while-revalidate=86400" }] }];
+      },
     };
 
 export default nextConfig;

@@ -123,21 +123,18 @@ export const contactPage: ContactPageContent = {
   },
   offices: {
     eyebrow: "Where we are",
-    title: { light: "Three offices.", bold: "Clients across three regions." },
+    title: { light: "Based in India.", bold: "Working across time zones." },
     subtitle:
-      "Engineering from India, client teams in the UK and USA, working with founders and companies across the UK, Europe, the UAE, India and Canada. Overlapping hours, every working day.",
+      "Engineering and client teams in India, working with founders and companies across the UK, Europe, the UAE, India and Canada. Overlapping hours, every working day.",
     legendOffice: "VAUG office",
     legendClient: "Client region",
   },
   officeExtras: [
     { entity: "VAUG India", city: "India", timeZone: "Asia/Kolkata", role: "Engineering hub" },
-    { entity: "VAUG UK", city: "London", timeZone: "Europe/London", role: "UK & Europe clients" },
-    { entity: "VAUG USA", city: "New York", timeZone: "America/New_York", role: "North America" },
   ],
   pins: [
     { label: "India", kind: "office", lon: 78.5, lat: 21 },
-    { label: "London", kind: "office", lon: -0.13, lat: 51.5 },
-    { label: "New York", kind: "office", lon: -74, lat: 40.7 },
+    { label: "UK", kind: "client", lon: -1.5, lat: 53 },
     { label: "Europe", kind: "client", lon: 10, lat: 48 },
     { label: "UAE", kind: "client", lon: 55.3, lat: 25.2 },
   ],

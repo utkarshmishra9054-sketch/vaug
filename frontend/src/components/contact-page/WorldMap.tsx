@@ -77,10 +77,8 @@ function arc(a: MapPin, b: MapPin) {
 
 /** Which pins to connect, by label. */
 const links: [string, string][] = [
-  ["India", "London"],
+  ["India", "UK"],
   ["India", "UAE"],
-  ["London", "Europe"],
-  ["New York", "London"],
   ["India", "Europe"],
 ];
 

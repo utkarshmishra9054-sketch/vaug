@@ -273,7 +273,7 @@ export function OfficesMap({ pins }: { pins: { label: string; lon: number; lat: 
       </svg>
       <ul className="mt-4 flex flex-wrap gap-4 font-mono text-[11px] uppercase tracking-[0.15em] text-muted">
         <li className="flex items-center gap-2">
-          <span className="size-2 rounded-full bg-accent-text" aria-hidden="true" /> Offices
+          <span className="size-2 rounded-full bg-accent-text" aria-hidden="true" /> {pins.filter((p) => p.kind === "office").length > 1 ? "Offices" : "Office"}
         </li>
         <li className="flex items-center gap-2">
           <span className="size-2 rounded-full bg-yellow" aria-hidden="true" /> Client hubs
@@ -284,6 +284,38 @@ export function OfficesMap({ pins }: { pins: { label: string; lon: number; lat: 
 }
 
 export function OfficeCards({ offices }: { offices: Office[] }) {
+  if (offices.length === 1) {
+    const o = offices[0];
+    return (
+      <div className="border-y border-border">
+        <div data-reveal data-glow className="flex flex-col gap-6 p-8 md:flex-row md:items-center md:justify-between lg:px-10">
+          <div className="flex items-center gap-5">
+            <span className="text-4xl" aria-hidden="true">
+              {o.flag}
+            </span>
+            <div>
+              <h3 className="text-xl font-semibold text-fg">{o.entity}</h3>
+              <p className="mt-1 leading-relaxed text-muted">{o.address}</p>
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center gap-x-8 gap-y-3 font-mono text-[13px] text-muted">
+            <a href={`mailto:${o.email}`} className="flex items-center gap-2 transition-colors hover:text-fg">
+              <Mail className="size-4" aria-hidden="true" /> {o.email}
+            </a>
+            {o.phone && (
+              <a href={`tel:${o.phone.replace(/\s/g, "")}`} className="flex items-center gap-2 transition-colors hover:text-fg">
+                <Phone className="size-4" aria-hidden="true" /> {o.phone}
+              </a>
+            )}
+            <span className="flex items-center gap-2 text-[11px] uppercase tracking-[0.15em] text-subtle">
+              <span className="size-1.5 animate-pulse-dot rounded-full bg-accent-text" aria-hidden="true" />
+              Open
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <ul className="grid border-t border-border md:grid-cols-3">
       {offices.map((o, i) => (

@@ -224,8 +224,8 @@ export const about = {
       year: "2026",
       title: "Today",
       description:
-        "A multi-disciplinary team shipping agents and products for more than 120 clients across three regions.",
-      tags: ["120+ clients", "3 regions", "6 services"],
+        "A multi-disciplinary team of 18 shipping agents and products for more than 120 clients across the UK, Europe, the UAE, India and Canada.",
+      tags: ["120+ clients", "Team of 18", "6 services"],
       icon: "sparkles",
       placeholder: true,
     },
@@ -292,12 +292,10 @@ export const about = {
   ] satisfies CountStat[],
 
   officesTitle: "Where to find us.",
-  officesSubtitle: "Remote-first, with bases in three countries and clients across the UK, Europe, the UAE, India and Canada.",
+  officesSubtitle: "Remote-first and based in India, with clients across the UK, Europe, the UAE, India and Canada.",
   /** Points on the offices map. `hub` is where the connecting arcs start. */
   mapPins: [
     { label: "India", lon: 78.5, lat: 21, kind: "office", hub: true },
-    { label: "London", lon: -0.1, lat: 51.5, kind: "office" },
-    { label: "New York", lon: -74, lat: 40.7, kind: "office" },
     { label: "Amsterdam", lon: 4.9, lat: 52.4, kind: "client" },
     { label: "Berlin", lon: 13.4, lat: 52.5, kind: "client" },
     { label: "Lisbon", lon: -9.1, lat: 38.7, kind: "client" },

@@ -44,7 +44,7 @@ export const privacyPolicy: LegalDoc = {
   },
   title: { light: "Privacy", bold: "Policy." },
   subtitle: "What we collect, why we collect it, and how you stay in control. Written in plain English.",
-  updated: "27 September 2026",
+  updated: "24 November 2026",
   summary: [
     "We collect only what we need to reply to you and deliver our work.",
     "We never sell your personal data.",
@@ -109,7 +109,7 @@ export const privacyPolicy: LegalDoc = {
         {
           list: [
             "Service providers who help us run the business, such as hosting, email, CRM, scheduling, analytics and accounting providers, under contracts that require them to protect it.",
-            "Other VAUG group companies (India, UK and USA) where needed to reply to you or deliver your project.",
+            "Other VAUG group companies, where needed to reply to you or deliver your project.",
             "Professional advisers such as lawyers, accountants and insurers.",
             "Authorities, where the law requires us to.",
             "A buyer or successor, if our business is ever sold or reorganised, under the same protections.",
@@ -122,7 +122,7 @@ export const privacyPolicy: LegalDoc = {
       id: "international-transfers",
       heading: "6. International transfers",
       body: [
-        "Our team works across India, the UK and the USA, so your data may be accessed from outside the UK or the European Economic Area.",
+        "Our team is based in India, so your data may be accessed from outside the UK or the European Economic Area.",
         "When that happens, we protect it with appropriate safeguards: adequacy regulations or decisions where they exist, and otherwise the UK International Data Transfer Agreement or Addendum and the EU Standard Contractual Clauses, together with supplementary measures where needed. You can ask us for a copy of the relevant safeguards.",
       ],
     },

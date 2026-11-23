@@ -30,7 +30,7 @@ export async function buildLlmsTxt(): Promise<string> {
     `${site.name}: ${site.tagline} Key facts, as stated on this site:`,
     "",
     "- 120+ clients; a team of 18 people across disciplines; operating since 2019.",
-    `- Offices: ${offices}. Remote-first, with bases in three countries.`,
+    `- Offices: ${offices}. Remote-first.`,
     "- Clients across the UK, Europe, the UAE, India and Canada, and websites and portals for startups across India, the UK, the US, Europe, Africa and Australia.",
     `- Contact: ${site.email} or ${abs(routes.contact)}`,
     "",

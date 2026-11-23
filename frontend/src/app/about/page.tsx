@@ -58,7 +58,7 @@ export default async function AboutPage() {
         <CountStats stats={c.stats} />
       </Section>
 
-      <Section tone="dark" id="offices" eyebrow="Offices" title={c.officesTitle} subtitle={c.officesSubtitle} flush>
+      <Section tone="dark" id="offices" eyebrow={site.offices.length > 1 ? "Offices" : "Office"} title={c.officesTitle} subtitle={c.officesSubtitle} flush>
         <div className="frame-pad pb-12">
           <OfficesMap pins={c.mapPins} />
         </div>

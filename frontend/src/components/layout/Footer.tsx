@@ -8,18 +8,25 @@ import { FooterWordmark } from "./FooterWordmark";
 import { SubscribeForm } from "./SubscribeForm";
 
 export function Footer({ site, columns, legal }: { site: SiteConfig; columns: FooterColumn[]; legal: LinkItem[] }) {
+  const single = site.offices.length === 1;
   return (
     <footer data-tone="dark" className="band border-b-0">
       <div className="frame">
-        {/* Offices */}
-        <ul className="grid border-b border-border md:grid-cols-3">
+        {/* Offices: one per column, or a single row when there's only one. */}
+        <ul className={`grid border-b border-border ${single ? "" : "md:grid-cols-3"}`}>
           {site.offices.map((o, i) => (
-            <li key={o.entity} data-glow data-reveal style={{ "--reveal-delay": `${i * 80}ms` } as React.CSSProperties} className="border-border px-8 py-10 max-md:border-b md:border-r md:last:border-r-0 md:border-dashed lg:px-12">
+            <li
+              key={o.entity}
+              data-glow
+              data-reveal
+              style={{ "--reveal-delay": `${i * 80}ms` } as React.CSSProperties}
+              className={`border-border px-8 py-10 max-md:border-b md:border-r md:last:border-r-0 md:border-dashed lg:px-12 ${single ? "md:flex md:items-center md:justify-between md:gap-8 md:py-8" : ""}`}
+            >
               <p className="flex items-center gap-3 text-xl text-fg">
                 <span aria-hidden="true">{o.flag}</span>
                 {o.entity}
               </p>
-              <div className="mt-6 flex flex-col gap-3 font-mono text-[13px] text-muted">
+              <div className={`mt-6 flex flex-col gap-3 font-mono text-[13px] text-muted ${single ? "md:mt-0 md:flex-row md:gap-8" : ""}`}>
                 <p className="flex gap-3">
                   <MapPin className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
                   {o.address}

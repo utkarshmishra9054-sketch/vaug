@@ -14,8 +14,6 @@ export const site: SiteConfig = {
   phone: "",
   offices: [
     { entity: "VAUG India", flag: "🇮🇳", address: "India", phone: "", email: "hello@vaug.in" },
-    { entity: "VAUG UK", flag: "🇬🇧", address: "London, United Kingdom", phone: "", email: "hello@vaug.in" },
-    { entity: "VAUG USA", flag: "🇺🇸", address: "New York, NY, United States", phone: "", email: "hello@vaug.in" },
   ],
   socials: [
     { label: "LinkedIn", href: "", icon: "linkedin" },
@@ -73,7 +71,7 @@ export const navigation: NavItem[] = [
     label: "About",
     href: routes.about,
     menu: [
-      { label: "About Us", href: routes.about, description: "Our story since 2019, values and offices" },
+      { label: "About Us", href: routes.about, description: "Our story since 2019, values and where we work" },
       { label: "How We Work", href: routes.howWeWork, description: "Clear commitments and visible progress" },
       { label: "Working With Us", href: routes.workingWithUs, description: "Hours, weekly rhythm and contracts" },
       { label: "Culture", href: routes.culture, description: "Remote-first, demo-driven, always learning" },

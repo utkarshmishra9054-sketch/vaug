@@ -16,7 +16,7 @@ export interface Role {
   department: Department;
   location: string;
   /** Used by the location filter. */
-  locationGroup: "India" | "UK" | "Remote";
+  locationGroup: "India" | "Remote";
   type: "Full-time" | "Contract";
   experience: string;
   summary: string;
@@ -56,7 +56,7 @@ export const careers = {
 
   perksTitle: "Perks and benefits.",
   perks: [
-    { title: "Remote-first", description: "Work from home, a co-working space or one of our offices.", icon: "globe" },
+    { title: "Remote-first", description: "Work from home, a co-working space or our office in India.", icon: "globe" },
     { title: "Learning budget", description: "Yearly budget for courses, books, conferences and certifications.", icon: "brain" },
     { title: "Top-spec kit", description: "A laptop and setup allowance so your tools never slow you down.", icon: "smartphone" },
     { title: "Health cover", description: "Medical insurance for you and your family, where local rules allow.", icon: "heart" },
@@ -203,8 +203,8 @@ export const roles: Role[] = [
     slug: "product-designer",
     title: "Product Designer",
     department: "Design",
-    location: "London, UK (hybrid)",
-    locationGroup: "UK",
+    location: "India (hybrid)",
+    locationGroup: "India",
     type: "Full-time",
     experience: "4+ years",
     summary: "Turn fuzzy ideas into clear flows and polished interfaces for web, mobile and AI products.",
@@ -225,8 +225,8 @@ export const roles: Role[] = [
     slug: "delivery-manager",
     title: "Delivery Manager",
     department: "Delivery",
-    location: "London, UK (hybrid)",
-    locationGroup: "UK",
+    location: "India (hybrid)",
+    locationGroup: "India",
     type: "Full-time",
     experience: "5+ years",
     summary: "Be the one accountable lead for a portfolio of client projects: scope, plan, demo and report.",
@@ -268,7 +268,7 @@ export const roles: Role[] = [
 ];
 
 export const departments: Department[] = ["Engineering", "AI", "Design", "QA", "Delivery", "Growth"];
-export const locationGroups: Role["locationGroup"][] = ["India", "UK", "Remote"];
+export const locationGroups: Role["locationGroup"][] = ["India", "Remote"];
 
 /** URL of a role page. (Candidate for `routes` in taxonomy.ts.) */
 export const roleHref = (slug: string) => routes.career(slug);
