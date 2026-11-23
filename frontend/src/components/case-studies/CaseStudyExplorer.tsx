@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 
-import type { CaseStudyDetail } from "@/content/types";
+import type { CaseStudyCardData } from "@/content/types";
 import { audiences, regions, sectors, services } from "@/content/taxonomy";
 import { CaseStudyCard } from "@/components/page/CaseStudyCards";
 
@@ -22,7 +22,7 @@ const groups = [
  * Filterable case study grid. Filters live in the URL (?sector=healthcare…)
  * so sector and service pages can deep-link into a filtered view.
  */
-export function CaseStudyExplorer({ studies }: { studies: CaseStudyDetail[] }) {
+export function CaseStudyExplorer({ studies }: { studies: CaseStudyCardData[] }) {
   const [filters, setFilters] = useState<Filters>(empty);
   const [open, setOpen] = useState(false);
 

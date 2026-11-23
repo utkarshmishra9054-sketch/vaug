@@ -383,3 +383,23 @@ export type EngineeringSlug =
 
 export type ClientType = "Startup" | "Enterprise" | "HNI" | "Agency";
 export type Region = "UK" | "Europe" | "UAE" | "India" | "Canada" | "Singapore" | "Australia" | "USA" | "Brazil" | "Africa";
+
+/**
+ * What a case-study card, its filters and its search need: the listing passes this to the client
+ * explorer instead of the full study, so the long-form text isn't serialized into the page.
+ */
+export type CaseStudyCardData = CaseStudy &
+  Pick<CaseStudyDetail, "sector" | "service" | "clientType" | "region" | "techStack" | "screenshots" | "images" | "website" | "features" | "domain">;
+
+/** Slims a study to its card fields. Use it wherever a study is handed to a client component. */
+export function toCardData<T extends CaseStudy & Partial<CaseStudyDetail>>(s: T): CaseStudyCardData {
+  const { slug, client, city, stage, industry, model, icon, title, summary, metrics, tint, screen, logo, placeholder } = s;
+  const { sector, techStack = [], screenshots = [], images, website, features = [], domain = "" } = s;
+  // Cards only show feature titles (in the drawn mock's table), so the descriptions stay behind.
+  const titles = features.map((f) => ({ title: f.title, description: "" }));
+  return {
+    slug, client, city, stage, industry, model, icon, title, summary, metrics, tint, screen, logo, placeholder,
+    sector, service: s.service!, clientType: s.clientType!, region: s.region!,
+    techStack, screenshots, images, website, features: titles, domain,
+  };
+}

@@ -1,6 +1,7 @@
 import type { CaseImage } from "@/content/types";
 import { SCREENS } from "./screens";
 import { ShotCanvas } from "./screens/kit";
+import { SCREEN_IMAGE, screenCount, screenImage } from "./screens/manifest";
 import { ShotThumb, type GalleryItem } from "./ShotGallery";
 
 /**
@@ -12,9 +13,14 @@ import { ShotThumb, type GalleryItem } from "./ShotGallery";
  * detail, site, form) so every screen in the gallery reads as a different view.
  */
 
-/** What a gallery entry shows: a real screenshot, else the study's drawn screen at `screenIndex`, else nothing (skeleton). */
+/**
+ * What a gallery entry shows: a real screenshot, else the study's drawn screen at `screenIndex`, else
+ * nothing (skeleton). The first drawn screen renders live; later ones use their pre-rendered image
+ * (1920 x 1200, loaded lazily), which keeps study pages light and still zooms sharply.
+ */
 export function galleryItem({ slug, tint, caption, screenIndex, image }: { slug: string; tint: string; caption: string; screenIndex: number; image?: CaseImage }): GalleryItem {
   if (image) return { caption, image };
+  if (screenIndex > 0 && screenIndex < screenCount(slug)) return { caption, image: { src: screenImage(slug, screenIndex), alt: caption, ...SCREEN_IMAGE } };
   const Screen = SCREENS[slug]?.[screenIndex];
   return Screen
     ? {

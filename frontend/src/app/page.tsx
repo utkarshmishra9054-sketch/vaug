@@ -1,4 +1,5 @@
 import { AiSpotlight } from "@/components/sections/AiSpotlight";
+import { toCardData } from "@/content/types";
 import { Audiences } from "@/components/sections/Audiences";
 import { CaseStudies } from "@/components/sections/CaseStudies";
 import { ClientGrid } from "@/components/sections/ClientGrid";
@@ -59,7 +60,7 @@ export default async function HomePage() {
 
       <Band tone="light" id="work" label="Case studies">
         <SectionTitle title={c.caseStudiesTitle} className="frame-pad pb-10 pt-20 lg:pt-24" />
-        <CaseStudies studies={c.caseStudies} />
+        <CaseStudies studies={c.caseStudies.map(toCardData)} />
         <div className="frame-pad flex justify-center pb-16">
           <ArrowLink href="/case-studies" variant="outline">
             View all {c.caseStudies.length} case studies

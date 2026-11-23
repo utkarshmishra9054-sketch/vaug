@@ -3,7 +3,7 @@ import { ArrowUpRight, ShieldCheck } from "lucide-react";
 
 import type { ComplianceItem, SectorProblem, ServiceFit, TechGroupLink } from "@/content/industries";
 import { routes, sectors, serviceBySlug } from "@/content/taxonomy";
-import type { CaseStudy, CaseStudyDetail, SectorSlug } from "@/content/types";
+import { toCardData, type CaseStudy, type CaseStudyDetail, type SectorSlug } from "@/content/types";
 import { ScreenMock } from "@/components/sections/CaseStudies";
 import { ArrowLink } from "@/components/ui/Button";
 import { DemoBadge } from "@/components/ui/DemoBadge";
@@ -185,7 +185,7 @@ export function CaseSpotlight({ study, eyebrow = "Featured case study" }: { stud
     <div className="grid border-t border-border lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
       <Link href={routes.caseStudy(study.slug)} data-cursor="View case" aria-label={`Read the case study: ${study.title}`} className="group block min-h-[18rem] overflow-hidden border-b border-border sm:min-h-[22rem] lg:border-r">
         <div className="h-full transition-transform duration-700 group-hover:scale-[1.02]">
-          <ScreenMock study={study} />
+          <ScreenMock study={toCardData(study)} />
         </div>
       </Link>
       <div className="flex flex-col border-b border-border p-8 sm:p-10 lg:p-12">

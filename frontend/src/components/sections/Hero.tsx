@@ -3,14 +3,16 @@ import { Band } from "@/components/ui/Band";
 import { ArrowLink } from "@/components/ui/Button";
 import { RotatingBadge } from "./RotatingBadge";
 import { RotatingWords } from "./RotatingWords";
+import { glow } from "@/components/ui/glow";
 
 /** Full-bleed light: drifting colour fields and a faint grid that fades out toward the edges. */
 function HeroBackdrop() {
   return (
     <>
-      <div data-parallax="-0.04" className="hero-aurora absolute -left-[5%] -top-[20%] h-[42rem] w-[55%] rounded-full bg-purple/30 blur-[140px]" />
-      <div data-parallax="0.03" className="hero-aurora absolute -right-[5%] top-[25%] h-[30rem] w-[40%] rounded-full bg-yellow/[0.08] blur-[130px] [animation-delay:-6s]" />
-      <div className="hero-aurora absolute bottom-[-30%] left-[30%] h-[28rem] w-[45%] rounded-full bg-purple-light/10 blur-[140px] [animation-delay:-11s]" />
+      {/* Soft glows are radial gradients, not blur() filters (cheaper to paint; WebKit can fail to paint big blurs). */}
+      <div data-parallax="-0.04" className="hero-aurora absolute -left-[14%] -top-[32%] h-[58rem] w-[74%]" style={glow("rgb(124 58 237 / 0.34)")} />
+      <div data-parallax="0.03" className="hero-aurora absolute -right-[14%] top-[14%] h-[44rem] w-[58%] [animation-delay:-6s]" style={glow("rgb(255 210 63 / 0.10)")} />
+      <div className="hero-aurora absolute bottom-[-42%] left-[22%] h-[42rem] w-[62%] [animation-delay:-11s]" style={glow("rgb(182 156 255 / 0.12)")} />
       <div className="absolute inset-0 opacity-[0.07] [background-image:linear-gradient(rgb(255_255_255)_1px,transparent_1px),linear-gradient(90deg,rgb(255_255_255)_1px,transparent_1px)] [background-size:72px_72px] [mask-image:radial-gradient(ellipse_70%_60%_at_40%_40%,black,transparent)]" />
       <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-bg" />
     </>

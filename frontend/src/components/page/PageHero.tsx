@@ -5,6 +5,7 @@ import type { Link as LinkItem, SplitTitle } from "@/content/types";
 import { Band } from "@/components/ui/Band";
 import { ArrowLink } from "@/components/ui/Button";
 import { JsonLd, breadcrumbSchema, ld } from "@/lib/jsonld";
+import { glow } from "@/components/ui/glow";
 
 export function Breadcrumbs({ items }: { items: LinkItem[] }) {
   return (
@@ -36,8 +37,9 @@ export function Breadcrumbs({ items }: { items: LinkItem[] }) {
 export function HeroGlow({ tint }: { tint?: string }) {
   return (
     <>
-      <div className="hero-aurora absolute -left-[5%] -top-[25%] h-[36rem] w-[50%] rounded-full blur-[140px]" style={{ background: tint ? `${tint}55` : "rgb(124 58 237 / 0.28)" }} />
-      <div className="hero-aurora absolute -right-[5%] top-[30%] h-[24rem] w-[38%] rounded-full bg-yellow/[0.07] blur-[130px] [animation-delay:-6s]" />
+      {/* Radial gradients, not blur() filters: cheaper to paint, and WebKit can fail to paint big blurs. */}
+      <div className="hero-aurora absolute -left-[14%] -top-[38%] h-[52rem] w-[68%]" style={glow(tint ? `${tint}66` : "rgb(124 58 237 / 0.32)")} />
+      <div className="hero-aurora absolute -right-[14%] top-[18%] h-[38rem] w-[54%] [animation-delay:-6s]" style={glow("rgb(255 210 63 / 0.09)")} />
       <div className="absolute inset-0 opacity-[0.06] [background-image:linear-gradient(rgb(255_255_255)_1px,transparent_1px),linear-gradient(90deg,rgb(255_255_255)_1px,transparent_1px)] [background-size:72px_72px] [mask-image:radial-gradient(ellipse_70%_60%_at_35%_35%,black,transparent)]" />
     </>
   );

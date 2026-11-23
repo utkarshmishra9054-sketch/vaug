@@ -4,8 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
 import type { CaseImage } from "@/content/types";
-import { SCREENS } from "@/components/case-studies/screens";
-import { ShotCanvas } from "@/components/case-studies/screens/kit";
+import { screenCount, screenImage } from "@/components/case-studies/screens/manifest";
 import { Pause, Play } from "lucide-react";
 
 import { useLessMotion } from "@/lib/motionHooks";
@@ -13,20 +12,26 @@ import { useLessMotion } from "@/lib/motionHooks";
 const INTERVAL = 3600;
 
 
-/** The study's product boards (drawn screens, else real screenshots), or null when it has none. */
-export function boardsFor(study: { slug: string; tint: string; images?: CaseImage[]; screenshots?: string[] }): ReactNode[] | null {
-  const Screens = SCREENS[study.slug];
-  if (Screens?.length) {
-    return Screens.map((Screen, i) => (
-      <ShotCanvas key={i}>
-        <Screen tint={study.tint} />
-      </ShotCanvas>
+/**
+ * The study's product boards (drawn screens, else real screenshots), or null when it has none.
+ * Drawn screens are pre-rendered images (see screens/manifest.ts), so cards and strips carry no
+ * screen markup or code; the carousel wrapper labels each board, so the images are decorative.
+ * `priority` loads the first board eagerly (the study page hero, where it's the largest paint).
+ */
+export function boardsFor(study: { slug: string; tint: string; images?: CaseImage[]; screenshots?: string[] }, { compact = false, priority = false } = {}): ReactNode[] | null {
+  const sizes = compact ? "(min-width: 1024px) 400px, (min-width: 640px) 50vw, 90vw" : "(min-width: 1024px) 720px, 95vw";
+  const drawn = screenCount(study.slug);
+  if (drawn) {
+    return Array.from({ length: drawn }, (_, i) => (
+      <div key={i} className="relative aspect-[16/10] w-full bg-white">
+        <Image src={screenImage(study.slug, i)} alt="" fill sizes={sizes} priority={priority && i === 0} loading={priority && i === 0 ? undefined : "lazy"} className="object-cover" />
+      </div>
     ));
   }
   if (study.images?.length) {
-    return study.images.map((img) => (
+    return study.images.map((img, i) => (
       <div key={img.src} className="relative aspect-[16/10] w-full bg-white">
-        <Image src={img.src} alt={img.alt} fill sizes="(min-width: 1024px) 720px, 95vw" className="object-contain" />
+        <Image src={img.src} alt={img.alt} fill sizes={sizes} priority={priority && i === 0} className="object-contain" />
       </div>
     ));
   }

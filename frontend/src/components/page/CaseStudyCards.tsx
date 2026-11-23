@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ViewTransition } from "react";
 import { ArrowUpRight } from "lucide-react";
 
-import type { CaseStudy } from "@/content/types";
+import { toCardData, type CaseStudy } from "@/content/types";
 import { routes } from "@/content/taxonomy";
 import { ScreenMock } from "@/components/sections/CaseStudies";
 import { DemoBadge } from "@/components/ui/DemoBadge";
@@ -14,7 +14,7 @@ export function CaseStudyCard({ study }: { study: CaseStudy }) {
       <div className="h-60 overflow-hidden sm:h-64">
         <ViewTransition name={`case-${study.slug}`} share="case-morph" default="none">
           <div className="h-full transition-transform duration-700 group-hover:scale-[1.03]">
-            <ScreenMock study={study} compact />
+            <ScreenMock study={toCardData(study)} compact />
           </div>
         </ViewTransition>
       </div>

@@ -51,9 +51,9 @@ function WebsiteShot({ study, compact }: { study: MockStudy; compact: boolean })
  * uses the simpler narrow composition. Studies with product boards (drawn
  * screens or real screenshots) cycle through those instead.
  */
-export function ScreenMock({ study, compact = false }: { study: MockStudy; compact?: boolean }) {
+export function ScreenMock({ study, compact = false, priority = false }: { study: MockStudy; compact?: boolean; priority?: boolean }) {
   const tint = study.tint;
-  const boards = boardsFor(study);
+  const boards = boardsFor(study, { compact, priority });
   return (
     <div
       className="mock2-root relative h-full overflow-hidden"

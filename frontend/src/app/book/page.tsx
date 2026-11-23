@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { BookingApp } from "@/components/booking/BookingApp";
-import { Breadcrumbs } from "@/components/page/PageHero";
+import { Breadcrumbs, HeroGlow } from "@/components/page/PageHero";
 import { routes } from "@/content/taxonomy";
 import { Band } from "@/components/ui/Band";
 
@@ -13,9 +13,8 @@ export const metadata: Metadata = {
 };
 
 export default function BookPage() {
-  // No HeroGlow here: its large blurred layer behind the booking card stops WebKit painting the page.
   return (
-    <Band tone="dark" rails={false} dots={false} label="Book a call">
+    <Band tone="dark" rails={false} dots={false} label="Book a call" backdrop={<HeroGlow />}>
       <div className="frame-pad relative pb-20 pt-28 sm:pt-32 lg:pt-36">
         <Breadcrumbs
           items={[

@@ -121,6 +121,14 @@ Create `frontend/src/components/case-studies/screens/<name>.tsx` exporting `<nam
 - Brand: the client's hex codes, font and logo throughout. Keep data hard-coded (server and client renders must match; no `Math.random`, no `Date.now`).
 - Mark illustrative data: `// TODO(content): illustrative …` at the top of the file.
 
+**Pre-rendered images (required).** Cards, home strips, industry pages and all but the first gallery screen show a pre-rendered image of each drawn screen, not the live component, so pages stay light and the screen code never reaches the browser. After adding or changing a study's screens, with a production build running on port 3400:
+
+```bash
+cd frontend && npx -p playwright@1.57.0 node scripts/capture-screens.mjs http://localhost:3400 <slug>
+```
+
+It captures each screen in WebKit at 3x (1920 × 1200), writes `public/case-studies/screens/<slug>-<n>.webp` and updates `screens/manifest.ts`. Commit both. The capture needs the screens rendering live: a new study (not yet in the manifest) already does; to re-capture a changed study, delete its line from `screens/manifest.ts` and rebuild first. A study missing from the manifest still works, but its cards show no drawn screens and its gallery renders every screen live, which is heavy, so don't skip this. (Needs `cwebp`: `brew install webp`; first time, `npx playwright@1.57.0 install webkit`.)
+
 **Phones.** Screens are drawn once at 640 × 400 and are not re-laid out for phones. On a phone the gallery shows each screen edge to edge with a "Tap to zoom" chip, and the viewer opens at a readable zoom (1.3×, so 8 px text reads at about 10.5 px) where the user tapped, with pinch, double-tap, drag and a mini-map. So: keep the smallest text at 7 px or more, and keep the most important content (title, KPIs, the key table) in the top two-thirds, where a phone user lands first.
 
 ## 7. Check and polish (three passes)
@@ -165,6 +173,7 @@ Railway auto-deploys the `vaug-web` service from `main`. Follow it with the Rail
 - [ ] 2-3 real screenshots (desktop home in `public/sites/`, others in `public/case-studies/<slug>/`)
 - [ ] All `CaseStudyDetail` fields filled; numbers consistent across copy, metrics, `screen` and drawn screens
 - [ ] 5-6 drawn screens in brand, incl. laptop and phone mockups, registered in `screens/index.ts`
+- [ ] Screen images captured (`scripts/capture-screens.mjs`), WebPs and `screens/manifest.ts` committed
 - [ ] Three polish passes at 1440 / 375 / 390 / 430, notes kept
 - [ ] `placeholder: true`, `TODO(content)` comments, `CONTENT_GAPS.md` entry
 - [ ] Lint, typecheck, build; only own files staged; pushed to `new-origin main`; Railway deploy live; live page checked

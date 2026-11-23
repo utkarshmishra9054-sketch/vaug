@@ -10,6 +10,7 @@ import { Section } from "@/components/page/Section";
 import { StartupLogos } from "@/components/startups/StartupLogos";
 import { Band } from "@/components/ui/Band";
 import { getCaseStudies } from "@/lib/content";
+import { toCardData } from "@/content/types";
 
 export const metadata: Metadata = {
   title: "Case Studies",
@@ -48,7 +49,7 @@ export default async function CaseStudiesPage() {
       </Band>
 
       <Band tone="light" id="all" label="All case studies">
-        <CaseStudyExplorer studies={studies} />
+        <CaseStudyExplorer studies={studies.map(toCardData)} />
       </Band>
 
       <Section tone="dark" id="startups" eyebrow="Startups" title="Startups we've digitalised." subtitle="Websites and portals for 20 startups across India, the UK, the US, Europe, Africa and Australia." flush>

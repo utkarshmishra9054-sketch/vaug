@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { toCardData } from "@/content/types";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ViewTransition } from "react";
@@ -129,7 +130,7 @@ export default async function CaseStudyPage(props: PageProps<"/case-studies/[slu
         <div className="relative grid border-t border-border lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
           <ViewTransition name={`case-${study.slug}`} share="case-morph" default="none">
             <div className="h-80 sm:h-[26rem] lg:h-full lg:min-h-[26rem]">
-              <ScreenMock study={study} />
+              <ScreenMock study={toCardData(study)} priority />
             </div>
           </ViewTransition>
           <dl className="grid grid-cols-2 border-border max-lg:border-t lg:border-l">
