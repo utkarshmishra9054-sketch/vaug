@@ -1,4 +1,4 @@
-import { timingSafeEqual } from "node:crypto";
+import { createHash, timingSafeEqual } from "node:crypto";
 import type { Context } from "hono";
 
 /** Best-effort client IP (the web app's proxy forwards x-forwarded-for). */
@@ -10,10 +10,9 @@ export function clientIp(c: Context) {
 export function isAdmin(c: Context) {
   const token = process.env.ADMIN_API_TOKEN;
   const provided = c.req.header("authorization")?.replace(/^Bearer\s+/i, "") ?? "";
-  if (!token) return false;
-  const a = Buffer.from(provided);
-  const b = Buffer.from(token);
-  return a.length === b.length && timingSafeEqual(a, b);
+  if (!token || !provided) return false;
+  // Compare fixed-length digests, so neither the token nor its length leaks through timing.
+  return timingSafeEqual(createHash("sha256").update(provided).digest(), createHash("sha256").update(token).digest());
 }
 
 export async function readJson(c: Context): Promise<unknown | undefined> {

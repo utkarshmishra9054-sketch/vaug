@@ -4,7 +4,9 @@ import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { secureHeaders } from "hono/secure-headers";
 
+import { startInboxReader } from "./lib/inbox/reader.js";
 import { booking } from "./routes/booking.js";
+import { inbox } from "./routes/inbox.js";
 import { leads } from "./routes/leads.js";
 import { subscribe, subscribers } from "./routes/subscribe.js";
 
@@ -19,6 +21,7 @@ app.route("/booking", booking);
 app.route("/leads", leads);
 app.route("/subscribe", subscribe);
 app.route("/subscribers", subscribers);
+app.route("/admin/inbox", inbox);
 
 app.notFound((c) => c.json({ ok: false, error: "Not found" }, 404));
 app.onError((err, c) => {
@@ -28,3 +31,4 @@ app.onError((err, c) => {
 
 const port = Number(process.env.PORT ?? 4000);
 serve({ fetch: app.fetch, port }, () => console.log(`VAUG API listening on http://localhost:${port}/api`));
+startInboxReader();
