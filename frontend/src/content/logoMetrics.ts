@@ -33,6 +33,7 @@ export const logoMetrics: Record<string, { ratio: number; ink: number }> = {
   "/logos/physiofit.webp": { ratio: 3.275, ink: 0.071 },
   "/logos/rak-glamping.webp": { ratio: 1.017, ink: 0.184 },
   "/logos/reagvis.webp": { ratio: 3.319, ink: 0.260 },
+  "/logos/stelx.webp": { ratio: 2.971, ink: 0.154 },
   "/logos/summerhill-health.webp": { ratio: 1.433, ink: 0.048 },
   "/logos/tennsa.webp": { ratio: 5.422, ink: 0.295 },
   "/logos/thermaldawn.webp": { ratio: 7.533, ink: 0.475 },

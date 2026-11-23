@@ -1846,6 +1846,98 @@ export const caseStudies: CaseStudyDetail[] = [
     placeholder: true,
   },
 
+  // StelX Dynamics: Indian robotics startup building GPS-denied drones (stelxdynamics.com, StelX Dynamics
+  // Private Limited, Varanasi). Facts from its site, read 23 Nov 2026. Its counters (hours, missions,
+  // clients, awards) are its own and not repeated. TODO(content): confirm scope (website and portfolio
+  // confirmed; the enquiry board, replay and survey portal are assumed), stack, timeline, team, logo consent.
+  {
+    slug: "gps-denied-drone-robotics-varanasi",
+    client: "StelX Dynamics",
+    city: "Varanasi, Uttar Pradesh, India",
+    stage: "Robotics startup",
+    industry: "Robotics · drones",
+    model: "Build With Us",
+    icon: "cpu",
+    title: "A Website, Portfolio and Requirement Flow for GPS-Denied Drones",
+    summary:
+      "The stelxdynamics.com website and portfolio, a Build with us flow that captures a mission's real requirements, an enquiry board for the engineers, a portfolio replay of a GPS-denied mission, and a portal where survey clients get their maps and findings.",
+    metrics: [
+      { value: "3", label: "lines of work on one site: autonomy, defence, survey" },
+      { value: "3", label: "flagship projects, each with its own page" },
+      { value: "1", label: "requirement flow that captures the mission, not just a name" },
+    ],
+    tint: "#002e5f",
+    // TODO(content): illustrative; matches the drawn screens.
+    screen: [
+      { label: "Open requirements", value: "5" },
+      { label: "Area mapped, survey flight 2", value: "14.6 ha" },
+      { label: "Findings for the client", value: "4" },
+    ],
+    logo: "/logos/stelx.webp",
+    service: "build-with-us",
+    clientType: "Startup",
+    region: "India",
+    domain: "Website, portfolio, requirement intake, enquiries and survey portal",
+    techStack: ["Bootstrap", "JavaScript", "PHP", "MySQL", "Mapbox GL"],
+    duration: "10 weeks",
+    team: "4 people: PM, designer, two full-stack devs",
+    about:
+      "StelX Dynamics is a robotics startup in Varanasi building advanced GPS-denied drones for mission-critical, high-risk environments. Its work spans autonomous and GPS-denied drone systems, stealth AI-powered defence drones, and high-precision drones for mapping, survey and inspection across infrastructure, mining, agriculture and urban planning. Its projects include a fully autonomous GPS-denied drone, an AI-enabled long-endurance surveillance drone and an autonomous lunar rover, and it builds custom systems from a customer's requirement.",
+    problems: [
+      f("Three audiences, one site.", "Defence, disaster response and industrial buyers each needed to find their part quickly."),
+      f("Custom work starts with a vague enquiry.", "A contact form rarely says whether GPS is available, what the setting is, or how long it must fly."),
+      f("Hard to show autonomy.", "A photo of a drone doesn't show it finding its way without GPS."),
+      f("Survey clients need more than files.", "Maps and findings had to arrive in a form a site manager can act on."),
+    ],
+    solution:
+      "We built stelxdynamics.com and its portfolio, and the pieces behind them. The site sets out the three lines of work and the flagship projects, with an FAQ for common questions. Build with us replaces a plain contact form with a short flow that asks what matters for a custom build: the mission, whether GPS is available, the setting, the payload and the endurance. Requirements land on an enquiry board where an engineer picks them up and scopes them. The portfolio includes an illustrated replay of a mission flown without GPS. Survey clients get a portal with the mapped area and each inspection finding, linked to the photos from the flight.",
+    features: [
+      f("Website and portfolio", "Services, projects and an FAQ for defence, disaster and industrial buyers."),
+      f("Build with us", "A requirement flow: mission, GPS, setting, payload, endurance."),
+      f("Enquiry board", "Every requirement in one place, from new to scoped."),
+      f("Mission replay", "An illustrated GPS-denied flight on the project page."),
+      f("Survey portal", "Mapped area, findings by priority and a downloadable report."),
+      f("Responsive", "The site and the forms work on a phone in the field."),
+    ],
+    challenges: [
+      f("Asking the right questions", "The form asks about GPS and setting first, because they decide what can be built."),
+      f("Showing, not claiming", "Demos are labelled illustrative, and the site's projects speak for themselves."),
+      f("Findings people act on", "Each survey finding has a priority and a link to its photos."),
+    ],
+    approach: [
+      p("Discovery", "Weeks 1–2", "Mapped the buyers, the projects and what a custom requirement must capture."),
+      p("Website", "Weeks 3–6", "Built the site, the portfolio pages and the FAQ."),
+      p("Requirements", "Weeks 7–8", "Build with us flow and the enquiry board."),
+      p("Demos and surveys", "Weeks 9–10", "Mission replay and the survey portal."),
+    ],
+    results: {
+      metrics: [
+        { value: "3", label: "lines of work on one site: autonomy, defence, survey" },
+        { value: "3", label: "flagship projects, each with its own page" },
+        { value: "1", label: "requirement flow that captures the mission, not just a name" },
+        { value: "Live", label: "at stelxdynamics.com" },
+      ],
+      narrative:
+        "StelX Dynamics has a website that shows its three lines of work and its projects clearly, a requirement flow that gives its engineers what they need to scope a custom build, and a way to hand survey clients their results.",
+    },
+    screenshots: [
+      "StelX Dynamics' projects: GPS-denied drone, surveillance drone, lunar rover",
+      "stelxdynamics.com on mobile: the home page and the projects",
+      "Build with us: the requirement flow, starting with GPS and setting",
+      "Enquiry board: every requirement from new to scoped",
+      "Portfolio: an illustrated replay of a mission flown without GPS",
+      "Survey portal: the mapped site and each finding for the client",
+      "The website on a laptop, with the projects on a phone",
+    ],
+    images: [
+      { src: "/case-studies/gps-denied-drone-robotics-varanasi/inner.webp", alt: "StelX Dynamics website: Our Projects, with the GPS-denied drone, surveillance drone and lunar rover", width: 1440, height: 900 },
+      { src: "/case-studies/gps-denied-drone-robotics-varanasi/mobile-site.webp", alt: "StelX Dynamics website on two phones: Welcome to StelX Dynamics, and Our Projects", width: 1440, height: 900 },
+    ],
+    website: { url: "https://stelxdynamics.com", image: { src: "/sites/stelx.webp", alt: "StelX Dynamics website home page: Welcome to StelX Dynamics", width: 1440, height: 900 } },
+    ctaHeading: "Building robotics or drones?",
+    placeholder: true,
+  },
+
   // ------------------------------------------------------------------ proposal · CareerNaksha
   // Source: 2023 VAUG proposal. TODO(content): confirm written consent to name this client.
   {
