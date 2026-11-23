@@ -1387,6 +1387,98 @@ export const caseStudies: CaseStudyDetail[] = [
     placeholder: true,
   },
 
+  // Thermal Dawn: Australian home thermal-storage startup (thermaldawn.com, FreeVolt Pty Ltd, Hornsby
+  // NSW). Facts from its site, read 23 Nov 2026. Its field figures (evenings with the compressor off,
+  // savings, gas and CO₂ avoided) are its own telemetry and are not repeated as VAUG results; its prices
+  // and funding are not mentioned. TODO(content): confirm scope, stack, timeline, team, logo consent.
+  {
+    slug: "home-thermal-storage-platform-australia",
+    client: "Thermal Dawn",
+    city: "Hornsby, NSW, Australia",
+    stage: "Climate-tech startup",
+    industry: "Climate · home energy",
+    model: "Build With Us",
+    icon: "zap",
+    title: "A Website, Quote Flow and Home App for Thermal Storage That Replaces Gas",
+    summary:
+      "The thermaldawn.com website with its home-fit quote flow and live field data, and the homeowner and fleet views behind it: a thermal store that charges when power is cheapest and heats the house through the evening peak.",
+    metrics: [
+      { value: "3", label: "cheap-power sources planned for: free window, solar, off-peak" },
+      { value: "Live", label: "field data on the website, straight from installed systems" },
+      { value: "1", label: "quote flow that checks the home fits first" },
+    ],
+    tint: "#14100d",
+    // TODO(content): illustrative; matches the drawn screens.
+    screen: [
+      { label: "Store charge now", value: "86%" },
+      { label: "Compressor off tonight", value: "5–9 pm" },
+      { label: "Quote requests this week", value: "23" },
+    ],
+    logo: "/logos/thermaldawn.webp",
+    service: "build-with-us",
+    clientType: "Startup",
+    region: "Australia",
+    domain: "Website, quote flow, homeowner app and fleet telemetry",
+    techStack: ["Astro", "TypeScript", "Node.js", "TimescaleDB", "MQTT", "Cloudflare"],
+    duration: "12 weeks",
+    team: "4 people: PM, designer, full-stack dev, IoT and data engineer",
+    about:
+      "Thermal Dawn replaces gas boilers in Australian homes with a hydronic heat pump and a thermal store it designs and builds in its own workshop in Hornsby, NSW. The system charges when power is cheapest (a free midday window, the home's own solar or late-night off-peak) and stores it as heating, cooling and hot water, so the house stays warm through the evening peak with the compressor off. It works with existing radiators or a concrete slab, uses no lithium, and its control software learns the home, the solar, the weather and the tariff. It is installed and running in homes in Victoria.",
+    problems: [
+      f("A new category for homeowners.", "People know batteries and heat pumps, not thermal storage; the site had to explain why stored heat beats a bigger battery."),
+      f("Not every home fits.", "Radiators or slab, boiler size and solar all matter, so quotes had to start with a fit check."),
+      f("Proof from real homes.", "Buyers wanted evidence from installed systems, not projections."),
+      f("Smart, not scheduled.", "Homeowners needed to see the system planning ahead around tariffs, solar and weather."),
+    ],
+    solution:
+      "We built thermaldawn.com, its quote flow and the views behind it. The website explains the solar mismatch and why a home battery isn't built for heating, shows the system, and carries a live field-data panel fed straight from installed systems' telemetry. Quote requests start with a home-fit check: heating type, boiler size, solar, tariff and location, so the team only quotes homes that fit, with nothing to pay until the homeowner approves. Homeowners get an app view of the store's charge, tonight's plan and the cheap-power windows it will use. The team gets a fleet view of every installed system, with alerts and the evening-peak performance of each home.",
+    features: [
+      f("Explainer website", "The solar mismatch, why batteries aren't built for heating, and how the system runs."),
+      f("Live field data", "A panel on the site fed by installed systems' own telemetry."),
+      f("Home-fit quote flow", "Heating type, boiler, solar, tariff and location before any quote."),
+      f("Homeowner app", "Store charge, tonight's plan and the cheap-power windows, at a glance."),
+      f("Fleet telemetry", "Every installed home, with alerts and evening-peak performance."),
+      f("Updates list", "Occasional email updates for people not ready to request a quote."),
+    ],
+    challenges: [
+      f("Live numbers you can trust", "The field-data panel reads only measured telemetry and states its baseline and how long it has been running."),
+      f("A plan, not a timer", "The app shows why the system will charge when it does (tariff, solar forecast, weather), not just when."),
+      f("Fit before price", "The quote flow screens out homes that won't fit before the team spends time on a quote."),
+    ],
+    approach: [
+      p("Discovery", "Weeks 1–2", "Mapped how a home is assessed, quoted and installed, and what the telemetry reports."),
+      p("Website", "Weeks 3–6", "Built the site, the explainer pages and the live field-data panel."),
+      p("Quote flow and app", "Weeks 7–10", "Home-fit quote flow, homeowner view and fleet telemetry."),
+      p("Launch", "Weeks 11–12", "Connected the first installed homes and handed over."),
+    ],
+    results: {
+      metrics: [
+        { value: "3", label: "cheap-power sources planned for: free window, solar, off-peak" },
+        { value: "Live", label: "field data on the website, straight from installed systems" },
+        { value: "1", label: "quote flow that checks the home fits first" },
+        { value: "Live", label: "at thermaldawn.com" },
+      ],
+      narrative:
+        "Thermal Dawn has a website that makes thermal storage make sense to a homeowner and backs it with live data from real homes, a quote flow that only spends the team's time on homes that fit, and views that show each house being kept warm on stored heat.",
+    },
+    screenshots: [
+      "Thermal Dawn's Intelligence page: a system that plans ahead, not a timer",
+      "thermaldawn.com on mobile: the home page and the hydronic system",
+      "Quote flow: the home-fit check before any quote",
+      "Homeowner app: store charge, tonight's plan and the cheap-power windows",
+      "Fleet: every installed home, with alerts and evening-peak performance",
+      "One home's week: when the store charged and when the compressor stayed off",
+      "The website on a laptop, with tonight's plan on a phone",
+    ],
+    images: [
+      { src: "/case-studies/home-thermal-storage-platform-australia/inner.webp", alt: "Thermal Dawn website, Intelligence page: Most smart home systems tell you what they did. Thermal Dawn thinks ahead.", width: 1440, height: 900 },
+      { src: "/case-studies/home-thermal-storage-platform-australia/mobile-site.webp", alt: "Thermal Dawn website on two phones: Heat by Day, Warm All Night, and the hydronic page", width: 1440, height: 900 },
+    ],
+    website: { url: "https://www.thermaldawn.com", image: { src: "/sites/thermaldawn.webp", alt: "Thermal Dawn website home page: Heat by Day. Warm All Night.", width: 1440, height: 900 } },
+    ctaHeading: "Selling clean energy to homeowners?",
+    placeholder: true,
+  },
+
   // ------------------------------------------------------------------ proposal · CareerNaksha
   // Source: 2023 VAUG proposal. TODO(content): confirm written consent to name this client.
   {

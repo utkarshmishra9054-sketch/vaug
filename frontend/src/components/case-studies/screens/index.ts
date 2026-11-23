@@ -34,6 +34,7 @@ import { styliqueScreens } from "./stylique";
 import { alkamyScreens } from "./alkamy";
 import { jolScreens } from "./jolenergy";
 import { earthsprintScreens } from "./earthsprint";
+import { thermalDawnScreens } from "./thermaldawn";
 import { propertyBrandScreens } from "./propertyBrand";
 import { reconciliationScreens } from "./reconciliation";
 import { rentalRescueScreens } from "./rentalRescue";
@@ -56,6 +57,7 @@ export const SCREENS: Record<string, Screen[]> = {
   "wastewater-carbon-removal-platform-india": alkamyScreens,
   "battery-recycling-portal-vellore": jolScreens,
   "rice-husk-materials-portal-nashik": earthsprintScreens,
+  "home-thermal-storage-platform-australia": thermalDawnScreens,
   "family-office-property-brand-dubai": propertyBrandScreens,
   "rental-prototype-rescue-lisbon": rentalRescueScreens,
   "modest-fashion-marketplace-abu-dhabi": marketplaceScreens,
