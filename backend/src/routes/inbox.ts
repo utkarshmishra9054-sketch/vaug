@@ -4,7 +4,7 @@ import { z } from "zod";
 import { CATEGORIES, classify, FREE_MAIL, type InboxCategory } from "../lib/inbox/classify.js";
 import { imapConfig } from "../lib/inbox/config.js";
 import { fetchBody, inboxStatus } from "../lib/inbox/reader.js";
-import { listRecords, readRecord, readRules, readState, writeRules } from "../lib/inbox/store.js";
+import { clearSavedRules, listRecords, readRecord, readRules, readRulesWithSource, readState, writeRules } from "../lib/inbox/store.js";
 import { clientIp, isAdmin, readJson } from "../lib/http.js";
 import { rateLimit } from "../lib/rate-limit.js";
 
@@ -51,8 +51,20 @@ const rulesSchema = z.object({
   rfps: z.array(z.string().trim().min(3).max(200)).max(1000),
 });
 
-/** GET /api/admin/inbox/rules: buyer domains/addresses/names and RFP keywords used for the `client` category. */
-inbox.get("/rules", async (c) => c.json({ ok: true, rules: await readRules() }));
+/**
+ * GET /api/admin/inbox/rules: buyer domains/addresses/names and RFP keywords used for the `client` category.
+ * `source` is "default" (the INBOX_RULES variable), "saved" (posted here, overriding the defaults) or "none".
+ */
+inbox.get("/rules", async (c) => {
+  const { rules, source } = await readRulesWithSource();
+  return c.json({ ok: true, source, rules });
+});
+
+/** DELETE /api/admin/inbox/rules: forget the posted rules and go back to the INBOX_RULES defaults. */
+inbox.delete("/rules", async (c) => {
+  await clearSavedRules();
+  return c.json({ ok: true, source: (await readRulesWithSource()).source });
+});
 
 /** POST /api/admin/inbox/rules: replaces the rules. Free-mail domains are dropped (use the full address). */
 inbox.post("/rules", async (c) => {

@@ -63,8 +63,40 @@ async function writeJsonFile(file: string, data: unknown) {
 export const readState = () => readJsonFile<InboxState>(path.join(DIR, "state.json"), { lastUid: 0 });
 export const writeState = (state: InboxState) => writeJsonFile(path.join(DIR, "state.json"), state);
 
-export const readRules = () => readJsonFile<InboxRules>(path.join(DIR, "rules.json"), { clients: [], rfps: [] });
+/**
+ * Default client rules come from the INBOX_RULES variable on vaug-api ({"clients": [...], "rfps": [...]}),
+ * generated locally from the private outreach files by scripts/inbox-rules-from-outreach.mjs. They are kept
+ * out of git because the repository is public. Rules saved through POST /api/admin/inbox/rules override them.
+ */
+let envRulesCache: { raw: string; rules: InboxRules | null } | null = null;
+function envRules(): InboxRules | null {
+  const raw = process.env.INBOX_RULES ?? "";
+  if (envRulesCache?.raw === raw) return envRulesCache.rules;
+  let rules: InboxRules | null = null;
+  if (raw.trim()) {
+    try {
+      const data = JSON.parse(raw) as Partial<InboxRules>;
+      const strings = (v: unknown) => (Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : []);
+      rules = { clients: strings(data.clients), rfps: strings(data.rfps) };
+    } catch {
+      console.error("inbox: INBOX_RULES is not valid JSON; ignoring it");
+    }
+  }
+  envRulesCache = { raw, rules };
+  return rules;
+}
+
+export async function readRulesWithSource(): Promise<{ rules: InboxRules; source: "saved" | "default" | "none" }> {
+  const saved = await readJsonFile<InboxRules | null>(path.join(DIR, "rules.json"), null);
+  if (saved) return { rules: saved, source: "saved" };
+  const defaults = envRules();
+  return defaults ? { rules: defaults, source: "default" } : { rules: { clients: [], rfps: [] }, source: "none" };
+}
+
+export const readRules = async () => (await readRulesWithSource()).rules;
 export const writeRules = (rules: InboxRules) => writeJsonFile(path.join(DIR, "rules.json"), rules);
+/** Drops the saved rules, so the INBOX_RULES defaults apply again. */
+export const clearSavedRules = () => rm(path.join(DIR, "rules.json"), { force: true });
 
 export const saveRecord = (record: InboxRecord) => writeJsonFile(path.join(MESSAGES, `${record.id}.json`), record);
 

@@ -69,11 +69,13 @@ async function main() {
     ADMIN_API_TOKEN: "test-admin-token",
   });
   const { pollInbox } = await import("../src/lib/inbox/reader.js");
-  const { writeRules, listRecords, readState } = await import("../src/lib/inbox/store.js");
+  const { listRecords, readRulesWithSource, readState } = await import("../src/lib/inbox/store.js");
   const { inbox } = await import("../src/routes/inbox.js");
 
   try {
-    await writeRules({ clients: ["acme-health.com", "gmail.com"], rfps: ["RFP-2026-118"] });
+    // Default rules come from the INBOX_RULES variable (free-mail domains in it are ignored when matching).
+    process.env.INBOX_RULES = JSON.stringify({ clients: ["acme-health.com", "gmail.com"], rfps: ["RFP-2026-118"] });
+    assert.equal((await readRulesWithSource()).source, "default");
 
     // First run: backfill.
     const first = await pollInbox();
@@ -132,6 +134,9 @@ async function main() {
     assert.deepEqual(rulesRes.ignored, ["gmail.com"]);
     const retag = (await (await inbox.request("/?category=client", { headers: auth })).json()) as { records: { from: { address: string } }[] };
     assert.deepEqual(retag.records.map((r) => r.from.address), ["ravi@example.org"]);
+    assert.equal(((await (await inbox.request("/rules", { headers: auth })).json()) as { source: string }).source, "saved", "posted rules override the defaults");
+    assert.equal(((await (await inbox.request("/rules", { method: "DELETE", headers: auth })).json()) as { source: string }).source, "default");
+    assert.equal(((await (await inbox.request("/?category=client", { headers: auth })).json()) as { count: number }).count, 2, "back on the defaults");
 
     const body = (await (await inbox.request(`/${byId(2).uid}`, { headers: auth })).json()) as { body: string };
     assert.ok(body.body.includes("Thanks, the scope looks right") && body.body.includes("OLD-QUOTED-TEXT"), "the on-demand body is the full text");
