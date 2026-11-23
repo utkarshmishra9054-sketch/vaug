@@ -224,8 +224,8 @@ export const about = {
       year: "2026",
       title: "Today",
       description:
-        "A multi-disciplinary team shipping agents and products for clients across three regions, with more than 60 projects delivered.",
-      tags: ["60+ projects", "3 regions", "6 services"],
+        "A multi-disciplinary team shipping agents and products for more than 120 clients across three regions.",
+      tags: ["120+ clients", "3 regions", "6 services"],
       icon: "sparkles",
       placeholder: true,
     },
@@ -286,8 +286,8 @@ export const about = {
   statsTitle: "VAUG in numbers.",
   stats: [
     { value: 7, suffix: "+", label: "Years building", placeholder: false },
-    { value: 60, suffix: "+", label: "Projects shipped", placeholder: true },
-    { value: 40, suffix: "+", label: "People across disciplines", placeholder: true },
+    { value: 120, suffix: "+", label: "Clients", placeholder: false },
+    { value: 18, suffix: "", label: "People across disciplines", placeholder: false },
     { value: 12, suffix: "", label: "Countries served", placeholder: true },
   ] satisfies CountStat[],
 

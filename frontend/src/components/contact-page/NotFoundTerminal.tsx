@@ -19,7 +19,7 @@ export function NotFoundTerminal() {
           <span className="text-accent-text">$</span> vaug find <span className="text-yellow">{shown}</span>
         </p>
         <p className="nf-line text-muted" style={{ "--i": 1 } as React.CSSProperties}>
-          → searched 60+ pages, 12 case studies, 6 services
+          → searched 120+ clients, 30+ growth stories, 6 services
         </p>
         <p className="nf-line text-red-300" style={{ "--i": 2 } as React.CSSProperties}>
           ✕ 0 results. Page not found (404)

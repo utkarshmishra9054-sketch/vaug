@@ -134,7 +134,7 @@ export const home: HomePageContent = {
 
   stats: [
     { value: 7, suffix: "+", label: "Years building", detail: "Operating since 2019, registered in 2021", icon: "rocket" },
-    { value: caseStudies.length, suffix: "", label: "Detailed case studies", detail: "Every number from the client's own data", icon: "file-check" },
+    { value: 120, suffix: "+", label: "Clients", detail: "Startups, enterprises and agencies since 2019, with 30+ growth stories", icon: "file-check" },
     { value: 6, suffix: "", label: "Sectors served", detail: "Finance, health, property, retail, logistics, travel", icon: "layers" },
     { value: 5, suffix: "", label: "Client regions", detail: "The UK, mainland Europe, the UAE, India and Canada", icon: "globe" },
   ],
