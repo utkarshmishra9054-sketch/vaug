@@ -134,3 +134,19 @@ Both are among the 20 startups Utkarsh says VAUG built for (relayed by the leade
 - **Scitus Labs:** Utkarsh asked us to use the live site. On 23 Nov 2026 there wasn't one: scituslabs.io is an unpublished Vercel deployment, scitus.io is a different company (never use it), and web searches for the company and its founders (Theresa Sporn, Tom Constance-Maxwell) found no site, Companies House entry or press. The card shows only the name and country. Add the logo, sector, link and a "what we built" line once the site is live.
 - **Stylique AI by YOKO:** shown this way on Utkarsh's instruction (23 Nov 2026); the site itself says "YOKO Styles".
 - Nothing on the wall says or implies VAUG helped any of them raise funding.
+
+## Startups batch B: AI startups (added 23 Nov 2026)
+
+HeliousAI, CityVerse AI, Klartext AI · doclarity, Reagvis Labs and Stylique AI by YOKO, all among the 20 startups VAUG built for (per Utkarsh). Product facts come from each startup's own site (read 23 Nov 2026). All five studies are `placeholder: true`, with qualitative or product-fact results only. Claims from the startups' own sites (HeliousAI's "3x better detection", YOKO's "80% less sampling cost", doclarity's institution count) are not repeated as VAUG results. doclarity's 1-in-17 PDF study is credited to doclarity.
+
+For all five, Utkarsh to confirm:
+- **Scope:** website plus portal or app. The drawn screens show the product portal, which implies VAUG built it.
+- **Logo consent.** Stylique has no logo on its site, so its card shows the name only.
+- **Stack, duration and team:** all inferred.
+
+Per study:
+- **HeliousAI** (`defence-ai-mission-console-india`): city unknown, shown as "India". Console screens are illustrative: detections are shown as neutral "thermal signatures" awaiting operator review. Logo: the site's white PNG, recoloured dark for light backgrounds.
+- **CityVerse AI** (`capital-projects-ai-platform-usa`): the screens use "Sample City", with no real cities (its site lists its own customers). "Built and tested to WCAG 2.1 AA" is an assumption.
+- **doclarity** (`accessible-pdf-ai-platform-austria`): city unknown, shown as "Austria". The portal screens are in German with a placeholder town ("Gemeinde Musterstadt"), and no doclarity prices appear. The QA claims (VoiceOver, NVDA, 200% zoom) and EU hosting of the portal are assumptions.
+- **Reagvis Labs** (`deepfake-detection-platform-dehradun`): all files, scores and verdicts are illustrative.
+- **Stylique AI by YOKO** (`ai-sewing-pattern-app-india`): city unknown, shown as "India". Waitlist numbers and entries are illustrative.

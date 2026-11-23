@@ -652,6 +652,462 @@ export const caseStudies: CaseStudyDetail[] = [
     placeholder: true,
   },
 
+  // ------------------------------------------------------------------ Startups · batch B (AI)
+  // HeliousAI: Indian defence-AI startup (heliousai.com). Product facts from its site, read
+  // 23 Nov 2026. No results claimed; the "3x better detection" line on its site is its own claim.
+  // TODO(content): confirm scope (website + mission console), stack, timeline, team, city and logo
+  // consent (CONTENT_GAPS.md). Every figure in the drawn screens is illustrative.
+  {
+    slug: "defence-ai-mission-console-india",
+    client: "HeliousAI",
+    city: "India",
+    stage: "Defence-tech startup",
+    industry: "Defence · AI imaging",
+    model: "Build With Us",
+    icon: "cpu",
+    title: "A Website and Mission Console for Canopy-Penetrating Defence AI",
+    summary:
+      "The heliousai.com website and a secure mission console for E-AOS imaging: flight planning, upload tracking, multi-layer reconstruction runs and ground composites whose AI detections an operator reviews.",
+    metrics: [
+      { value: "4", label: "steps from flight to ground composite, on one console" },
+      { value: "1,000s", label: "of geotagged thermal frames per pass, handled for the operator" },
+      { value: "Every", label: "detection reviewed by a person" },
+    ],
+    tint: "#1c1c1e",
+    // TODO(content): illustrative; matches the drawn screens.
+    screen: [
+      { label: "Passes today", value: "6" },
+      { label: "Composites ready", value: "4" },
+      { label: "Detections to review", value: "11" },
+    ],
+    logo: "/logos/heliousai.webp",
+    service: "build-with-us",
+    clientType: "Startup",
+    region: "India",
+    domain: "Defence-tech website and secure mission console (web)",
+    techStack: ["Next.js", "TypeScript", "Python (FastAPI)", "PostgreSQL + PostGIS", "MapLibre GL", "AWS"],
+    duration: "12 weeks",
+    team: "4 people: PM, designer, full-stack dev, GIS and data engineer",
+    about:
+      "HeliousAI is an Indian defence-technology startup building canopy-penetrating AI for clarity in complex terrain. Its E-AOS (airborne optical sectioning) module flies a UAV in optimised patterns to capture thousands of geotagged thermal images, then reconstructs the canopy, mid-layer and ground separately, so that static ground signatures reinforce while foliage fades into noise. The output is a single foliage-penetrating ground composite in near real time, built to work with existing command systems on any drone or platform. The company also develops the Helious VTOL drone and an indigenous upgrade for existing platforms.",
+    problems: [
+      f("Physics that's hard to explain.", "Optical sectioning had to make sense to defence buyers in a minute, without overstating what it does."),
+      f("Thousands of frames per pass.", "Each flight produces more geotagged thermal images than anyone can review one by one."),
+      f("Restricted by default.", "Mission data had to be visible only to the right roles, with every action logged."),
+      f("One place to decide.", "Teams needed the reconstructed composite and its flagged detections side by side, not across separate tools."),
+    ],
+    solution:
+      "We built heliousai.com and a secure mission console. The website explains why conventional thermal imaging fails under canopy, how E-AOS works in four steps, and the products, with a contact route for defence teams. The console plans the synthetic-aperture flight pattern over an area, tracks each pass as its images upload, runs the multi-layer reconstruction and shows the ground composite beside the raw canopy view. Detections on the composite carry a confidence score and stay unconfirmed until an operator reviews them, and every action is logged. Access is by role, on infrastructure the client controls.",
+    features: [
+      f("Explainer website", "Why canopy defeats thermal imaging, the four E-AOS steps, the products and a contact route."),
+      f("Flight-pattern planner", "Draw the area, pick the pattern and altitude, and see the expected coverage."),
+      f("Pass tracking", "Resumable uploads from the field with per-pass progress and integrity checks."),
+      f("Reconstruction runs", "Canopy, mid-layer and ground layers computed per pass, with run status."),
+      f("Composite viewer", "Canopy and ground views side by side, with flagged detections and confidence."),
+      f("Operator review and audit", "Confirm or dismiss each detection; every decision is logged with who and when."),
+    ],
+    challenges: [
+      f("Large uploads over field links", "Chunked, resumable uploads with checksums, so a dropped connection never restarts a pass."),
+      f("Explaining without overclaiming", "The website quotes the published research behind the approach rather than making its own performance claims."),
+      f("Clear roles", "Operators, analysts and administrators see different things, and nothing leaves the console unlogged."),
+    ],
+    approach: [
+      p("Discovery", "Weeks 1–2", "Mapped the flight-to-composite workflow and who needs to see what."),
+      p("Website", "Weeks 3–5", "Wrote and built heliousai.com around the problem, the physics and the products."),
+      p("Console", "Weeks 6–11", "Built planning, pass tracking, reconstruction runs, the viewer and review in two-week sprints."),
+      p("Hardening", "Week 12", "Role checks, audit logging and a security review before handover."),
+    ],
+    results: {
+      metrics: [
+        { value: "4", label: "steps from flight to ground composite, on one console" },
+        { value: "1,000s", label: "of geotagged thermal frames per pass, handled for the operator" },
+        { value: "Every", label: "detection reviewed by a person" },
+        { value: "Live", label: "at heliousai.com" },
+      ],
+      narrative:
+        "HeliousAI has a website that explains a hard-to-picture technology in plain terms, and a console that takes a team from flight plan to reviewed ground composite in one place. Detections are never acted on without a person confirming them.",
+    },
+    screenshots: [
+      "HeliousAI's website: the physics of seeing through canopy, in four steps",
+      "heliousai.com on mobile: the promise and optical sectioning",
+      "Mission console: today's passes, reconstruction runs and composites ready for review",
+      "Flight planner: the synthetic-aperture pattern over the search area",
+      "Composite viewer: the canopy view and the reconstructed ground view, with flagged signatures",
+      "Operator review: confirm or dismiss each detection, with an audit trail",
+      "The console on a laptop, with a composite-ready alert on a phone",
+    ],
+    images: [
+      { src: "/case-studies/defence-ai-mission-console-india/optical-sectioning.webp", alt: "HeliousAI website: The Physics of Advantage, with smart flight patterns, multi-layer reconstruction, signal vs noise integration and actionable output", width: 1440, height: 900 },
+      { src: "/case-studies/defence-ai-mission-console-india/mobile-site.webp", alt: "HeliousAI website on two phones: the hero and the optical sectioning section", width: 1440, height: 900 },
+    ],
+    website: { url: "https://www.heliousai.com", image: { src: "/sites/heliousai.webp", alt: "HeliousAI website home page: See Through The Noise, Real-Time AI Defense Clarity", width: 1440, height: 900 } },
+    ctaHeading: "Need a console your field team will actually use?",
+    placeholder: true,
+  },
+
+  // CityVerse AI: US GovTech startup (cityverseai.com, a product of ATHLYNK Inc.). Product facts
+  // (Themis spec-compliance review, Field Operations, single system of record) from its site, read
+  // 23 Nov 2026. Its own customer list is not repeated here; the screens use a sample city.
+  // TODO(content): confirm scope (website + platform portal), stack, timeline, team, logo consent.
+  {
+    slug: "capital-projects-ai-platform-usa",
+    client: "CityVerse AI",
+    city: "United States",
+    stage: "GovTech startup",
+    industry: "GovTech · capital projects",
+    model: "Build With Us",
+    icon: "building",
+    title: "A Website and Portal for an AI Operating Layer for City Capital Projects",
+    summary:
+      "The cityverseai.com website and the portal for its platform: a capital-projects portfolio, Themis plan review against a city's standard plates, questions answered across specifications with sources, and field reports from a phone.",
+    metrics: [
+      { value: "6", label: "everyday project tasks on one platform" },
+      { value: "2", label: "products: Themis and Field Operations" },
+      { value: "Every", label: "finding cites its sheet or section" },
+    ],
+    tint: "#1c1c1b",
+    // TODO(content): illustrative sample-city data; matches the drawn screens.
+    screen: [
+      { label: "Active projects", value: "18" },
+      { label: "Plan sets in review", value: "5" },
+      { label: "Findings to decide", value: "7" },
+    ],
+    logo: "/logos/cityverse.webp",
+    service: "build-with-us",
+    clientType: "Startup",
+    region: "USA",
+    domain: "Website and platform portal for capital-project teams",
+    techStack: ["Next.js", "TypeScript", "Python (FastAPI)", "PostgreSQL + pgvector", "AWS", "React Native"],
+    duration: "14 weeks",
+    team: "5 people: PM, designer, 2 full-stack devs, AI engineer",
+    about:
+      "CityVerse AI, a product of ATHLYNK Inc., builds the operating layer for capital projects: construction management, AI document extraction, spec-compliance review, field inspections, utility tracking and financial reporting in one system of record for cities and public agencies. Its Themis product reviews plan sets against a city's standard plates and hands each finding to an engineer to accept or overrule, with the sheet and section cited. Field Operations captures photos, voice notes and GPS on site and turns them into reports, so inspectors spend less time on paperwork.",
+    problems: [
+      f("A platform for skeptical buyers.", "Public-works engineers had to see exactly what the AI does, and that they stay in charge, before booking a demo."),
+      f("Six jobs, one product.", "Summaries, specifications, Q&A, pre-review checks, review comments and follow-ups had to feel like one tool."),
+      f("Traceable answers.", "Every finding and answer needed its source: the sheet, the standard plate, the section."),
+      f("Field to office.", "Inspectors in the field needed to capture evidence fast and have it land in the project record."),
+    ],
+    solution:
+      "We built cityverseai.com and the portal for the platform. The website leads with a live-looking Themis review, so visitors see a finding, its citation and the engineer's verdict before they read a word of marketing, with pages for Themis, Field Operations, pricing and accessibility. The portal opens on a portfolio of capital projects by phase, budget and review status. In Themis, each check on a plan set shows the AI's suggested verdict, the evidence with sheet and section, and Accept or Disagree; anything the documents don't settle is marked for the engineer's judgment. A question panel answers across the project's specifications with references, and the field app sends photos, voice notes and locations straight into the project record.",
+    features: [
+      f("Product website", "A live-style Themis review on the home page, product pages, pricing and accessibility."),
+      f("Capital-projects portfolio", "Every project by phase, budget, review cycle and open findings."),
+      f("Themis plan review", "Checks against the city's standard plates, with evidence, citations and the engineer's verdict."),
+      f("Ask the documents", "Answers across specifications and city requirements, each with its source."),
+      f("Field Operations app", "Photos, voice notes and GPS on site, turned into daily reports."),
+      f("Follow-ups", "Status updates and review responses drafted for the team to send."),
+    ],
+    challenges: [
+      f("Trust before the demo", "We put a real-looking review on the home page instead of a claim, with the engineer's Accept or Disagree in view."),
+      f("Citations everywhere", "Every AI output in the portal links to the page it came from, so nothing has to be taken on faith."),
+      f("Accessible for public agencies", "The website and portal were built and tested to WCAG 2.1 AA, which city buyers ask for."),
+    ],
+    approach: [
+      p("Discovery", "Weeks 1–2", "Walked through a real review cycle and a field day with the founders."),
+      p("Website", "Weeks 3–5", "Designed and built the site around the Themis review, with product and pricing pages."),
+      p("Portal", "Weeks 6–12", "Built the portfolio, Themis review, document Q&A and field app sync in two-week sprints."),
+      p("Launch", "Weeks 13–14", "Accessibility testing, analytics and handover."),
+    ],
+    results: {
+      metrics: [
+        { value: "6", label: "everyday project tasks on one platform" },
+        { value: "2", label: "products: Themis and Field Operations" },
+        { value: "Every", label: "finding cites its sheet or section" },
+        { value: "Live", label: "at cityverseai.com" },
+      ],
+      narrative:
+        "CityVerse has a website that shows its AI working, citations and all, before a city engineer has to take anything on trust, and a portal where a plan review, a question across the specs and a site visit all end up in the same project record.",
+    },
+    screenshots: [
+      "CityVerse's Themis page: plan review against a city's standard plates",
+      "cityverseai.com on mobile: the home page and Field Operations",
+      "Portfolio: every capital project by phase, budget and review status",
+      "Themis review: each check with the AI's suggestion, the evidence and the engineer's verdict",
+      "Ask the documents: answers across the specifications, with sources",
+      "Field Operations: a photo, a voice note and the daily report it becomes",
+      "The portal on a laptop, with the field app on a phone",
+    ],
+    images: [
+      { src: "/case-studies/capital-projects-ai-platform-usa/themis.webp", alt: "CityVerse AI website: the Themis product page with a plan review in progress", width: 1440, height: 900 },
+      { src: "/case-studies/capital-projects-ai-platform-usa/mobile-site.webp", alt: "CityVerse AI website on two phones: The Operating Layer for Capital Projects, and Field Operations Without Paperwork", width: 1440, height: 900 },
+    ],
+    website: { url: "https://cityverseai.com", image: { src: "/sites/cityverse.webp", alt: "CityVerse AI website home page: The Operating Layer for Capital Projects", width: 1440, height: 900 } },
+    ctaHeading: "Selling software to cities?",
+    placeholder: true,
+  },
+
+  // Klartext AI · doclarity: Austrian accessible-PDF startup (doclarity.eu). Product and study facts
+  // from its site, read 23 Nov 2026 (the 1-in-17 figure is doclarity's own study, credited as such).
+  // TODO(content): confirm scope (bilingual website + account portal), stack, timeline, team, city
+  // and logo consent (CONTENT_GAPS.md). Documents and figures in the drawn screens are illustrative.
+  {
+    slug: "accessible-pdf-ai-platform-austria",
+    client: "Klartext AI · doclarity",
+    city: "Austria",
+    stage: "AI startup",
+    industry: "AI · digital accessibility",
+    model: "Build With Us",
+    icon: "file-check",
+    title: "A Bilingual Website and Portal for AI-Made Accessible PDFs",
+    summary:
+      "The English and German doclarity.eu website and the account portal for its AI remediation: upload a PDF or Office file, set the rules once, check every suggested tag before download, and see each file's PDF/UA machine check.",
+    metrics: [
+      { value: "2", label: "languages: English and German, site and portal" },
+      { value: "3", label: "contrast levels to fix to: WCAG A, AA or AAA" },
+      { value: "PDF/UA", label: "machine check on every file, shown before download" },
+    ],
+    tint: "#1c4fd6",
+    // TODO(content): illustrative account data; matches the drawn screens.
+    screen: [
+      { label: "Documents this month", value: "46" },
+      { label: "Pages remediated", value: "1,284" },
+      { label: "Passed PDF/UA check", value: "44" },
+    ],
+    logo: "/logos/doclarity.webp",
+    service: "build-with-us",
+    clientType: "Startup",
+    region: "Europe",
+    domain: "Bilingual product website and account portal",
+    techStack: ["Next.js", "TypeScript", "Node.js", "PostgreSQL", "Stripe", "EU hosting"],
+    duration: "12 weeks",
+    team: "4 people: PM, designer, full-stack dev, QA and accessibility tester",
+    about:
+      "Klartext AI makes doclarity, AI-assisted remediation for PDFs. It adds headings, tables, image descriptions, reading order and real form fields, fixes contrast to WCAG A, AA or AAA, and machine-checks the result against PDF/UA-1 or PDF/UA-2, while the user checks every suggestion before downloading. It takes born-digital or scanned PDFs as well as Word, PowerPoint and LibreOffice files, runs in Europe, and works in English and German. Its own study of 193,198 public PDFs from 382 Austrian public institutions found that only 1 in 17 passes the machine check for PDF/UA.",
+    problems: [
+      f("An accessibility product has to be accessible.", "The website and portal would be tested by the very people doclarity serves, with screen readers and high contrast."),
+      f("Two languages from day one.", "Austrian and German institutions needed everything in German, with English alongside."),
+      f("Trust in AI suggestions.", "Users had to see and change every tag before download, not hand their documents to a black box."),
+      f("Clear pricing for institutions.", "Public bodies needed page-based pricing, invoices and a free trial without a card."),
+    ],
+    solution:
+      "We built doclarity.eu in English and German and the account portal behind it. The website shows a tagged sample page you can point at or tab through, each element numbered in reading order, so the product explains itself, with pages for how it works, features, pricing and the Austrian PDF study, plus a contrast switch for visitors who need it. The portal handles sign-up, the free pages and plans, and every document: upload, settings that persist (PDF/UA level, contrast level, alt-text language, page straightening), progress, and the review step where each suggested tag can be changed before download. Each file shows its PDF/UA machine check, and accounts get invoices and usage by page.",
+    features: [
+      f("Bilingual website", "English and German, with a live tagged sample page and a contrast switch."),
+      f("Sign-up, team and usage", "30 free pages without a card, team seats with roles, and pages used by month."),
+      f("Rules set once", "PDF/UA level, contrast level, alt-text language and page straightening remembered per account."),
+      f("Document list", "Every upload with its status, pages and PDF/UA machine check."),
+      f("Review before download", "Each suggested heading, table, figure and field, in reading order, ready to change."),
+      f("Study page", "The Austrian public-PDF study, readable on any device."),
+    ],
+    challenges: [
+      f("Accessible to the people it's for", "Tested by hand with VoiceOver and NVDA, keyboard only, at 200% zoom and in high contrast, on the website and in the portal."),
+      f("German that reads as German", "Native-speaker copy for both languages, not machine translation, with the language set on every page for screen readers."),
+      f("Hosted in Europe", "The portal and document storage stay in an EU region, as institutions require."),
+    ],
+    approach: [
+      p("Discovery", "Weeks 1–2", "Mapped the remediation flow with the founders and the questions institutions ask first."),
+      p("Website", "Weeks 3–5", "Built the bilingual site around the tagged sample page, with pricing and the study."),
+      p("Portal", "Weeks 6–10", "Sign-up, plans, uploads, settings, review and invoices in two-week sprints."),
+      p("Accessibility QA", "Weeks 11–12", "Screen-reader, keyboard, zoom and contrast testing, then fixes and handover."),
+    ],
+    results: {
+      metrics: [
+        { value: "2", label: "languages: English and German, site and portal" },
+        { value: "3", label: "contrast levels to fix to: WCAG A, AA or AAA" },
+        { value: "PDF/UA", label: "machine check on every file, shown before download" },
+        { value: "Live", label: "at doclarity.eu" },
+      ],
+      narrative:
+        "doclarity has a website that demonstrates accessible structure instead of describing it, in both its languages, and a portal where institutions can try it free, set their rules once, and check every AI suggestion before a file leaves their hands.",
+    },
+    screenshots: [
+      "doclarity.eu on mobile: the home page and pricing",
+      "Account home: documents, pages used and each file's PDF/UA check",
+      "Upload settings: PDF/UA level, contrast level and alt-text language, set once",
+      "Review before download: every suggested tag in reading order",
+      "Team and usage: seats, roles and pages used by month",
+      "The website in German on a laptop, with the portal on a phone",
+    ],
+    images: [{ src: "/case-studies/accessible-pdf-ai-platform-austria/mobile-site.webp", alt: "doclarity website on two phones: Accessible PDFs, readable by everyone, and pricing", width: 1440, height: 900 }],
+    website: { url: "https://doclarity.eu", image: { src: "/sites/doclarity.webp", alt: "doclarity website home page: Accessible PDFs. Readable by everyone.", width: 1440, height: 900 } },
+    ctaHeading: "Building a product that has to be accessible?",
+    placeholder: true,
+  },
+
+  // Reagvis Labs: Dehradun deepfake-detection startup (reagvis.com). Product facts (image, video and
+  // audio detection, KYC Guard) from its site, read 23 Nov 2026.
+  // TODO(content): confirm scope (website + detection portal), stack, timeline, team, logo consent.
+  // Every upload, score and verdict in the drawn screens is illustrative.
+  {
+    slug: "deepfake-detection-platform-dehradun",
+    client: "Reagvis Labs",
+    city: "Dehradun, Uttarakhand, India",
+    stage: "AI startup",
+    industry: "AI · deepfake detection",
+    model: "Build With Us",
+    icon: "shield",
+    title: "A Website and Detection Portal That Expose Deepfakes Across Image, Video, Audio and KYC",
+    summary:
+      "The reagvis.com website and the signed-in portal for its detection platform: upload an image, video or voice clip and see the verdict with the evidence behind it, and screen KYC selfies and documents in real time.",
+    metrics: [
+      { value: "4", label: "detection products in one portal" },
+      { value: "Frame by frame", label: "manipulated segments located in video" },
+      { value: "Every", label: "verdict shows its evidence" },
+    ],
+    tint: "#3b2414",
+    // TODO(content): illustrative; matches the drawn screens.
+    screen: [
+      { label: "Files analysed today", value: "312" },
+      { label: "Flagged as manipulated", value: "27" },
+      { label: "KYC checks", value: "148" },
+    ],
+    logo: "/logos/reagvis.webp",
+    service: "build-with-us",
+    clientType: "Startup",
+    region: "India",
+    domain: "Product website and detection portal (web)",
+    techStack: ["React", "TypeScript", "Python (FastAPI)", "PyTorch serving", "PostgreSQL", "AWS"],
+    duration: "12 weeks",
+    team: "4 people: PM, designer, full-stack dev, ML engineer",
+    about:
+      "Reagvis Labs, based in Dehradun, builds AI-driven deepfake detection. Its image detection finds AI-generated content and subtle manipulations; video analysis scrutinises footage frame by frame and localises the manipulated segments; audio verification exposes synthetic or impersonated voices with acoustic analysis; and KYC Guard screens video calls and selfie submissions for deepfakes during identity verification.",
+    problems: [
+      f("Four products, one story.", "Image, video, audio and KYC detection needed one clear site and one place to use them."),
+      f("Verdicts need reasons.", "A bare 'fake' score isn't enough for a compliance team; they need to see where and why."),
+      f("Demo versus production.", "Visitors had to be able to try the tools safely, with sign-in before anything sensitive."),
+      f("KYC in real time.", "Selfie videos and ID documents had to be screened while the customer waits."),
+    ],
+    solution:
+      "We built reagvis.com and the signed-in portal for the platform. The website introduces the four products with a page each and a demo route that explains what is and isn't analysed before sign-in. In the portal, an upload of an image, video or voice clip returns a verdict with its evidence: a heatmap of manipulated regions for images, a timeline of flagged frames for video, and a spectrogram with synthetic-speech markers for audio. KYC Guard takes a selfie video and an ID document, runs liveness and deepfake screening and returns a decision with reasons, and every result can be exported for a case file.",
+    features: [
+      f("Product website", "Image, video, audio and KYC Guard pages, with a clearly labelled demo route."),
+      f("Upload and analyse", "Drop an image, video or voice clip and follow it through analysis."),
+      f("Image evidence", "A heatmap over the regions the model believes were generated or edited."),
+      f("Video timeline", "Flagged frames and segments located along the clip."),
+      f("Audio check", "A spectrogram with synthetic-speech markers and a confidence score."),
+      f("KYC Guard", "Selfie video and ID document screened for liveness and deepfakes, with reasons."),
+    ],
+    challenges: [
+      f("Evidence, not just a score", "Each result shows where the model looked and what it found, so a reviewer can agree or escalate."),
+      f("Big files, fast answers", "Videos upload in chunks and analysis streams progress back, so nobody stares at a spinner."),
+      f("Sensitive data", "Uploads are encrypted, kept only as long as the account sets, and visible only to its own users."),
+    ],
+    approach: [
+      p("Discovery", "Weeks 1–2", "Mapped each product's input, output and the evidence a reviewer needs."),
+      p("Website", "Weeks 3–4", "Built the four product pages and the demo route."),
+      p("Portal", "Weeks 5–10", "Uploads, analysis views, KYC Guard and exports in two-week sprints."),
+      p("Launch", "Weeks 11–12", "Security review, load testing and handover."),
+    ],
+    results: {
+      metrics: [
+        { value: "4", label: "detection products in one portal" },
+        { value: "Frame by frame", label: "manipulated segments located in video" },
+        { value: "Every", label: "verdict shows its evidence" },
+        { value: "Live", label: "at reagvis.com" },
+      ],
+      narrative:
+        "Reagvis has one website for its four detection products and a portal where every verdict comes with the evidence a compliance or newsroom team needs to act on it.",
+    },
+    screenshots: [
+      "Reagvis's website: the KYC Guard identity-verification page",
+      "reagvis.com on mobile: the home page and video deepfake detection",
+      "Portal home: today's uploads across image, video, audio and KYC, with verdicts",
+      "Video analysis: flagged frames and the manipulated segment on the timeline",
+      "Image and audio evidence: a manipulation heatmap and a synthetic-speech spectrogram",
+      "KYC Guard: selfie video and ID document screened while the customer waits",
+      "The portal on a laptop, with a KYC check on a phone",
+    ],
+    images: [
+      { src: "/case-studies/deepfake-detection-platform-dehradun/kyc-guard.webp", alt: "Reagvis website: KYC Guard identity verification with selfie video and ID document upload", width: 1440, height: 900 },
+      { src: "/case-studies/deepfake-detection-platform-dehradun/mobile-site.webp", alt: "Reagvis website on two phones: Exposing Deception, Ensuring Trust, and video deepfake detection", width: 1440, height: 900 },
+    ],
+    website: { url: "https://reagvis.com", image: { src: "/sites/reagvis.webp", alt: "Reagvis website home page: Exposing Deception. Ensuring Trust.", width: 1440, height: 900 } },
+    ctaHeading: "Need AI results people can check?",
+    placeholder: true,
+  },
+
+  // Stylique AI by YOKO (name as Utkarsh asked; the site says "YOKO Styles", yokostyles.com).
+  // Product facts (patterns from text, images or CAD; 50+ body types; DXF export; 3D preview; API and
+  // SDK; beta waitlist) from its site, read 23 Nov 2026. Its "80% less sampling cost" is its own claim.
+  // TODO(content): confirm scope (website + beta app portal), stack, timeline, team, city, logo.
+  {
+    slug: "ai-sewing-pattern-app-india",
+    client: "Stylique AI by YOKO",
+    city: "India",
+    stage: "AI startup, in beta",
+    industry: "Fashion tech · AI",
+    model: "Build With Us",
+    icon: "sparkles",
+    title: "A Website and Beta App for AI-Generated Sewing Patterns",
+    summary:
+      "The yokostyles.com website, its beta waitlist and the app portal: describe a garment or upload a sketch or CAD file, get production-ready pattern pieces, grade them across body types, preview in 3D and export DXF.",
+    metrics: [
+      { value: "3", label: "ways in: text, image or CAD" },
+      { value: "50+", label: "body types to fit a pattern to" },
+      { value: "DXF", label: "export, ready for the factory" },
+    ],
+    tint: "#2a1220",
+    // TODO(content): illustrative; matches the drawn screens.
+    screen: [
+      { label: "Patterns generated", value: "128" },
+      { label: "Graded size sets", value: "41" },
+      { label: "Beta waitlist", value: "640" },
+    ],
+    service: "build-with-us",
+    clientType: "Startup",
+    region: "India",
+    domain: "Product website, beta waitlist and app portal",
+    techStack: ["Next.js", "TypeScript", "Python (FastAPI)", "Three.js", "PostgreSQL", "AWS"],
+    duration: "12 weeks",
+    team: "4 people: PM, designer, full-stack dev, 3D and CAD engineer",
+    about:
+      "Stylique AI by YOKO (YOKO Styles) turns ideas into production-ready sewing patterns with multimodal AI trained on expert datasets. Designers describe a garment, upload a sketch or photo, or bring a CAD file; the app generates the pattern pieces, fits them across more than 50 body types, previews the garment in 3D and exports DXF for manufacturing, with factory grading and marker optimisation. It serves designers and brands, manufacturers, pattern makers, students and fashion-tech platforms, which can embed it through an API and SDK. The product is in beta.",
+    problems: [
+      f("A new category to explain.", "Designers and factories had to understand AI pattern-making, and trust it, from one page."),
+      f("Two audiences.", "Creative teams wanted an app; platforms wanted an API. Both needed a way in."),
+      f("Beta, not launch.", "The site had to build a waitlist and onboard founding users in batches."),
+      f("Factory-ready output.", "Patterns had to leave the app as DXF a cutting room can use, not just pictures."),
+    ],
+    solution:
+      "We built yokostyles.com, the beta waitlist and the app portal. The website explains the product in a single scroll, with the two ways to access it (the design app or the API and SDK), who it's for, and a waitlist that captures role and use case so founding users can be invited in batches. In the app, a designer starts from a text description, an image or a CAD file and gets the pattern pieces laid out with seam allowances and grain lines. They can grade them across body types, check the fit in a 3D preview and export DXF with a marker layout for the factory. Teams share projects, and API customers get keys and usage on the same account.",
+    features: [
+      f("One-scroll website", "The product, the two ways to access it, who it's for, and the waitlist."),
+      f("Beta waitlist", "Role and use-case capture, with batch invitations for founding users."),
+      f("Pattern generator", "Pieces from text, an image or a CAD file, with seams and grain lines."),
+      f("Grading", "Fit the pattern across 50+ body types and check measurements."),
+      f("3D preview", "See the garment drape before a sample is cut."),
+      f("DXF export and API", "Factory-ready files with a marker layout, plus keys for platforms."),
+    ],
+    challenges: [
+      f("Showing, not telling", "We let the patterns, the size grid and the 3D preview carry the website instead of claims."),
+      f("Batch onboarding", "Waitlist entries are scored by role and use case, so each beta batch covers designers, factories and platforms."),
+      f("Big CAD files in a browser", "Uploads stream to the server and the 3D preview loads progressively, so the app stays responsive."),
+    ],
+    approach: [
+      p("Discovery", "Weeks 1–2", "Sessions with the founders and pattern makers on how a pattern moves from idea to factory."),
+      p("Website and waitlist", "Weeks 3–5", "Built the site and the waitlist with batch invitations."),
+      p("App portal", "Weeks 6–11", "Generator, grading, 3D preview, DXF export and API keys in two-week sprints."),
+      p("Beta", "Week 12", "First founding users invited, with feedback built into the app."),
+    ],
+    results: {
+      metrics: [
+        { value: "3", label: "ways in: text, image or CAD" },
+        { value: "50+", label: "body types to fit a pattern to" },
+        { value: "DXF", label: "export, ready for the factory" },
+        { value: "Live", label: "at yokostyles.com" },
+      ],
+      narrative:
+        "Stylique AI by YOKO has a website that explains a new way to make patterns in one scroll, a waitlist that brings in the right founding users, and an app that takes a designer from an idea to a factory-ready DXF.",
+    },
+    screenshots: [
+      "The YOKO Styles website: two ways to access it, and the beta waitlist",
+      "yokostyles.com on mobile: the home page and the AI solution",
+      "Pattern generator: a text brief and a sketch become pattern pieces",
+      "Grading: the pattern fitted across body types, with measurements",
+      "3D preview and DXF export with a marker layout",
+      "Beta waitlist: role, use case and the next invitation batch",
+      "The app on a laptop, with the waitlist on a phone",
+    ],
+    images: [
+      { src: "/case-studies/ai-sewing-pattern-app-india/access.webp", alt: "YOKO Styles website: Two Ways to Access, the full design app and the developer API and SDK, with beta access benefits and a waitlist form", width: 1440, height: 900 },
+      { src: "/case-studies/ai-sewing-pattern-app-india/mobile-site.webp", alt: "YOKO Styles website on two phones: Reinventing Fashion Design with AI, and Our AI Solution", width: 1440, height: 900 },
+    ],
+    website: { url: "https://www.yokostyles.com", image: { src: "/sites/yokostyles.webp", alt: "YOKO Styles website home page: Reinventing Fashion Design with AI", width: 1440, height: 900 } },
+    ctaHeading: "Launching a new kind of product?",
+    placeholder: true,
+  },
+
   // ------------------------------------------------------------------ proposal · CareerNaksha
   // Source: 2023 VAUG proposal. TODO(content): confirm written consent to name this client.
   {

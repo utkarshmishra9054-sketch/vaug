@@ -26,6 +26,11 @@ import { summerhillScreens } from "./summerhill";
 import { physioFitScreens } from "./physiofit";
 import { oreejoyScreens } from "./oreejoy";
 import { theronixScreens } from "./theronix";
+import { heliousScreens } from "./helious";
+import { cityverseScreens } from "./cityverse";
+import { doclarityScreens } from "./doclarity";
+import { reagvisScreens } from "./reagvis";
+import { styliqueScreens } from "./stylique";
 import { propertyBrandScreens } from "./propertyBrand";
 import { reconciliationScreens } from "./reconciliation";
 import { rentalRescueScreens } from "./rentalRescue";
@@ -40,6 +45,11 @@ export const SCREENS: Record<string, Screen[]> = {
   "patient-whatsapp-voice-agent-manchester": summerhillScreens,
   "gait-analysis-portal-gandhinagar": oreejoyScreens,
   "nhs-discharge-platform-england": theronixScreens,
+  "defence-ai-mission-console-india": heliousScreens,
+  "capital-projects-ai-platform-usa": cityverseScreens,
+  "accessible-pdf-ai-platform-austria": doclarityScreens,
+  "deepfake-detection-platform-dehradun": reagvisScreens,
+  "ai-sewing-pattern-app-india": styliqueScreens,
   "family-office-property-brand-dubai": propertyBrandScreens,
   "rental-prototype-rescue-lisbon": rentalRescueScreens,
   "modest-fashion-marketplace-abu-dhabi": marketplaceScreens,
