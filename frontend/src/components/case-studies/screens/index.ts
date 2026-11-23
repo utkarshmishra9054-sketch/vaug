@@ -33,6 +33,7 @@ import { reagvisScreens } from "./reagvis";
 import { styliqueScreens } from "./stylique";
 import { alkamyScreens } from "./alkamy";
 import { jolScreens } from "./jolenergy";
+import { earthsprintScreens } from "./earthsprint";
 import { propertyBrandScreens } from "./propertyBrand";
 import { reconciliationScreens } from "./reconciliation";
 import { rentalRescueScreens } from "./rentalRescue";
@@ -54,6 +55,7 @@ export const SCREENS: Record<string, Screen[]> = {
   "ai-sewing-pattern-app-india": styliqueScreens,
   "wastewater-carbon-removal-platform-india": alkamyScreens,
   "battery-recycling-portal-vellore": jolScreens,
+  "rice-husk-materials-portal-nashik": earthsprintScreens,
   "family-office-property-brand-dubai": propertyBrandScreens,
   "rental-prototype-rescue-lisbon": rentalRescueScreens,
   "modest-fashion-marketplace-abu-dhabi": marketplaceScreens,

@@ -10,6 +10,7 @@ export const logoMetrics: Record<string, { ratio: number; ink: number }> = {
   "/logos/cityverse.webp": { ratio: 4.383, ink: 0.166 },
   "/logos/devgun-packers-movers.webp": { ratio: 3.725, ink: 0.423 },
   "/logos/doclarity.webp": { ratio: 3.575, ink: 0.214 },
+  "/logos/earthsprint.webp": { ratio: 3.381, ink: 0.177 },
   "/logos/egs-rotterdam.webp": { ratio: 1.975, ink: 0.367 },
   "/logos/enjoybcn.webp": { ratio: 6.857, ink: 0.158 },
   "/logos/epilogic.webp": { ratio: 3.917, ink: 0.187 },

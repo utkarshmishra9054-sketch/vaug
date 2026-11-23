@@ -1295,6 +1295,98 @@ export const caseStudies: CaseStudyDetail[] = [
     placeholder: true,
   },
 
+  // EarthSprint Solutions: Nashik materials startup (earthsprintsolutions.com). Utkarsh confirmed VAUG
+  // built its current website and portal (the older WordPress site was another agency's and is not
+  // referenced). Facts from the site, read 23 Nov 2026. TODO(content): confirm portal scope, stack,
+  // timeline, team and logo consent (CONTENT_GAPS.md). Enquiries, sites and areas are illustrative.
+  {
+    slug: "rice-husk-materials-portal-nashik",
+    client: "EarthSprint Solutions",
+    city: "Nashik, Maharashtra, India",
+    stage: "Climate-tech startup",
+    industry: "Climate · low-carbon materials",
+    model: "Build With Us",
+    icon: "hammer",
+    title: "A Website and Portal for Floor Coatings Made From Rice Husk",
+    summary:
+      "The current earthsprintsolutions.com website and the portal behind it: sample-panel and call-back requests, dispatch tracking, pilot floors and silica data-sheet requests, for a company turning raw rice husk into industrial materials.",
+    metrics: [
+      { value: "4", label: "markets from one raw material, on one site" },
+      { value: "2", label: "ways to start: a sample panel or a call back" },
+      { value: "1", label: "portal from enquiry to pilot floor" },
+    ],
+    tint: "#1c1c1c",
+    // TODO(content): illustrative; matches the drawn screens.
+    screen: [
+      { label: "Open enquiries", value: "14" },
+      { label: "Sample panels out", value: "6" },
+      { label: "Pilot floors", value: "3" },
+    ],
+    logo: "/logos/earthsprint.webp",
+    service: "build-with-us",
+    clientType: "Startup",
+    region: "India",
+    domain: "Product website and enquiry-to-pilot portal",
+    techStack: ["HTML/CSS + vanilla JS", "Node.js", "PostgreSQL", "WhatsApp Business API", "Cloudflare"],
+    duration: "8 weeks",
+    team: "3 people: PM and designer, full-stack dev, QA",
+    about:
+      "EarthSprint Solutions, based in Nashik, makes industrial materials from raw rice husk. Its proprietary low-temperature reactor turns husk into silica of up to 99% SiO₂ with ultra-low alkali, which goes into KisanKrete, a mineral floor coating for industrial floors where epoxy fails under heat, chemical spills or slab moisture. A low-carbon cement alternative (KisanKrete Binder) is in development, and the silica is being explored as a feedstock for battery anode materials.",
+    problems: [
+      f("One raw material, four markets.", "Coatings, silica, a binder and battery anodes each needed their own story without confusing buyers."),
+      f("Industrial buyers want proof.", "Plant managers ask for a sample panel or a call before they consider a pilot floor."),
+      f("Enquiries everywhere.", "Requests came by email, phone and WhatsApp, with no record of what was sent or promised."),
+      f("Pilots need follow-up.", "Each pilot floor has a site, a substrate and tests to schedule."),
+    ],
+    solution:
+      "We built the current earthsprintsolutions.com and the portal behind it. The website leads with KisanKrete, the floor coating for floors where epoxy fails, then explains the silica, the binder and the battery-anode work, each on its own page, with the husk-to-floor process in four steps. Every page ends with two ways to start: request a sample panel, or leave a number for a call back on the phone or WhatsApp. In the portal, each request lands with the product of interest; sample panels are tracked to delivery, calls are logged, and promising leads become pilot floors with the site, area, substrate and the tests planned. Silica data-sheet requests are handled in the same place.",
+    features: [
+      f("Product-led website", "KisanKrete first, then silica, the binder and battery anodes, each with its own page."),
+      f("Sample panels", "Requests with colour and address, tracked from dispatch to delivery."),
+      f("Call backs", "Number, product and WhatsApp preference, logged with the outcome."),
+      f("Pilot floors", "Site, area, substrate, the problem with the current floor, and the tests planned."),
+      f("Data-sheet requests", "Silica data sheets sent and recorded per buyer."),
+      f("One enquiry record", "Everything a buyer asked for and received, in one place."),
+    ],
+    challenges: [
+      f("Technical without jargon", "The site explains why mineral coatings survive heat and moisture in plain words, with the lab results left for the data sheet."),
+      f("WhatsApp-first buyers", "Call-back requests can choose WhatsApp, and the team replies from the same record."),
+      f("Fast on site", "Light pages that load quickly for plant managers on mobile data."),
+    ],
+    approach: [
+      p("Discovery", "Weeks 1–2", "Mapped each product's buyer and how a pilot floor gets agreed."),
+      p("Website", "Weeks 3–5", "Built the product pages, the husk-to-floor story and the request forms."),
+      p("Portal", "Weeks 6–7", "Requests, sample tracking, pilots and data sheets."),
+      p("Launch", "Week 8", "Content, analytics and handover."),
+    ],
+    results: {
+      metrics: [
+        { value: "4", label: "markets from one raw material, on one site" },
+        { value: "2", label: "ways to start: a sample panel or a call back" },
+        { value: "1", label: "portal from enquiry to pilot floor" },
+        { value: "Live", label: "at earthsprintsolutions.com" },
+      ],
+      narrative:
+        "EarthSprint has a website that makes a material made from rice husk credible to industrial buyers, and a portal that keeps every sample, call and pilot floor in one record.",
+    },
+    screenshots: [
+      "EarthSprint's website: KisanKrete, the mineral floor coating for floors where epoxy fails",
+      "earthsprintsolutions.com on mobile: the home page and rice husk silica",
+      "Enquiries: sample panels, call backs and data sheets, by product",
+      "Sample panels: colour, address and delivery status",
+      "Pilot floors: site, area, substrate and the tests planned",
+      "Silica data-sheet requests, per buyer",
+      "The website on a laptop, with a WhatsApp call back on a phone",
+    ],
+    images: [
+      { src: "/case-studies/rice-husk-materials-portal-nashik/inner.webp", alt: "EarthSprint website: KisanKrete, a mineral floor coating for floors where epoxy fails, with sample panels", width: 1440, height: 900 },
+      { src: "/case-studies/rice-husk-materials-portal-nashik/mobile-site.webp", alt: "EarthSprint website on two phones: the home page and Silica from raw rice husk", width: 1440, height: 900 },
+    ],
+    website: { url: "https://earthsprintsolutions.com", image: { src: "/sites/earthsprint.webp", alt: "EarthSprint website home page: Floor coatings made with our own rice husk silica", width: 1440, height: 900 } },
+    ctaHeading: "Selling a new material to industrial buyers?",
+    placeholder: true,
+  },
+
   // ------------------------------------------------------------------ proposal · CareerNaksha
   // Source: 2023 VAUG proposal. TODO(content): confirm written consent to name this client.
   {
