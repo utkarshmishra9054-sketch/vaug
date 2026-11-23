@@ -35,6 +35,7 @@ import { alkamyScreens } from "./alkamy";
 import { jolScreens } from "./jolenergy";
 import { earthsprintScreens } from "./earthsprint";
 import { thermalDawnScreens } from "./thermaldawn";
+import { aerosearchScreens } from "./aerosearch";
 import { tennsaScreens } from "./tennsa";
 import { volkcellScreens } from "./volkcell";
 import { vunapayScreens } from "./vunapay";
@@ -64,6 +65,7 @@ export const SCREENS: Record<string, Screen[]> = {
   "ai-microscopy-image-analysis-edinburgh": volkcellScreens,
   "smallholder-produce-payments-nairobi": vunapayScreens,
   "supply-chain-business-ai-south-africa": tennsaScreens,
+  "autonomous-landmine-detection-india": aerosearchScreens,
   "family-office-property-brand-dubai": propertyBrandScreens,
   "rental-prototype-rescue-lisbon": rentalRescueScreens,
   "modest-fashion-marketplace-abu-dhabi": marketplaceScreens,

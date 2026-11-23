@@ -1754,6 +1754,98 @@ export const caseStudies: CaseStudyDetail[] = [
     placeholder: true,
   },
 
+  // Aerosearch Technologies: Indian defence-autonomy startup (aerosearchtech.com). Facts from its site,
+  // read 23 Nov 2026: autonomous swarming, sensor fusion, ClearLandMine (search, detect, map). Its landmine
+  // statistics, supporters and contact details are not repeated. TODO(content): confirm city, scope
+  // (website confirmed; the console is assumed), stack, timeline, team, logo consent.
+  {
+    slug: "autonomous-landmine-detection-india",
+    client: "Aerosearch Technologies",
+    city: "India",
+    stage: "Defence-tech startup",
+    industry: "Defence · autonomy",
+    model: "Build With Us",
+    icon: "search",
+    title: "A Website and Survey Console for Finding Landmines From the Air",
+    summary:
+      "The aerosearchtech.com website and a survey console for ClearLandMine, its first programme: plan a search the aircraft fly first, read three sensors as one picture, have an analyst decide every candidate, and hand a marked map to the team on the ground.",
+    metrics: [
+      { value: "3", label: "steps from search to a marked map: search, detect, map" },
+      { value: "0", label: "people sent onto the ground for the search" },
+      { value: "Every", label: "candidate decided by an analyst, not the model" },
+    ],
+    tint: "#0a0a09",
+    // TODO(content): illustrative; matches the drawn screens.
+    screen: [
+      { label: "Survey area", value: "38 ha" },
+      { label: "Contacts where sensors agree", value: "20" },
+      { label: "Marked for the team", value: "17" },
+    ],
+    logo: "/logos/aerosearch.webp",
+    service: "build-with-us",
+    clientType: "Startup",
+    region: "India",
+    domain: "Website, search planning, sensor fusion review and field maps",
+    techStack: ["Next.js", "TypeScript", "Three.js", "Python", "PostGIS", "MapLibre"],
+    duration: "14 weeks",
+    team: "5 people: PM, designer, two full-stack devs, GIS engineer",
+    about:
+      "Aerosearch Technologies develops hardware-integrated autonomy for contested environments in India, fusing raw signals from several sensors into real-time threat intelligence. Its first application is ClearLandMine: aircraft search contaminated ground first, so no one has to walk it, a model reads what the eye misses and proposes candidates, and the result is a map handed to the team that acts on it. Its technology covers coordinated multi-aircraft coverage and sensor fusion, for the armed services and for border, port, industrial and agricultural security.",
+    problems: [
+      f("A hard idea to explain.", "Autonomy, sensor fusion and threat prediction had to make sense to defence partners, mine action operators, researchers and funders alike."),
+      f("Three sensors, three opinions.", "Each sensor sees the ground differently; a contact that is ambiguous on one can be clear in combination."),
+      f("A model must not have the last word.", "Detections are candidates, not conclusions, so a person has to decide each one."),
+      f("The output has to leave the screen.", "What matters is a map the clearance team can take into the field."),
+    ],
+    solution:
+      "We built aerosearchtech.com and the ClearLandMine survey console. The website explains the technology and the mission in plain terms, with an illustrated formation, the three-sensor view and the search, detect and map steps, and routes partners to the team. The console follows the same three steps. A search plan sets the boundary, the formation and the sorties, with checks before each launch. Detection shows every sensor's contacts on one map, marked by the sensor that called them, and queues the ones where two or more agree. An analyst reviews each candidate against all three sensor views and marks it for the team, sends it for another pass, or dismisses it with a reason. The marked map then goes to the clearance team as a field PDF, KML or GeoJSON, with every decision logged.",
+    features: [
+      f("Mission website", "Technology, approach, ClearLandMine and the mission, with partner enquiries."),
+      f("Search planning", "Boundary, formation, lanes and sorties, with pre-launch checks."),
+      f("Sensor fusion view", "All three sensors on one map, with agreeing contacts queued first."),
+      f("Analyst review", "Each candidate against every sensor view, decided by a person and logged."),
+      f("Field maps", "Marked contacts exported as PDF, KML or GeoJSON for the team."),
+      f("Re-fly queue", "Contacts that need another pass go straight into the next sortie plan."),
+    ],
+    challenges: [
+      f("Candidates, not conclusions", "The console never marks ground on its own; a person decides every contact."),
+      f("Readable in combination", "Contacts show which sensors agree, so ambiguity is visible, not hidden."),
+      f("Sensitive by default", "Sample sites only on the website and in demos; real survey data stays in the console."),
+    ],
+    approach: [
+      p("Discovery", "Weeks 1–2", "Mapped how a survey is planned, flown, reviewed and handed over."),
+      p("Website", "Weeks 3–6", "Built the site and its illustrations of the formation and the three-sensor view."),
+      p("Console", "Weeks 7–12", "Search planning, the fusion map, analyst review and decision logs."),
+      p("Field maps", "Weeks 13–14", "Exports for the clearance team and the re-fly queue."),
+    ],
+    results: {
+      metrics: [
+        { value: "3", label: "steps from search to a marked map: search, detect, map" },
+        { value: "0", label: "people sent onto the ground for the search" },
+        { value: "Every", label: "candidate decided by an analyst, not the model" },
+        { value: "Live", label: "at aerosearchtech.com" },
+      ],
+      narrative:
+        "Aerosearch has a website that explains autonomous detection to every kind of partner it needs, and a console that turns three sensors' readings into a map a team can act on, with a person deciding every mark.",
+    },
+    screenshots: [
+      "Aerosearch's website: intelligence for the missions that matter",
+      "aerosearchtech.com on mobile: the home page and ClearLandMine",
+      "Search plan: the boundary, the formation and the sorties, flown before anyone walks in",
+      "Detect: three sensors over the same ground, with agreeing contacts queued",
+      "Review: an analyst decides each candidate against every sensor view",
+      "Map: marked contacts handed to the clearance team",
+      "The website on a laptop, with the field map on a phone",
+    ],
+    images: [
+      { src: "/case-studies/autonomous-landmine-detection-india/inner.webp", alt: "Aerosearch website: Intelligence for the missions that matter, with an illustrated aircraft formation", width: 1440, height: 900 },
+      { src: "/case-studies/autonomous-landmine-detection-india/mobile-site.webp", alt: "Aerosearch website on two phones: Autonomous threat prediction, and ClearLandMine", width: 1440, height: 900 },
+    ],
+    website: { url: "https://aerosearchtech.com", image: { src: "/sites/aerosearch.webp", alt: "Aerosearch Technologies website home page: Autonomous threat prediction.", width: 1440, height: 900 } },
+    ctaHeading: "Building defence or safety tech that people have to trust?",
+    placeholder: true,
+  },
+
   // ------------------------------------------------------------------ proposal · CareerNaksha
   // Source: 2023 VAUG proposal. TODO(content): confirm written consent to name this client.
   {

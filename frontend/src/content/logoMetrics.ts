@@ -2,6 +2,7 @@
 
 /** Per logo: width / height, and dark-pixel coverage of its box (0-1). */
 export const logoMetrics: Record<string, { ratio: number; ink: number }> = {
+  "/logos/aerosearch.webp": { ratio: 12.620, ink: 0.096 },
   "/logos/alkamy.webp": { ratio: 2.925, ink: 0.085 },
   "/logos/amity-university.webp": { ratio: 3.600, ink: 0.227 },
   "/logos/brandless.webp": { ratio: 1.250, ink: 0.178 },
