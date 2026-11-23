@@ -295,7 +295,7 @@ export const about = {
   officesSubtitle: "Remote-first, with bases in three countries and clients across the UK, Europe, the UAE, India and Canada.",
   /** Points on the offices map. `hub` is where the connecting arcs start. */
   mapPins: [
-    { label: "Bengaluru", lon: 77.6, lat: 13, kind: "office", hub: true },
+    { label: "India", lon: 78.5, lat: 21, kind: "office", hub: true },
     { label: "London", lon: -0.1, lat: 51.5, kind: "office" },
     { label: "New York", lon: -74, lat: 40.7, kind: "office" },
     { label: "Amsterdam", lon: 4.9, lat: 52.4, kind: "client" },

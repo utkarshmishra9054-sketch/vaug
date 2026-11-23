@@ -130,12 +130,12 @@ export const contactPage: ContactPageContent = {
     legendClient: "Client region",
   },
   officeExtras: [
-    { entity: "VAUG India", city: "Bengaluru", timeZone: "Asia/Kolkata", role: "Engineering hub" },
+    { entity: "VAUG India", city: "India", timeZone: "Asia/Kolkata", role: "Engineering hub" },
     { entity: "VAUG UK", city: "London", timeZone: "Europe/London", role: "UK & Europe clients" },
     { entity: "VAUG USA", city: "New York", timeZone: "America/New_York", role: "North America" },
   ],
   pins: [
-    { label: "Bengaluru", kind: "office", lon: 77.6, lat: 12.97 },
+    { label: "India", kind: "office", lon: 78.5, lat: 21 },
     { label: "London", kind: "office", lon: -0.13, lat: 51.5 },
     { label: "New York", kind: "office", lon: -74, lat: 40.7 },
     { label: "Europe", kind: "client", lon: 10, lat: 48 },

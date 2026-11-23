@@ -13,7 +13,7 @@ export const site: SiteConfig = {
   email: "hello@vaug.in",
   phone: "",
   offices: [
-    { entity: "VAUG India", flag: "🇮🇳", address: "Bengaluru, Karnataka, India", phone: "", email: "hello@vaug.in" },
+    { entity: "VAUG India", flag: "🇮🇳", address: "India", phone: "", email: "hello@vaug.in" },
     { entity: "VAUG UK", flag: "🇬🇧", address: "London, United Kingdom", phone: "", email: "hello@vaug.in" },
     { entity: "VAUG USA", flag: "🇺🇸", address: "New York, NY, United States", phone: "", email: "hello@vaug.in" },
   ],

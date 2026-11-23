@@ -15,7 +15,12 @@ const link = (label: string, path: string, note?: string) => `- [${label}](${abs
 
 export async function buildLlmsTxt(): Promise<string> {
   const studies = await getCaseStudies();
-  const offices = site.offices.map((o) => o.address.split(",")[0].trim() + ` (${o.address.split(",").at(-1)?.trim()})`).join(", ");
+  const offices = site.offices
+    .map((o) => {
+      const parts = o.address.split(",").map((p) => p.trim());
+      return parts.length > 1 ? `${parts[0]} (${parts.at(-1)})` : parts[0];
+    })
+    .join(", ");
 
   const lines = [
     `# ${site.name}`,

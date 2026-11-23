@@ -77,11 +77,11 @@ function arc(a: MapPin, b: MapPin) {
 
 /** Which pins to connect, by label. */
 const links: [string, string][] = [
-  ["Bengaluru", "London"],
-  ["Bengaluru", "UAE"],
+  ["India", "London"],
+  ["India", "UAE"],
   ["London", "Europe"],
   ["New York", "London"],
-  ["Bengaluru", "Europe"],
+  ["India", "Europe"],
 ];
 
 export function WorldMap({ pins }: { pins: MapPin[] }) {

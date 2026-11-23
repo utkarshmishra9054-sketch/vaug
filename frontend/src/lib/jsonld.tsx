@@ -29,7 +29,7 @@ function postalAddress(address: string): Json {
   const parts = address.split(",").map((p) => p.trim());
   return {
     "@type": "PostalAddress",
-    addressLocality: parts[0],
+    ...(parts.length > 1 ? { addressLocality: parts[0] } : {}),
     ...(parts.length > 2 ? { addressRegion: parts[1] } : {}),
     addressCountry: parts[parts.length - 1],
   };
