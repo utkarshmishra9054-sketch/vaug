@@ -2030,6 +2030,98 @@ export const caseStudies: CaseStudyDetail[] = [
     placeholder: true,
   },
 
+  // ND Lens: UK health-tech startup for ADHD assessment (ndlens.com, ND Lens Ltd, Harlow Innovation Park).
+  // Facts from its site, read 23 Nov 2026. Its time-saving and compliance claims, waiting-list figures,
+  // team and funding are not repeated. TODO(content): confirm scope (website and demo bookings confirmed;
+  // the platform screens are assumed), stack, timeline, team, logo consent.
+  {
+    slug: "adhd-assessment-platform-harlow",
+    client: "ND Lens",
+    city: "Harlow, Essex, UK",
+    stage: "Health-tech startup",
+    industry: "Healthcare · ADHD assessment",
+    model: "Build With Us",
+    icon: "heart",
+    title: "A Website and Assessment Platform That Drafts ADHD Reports for Clinicians to Sign",
+    summary:
+      "The ndlens.com website with demo booking, and the assessment platform behind it: a voice-enabled questionnaire patients finish at their own pace, AI-drafted reports matched to DSM-5 and ICD-11 criteria with the evidence cited, and a clinician who reviews, edits and signs.",
+    metrics: [
+      { value: "2", label: "diagnostic frameworks each draft is matched to: DSM-5, ICD-11" },
+      { value: "Every", label: "finding cites the patient's own answers" },
+      { value: "1", label: "clinician signs every report; the AI only drafts" },
+    ],
+    tint: "#16132b",
+    // TODO(content): illustrative; matches the drawn screens.
+    screen: [
+      { label: "Active assessments", value: "14" },
+      { label: "Drafts to review", value: "3" },
+      { label: "Signed off this month", value: "11" },
+    ],
+    logo: "/logos/ndlens.webp",
+    service: "build-with-us",
+    clientType: "Startup",
+    region: "UK",
+    domain: "Website, demo booking, patient questionnaire, clinician dashboard and report review",
+    techStack: ["Next.js", "TypeScript", "Python", "PostgreSQL", "Speech-to-text", "UK-hosted cloud"],
+    duration: "16 weeks",
+    team: "5 people: PM, designer, two full-stack devs, ML engineer",
+    about:
+      "ND Lens builds an AI-powered ADHD clinical assessment platform for NHS and private clinics, from the Harlow Innovation Park in Essex. Patients complete a mobile-friendly, voice-enabled questionnaire at their own pace, with read-aloud, transcription and save-and-resume. The platform matches their responses against DSM-5 and ICD-11 criteria and generates a draft report with evidence citations, which a clinician reviews and signs off, so clinicians spend their time with the patient rather than on paperwork.",
+    problems: [
+      f("Report-writing eats clinic time.", "Clinicians write long assessment reports from scratch while waiting lists grow."),
+      f("Questionnaires that shut people out.", "Long forms are hard for the very people being assessed for attention difficulties."),
+      f("AI has to show its working.", "A draft is only useful if every finding points to what the patient actually said."),
+      f("A clinician must decide.", "The diagnosis and the signature stay with a qualified clinician."),
+    ],
+    solution:
+      "We built ndlens.com, with demo booking for NHS services and private clinics, and the assessment platform. Patients get a questionnaire they can finish on a phone, in their own time, with each question read aloud and the option to answer by voice and edit the transcript. Clinicians see every assessment on a dashboard, from invited to signed off, with drafts waiting for review. Each draft report lists the DSM-5 criteria by code with a suggested reading and the answers it rests on, adds the ICD-11 view, and is clearly marked as a draft. The clinician edits it with every change kept, adds the interview, works through a checklist and signs.",
+    features: [
+      f("Website and demo booking", "How it works, the platform and a booking flow for clinics."),
+      f("Accessible questionnaire", "Read-aloud, voice answers with transcripts, progress and save-and-resume."),
+      f("Clinician dashboard", "Assessments, patient progress and drafts in one place."),
+      f("Criteria mapping", "Each DSM-5 criterion with a suggested reading, plus the ICD-11 view."),
+      f("Cited evidence", "Every finding links to the patient's own answers."),
+      f("Review and sign-off", "Tracked edits, interview notes, a checklist and the clinician's signature."),
+    ],
+    challenges: [
+      f("Drafts, not decisions", "Every AI output is labelled a draft, and nothing is final until a clinician signs."),
+      f("Accessible by design", "Large targets, read-aloud and voice input for people who find forms hard."),
+      f("Patient data handled carefully", "Patients appear as IDs in the clinician views, and demos use sample patients only."),
+    ],
+    approach: [
+      p("Discovery", "Weeks 1–3", "Mapped a clinic's assessment pathway from referral to signed report with the clinical lead."),
+      p("Website", "Weeks 4–6", "Built the site and the demo booking flow."),
+      p("Questionnaire", "Weeks 7–10", "Accessible questionnaire with read-aloud, voice answers and save-and-resume."),
+      p("Reports", "Weeks 11–16", "Criteria mapping, cited drafts, the dashboard and clinician sign-off."),
+    ],
+    results: {
+      metrics: [
+        { value: "2", label: "diagnostic frameworks each draft is matched to: DSM-5, ICD-11" },
+        { value: "Every", label: "finding cites the patient's own answers" },
+        { value: "1", label: "clinician signs every report; the AI only drafts" },
+        { value: "Live", label: "at ndlens.com" },
+      ],
+      narrative:
+        "ND Lens has a website that explains its platform to NHS services and private clinics and books demos, and a platform where patients can complete an assessment their own way and clinicians start from a cited draft rather than a blank page, with the decision always theirs.",
+    },
+    screenshots: [
+      "ND Lens' clinician dashboard and patient experience",
+      "ndlens.com on mobile: the home page and the patient experience",
+      "Questionnaire: at the patient's own pace, read aloud, answered by voice",
+      "Clinician dashboard: every assessment from invited to signed off",
+      "Draft report: DSM-5 criteria by code, each with the answers it rests on",
+      "Review and sign-off: tracked edits, a checklist and the clinician's signature",
+      "The website on a laptop, with demo booking on a phone",
+    ],
+    images: [
+      { src: "/case-studies/adhd-assessment-platform-harlow/inner.webp", alt: "ND Lens website: Streamlined clinical workflow and accessible assessment experience", width: 1440, height: 900 },
+      { src: "/case-studies/adhd-assessment-platform-harlow/mobile-site.webp", alt: "ND Lens website on two phones: Clearer diagnoses, and the accessible assessment experience", width: 1440, height: 900 },
+    ],
+    website: { url: "https://ndlens.com", image: { src: "/sites/ndlens.webp", alt: "ND Lens website home page: Clearer diagnoses. Faster than ever.", width: 1440, height: 900 } },
+    ctaHeading: "Building clinical software that has to be trusted?",
+    placeholder: true,
+  },
+
   // ------------------------------------------------------------------ proposal · CareerNaksha
   // Source: 2023 VAUG proposal. TODO(content): confirm written consent to name this client.
   {

@@ -36,6 +36,7 @@ import { jolScreens } from "./jolenergy";
 import { earthsprintScreens } from "./earthsprint";
 import { thermalDawnScreens } from "./thermaldawn";
 import { aerosearchScreens } from "./aerosearch";
+import { ndlensScreens } from "./ndlens";
 import { stelxScreens } from "./stelx";
 import { swrnScreens } from "./swrn";
 import { tennsaScreens } from "./tennsa";
@@ -70,6 +71,7 @@ export const SCREENS: Record<string, Screen[]> = {
   "autonomous-landmine-detection-india": aerosearchScreens,
   "gps-denied-drone-robotics-varanasi": stelxScreens,
   "indigenous-flight-controller-india": swrnScreens,
+  "adhd-assessment-platform-harlow": ndlensScreens,
   "family-office-property-brand-dubai": propertyBrandScreens,
   "rental-prototype-rescue-lisbon": rentalRescueScreens,
   "modest-fashion-marketplace-abu-dhabi": marketplaceScreens,

@@ -24,6 +24,7 @@ export const logoMetrics: Record<string, { ratio: number; ink: number }> = {
   "/logos/jolenergy.webp": { ratio: 4.138, ink: 0.217 },
   "/logos/la-boutique-real-estate.webp": { ratio: 2.150, ink: 0.069 },
   "/logos/local-agency-co.webp": { ratio: 4.800, ink: 0.189 },
+  "/logos/ndlens.webp": { ratio: 4.156, ink: 0.163 },
   "/logos/ntech.webp": { ratio: 2.958, ink: 0.144 },
   "/logos/onsi.webp": { ratio: 3.192, ink: 0.596 },
   "/logos/oreejoy.webp": { ratio: 3.815, ink: 0.096 },
