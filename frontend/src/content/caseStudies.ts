@@ -1938,6 +1938,98 @@ export const caseStudies: CaseStudyDetail[] = [
     placeholder: true,
   },
 
+  // SWRN Systems: Indian defence-electronics startup building indigenous flight controllers
+  // (swrnsystems.in). Facts from its site, read 23 Nov 2026. Its recognition (competition results),
+  // compliance claims and founder details are not repeated; it has no logo file, so none is shown.
+  // TODO(content): confirm city, scope (website confirmed; the ground software is assumed), stack,
+  // timeline, team, and a logo.
+  {
+    slug: "indigenous-flight-controller-india",
+    client: "SWRN Systems",
+    city: "India",
+    stage: "Defence-tech startup",
+    industry: "Defence · flight control",
+    model: "Build With Us",
+    icon: "layers",
+    title: "A Website and Ground Software for an Indigenous Flight Controller",
+    summary:
+      "The swrnsystems.in website for SWRN's defence flight-control platform, and the ground software that goes with the board: setup, a live view of its redundant sensors, loop tuning and flight logs.",
+    metrics: [
+      { value: "4", label: "jobs in one ground app: setup, sensors, tuning, logs" },
+      { value: "Live", label: "view of sensor redundancy, with voted-out sensors flagged" },
+      { value: "1", label: "site that takes a defence partner from product to contact" },
+    ],
+    tint: "#0b0b0b",
+    // TODO(content): illustrative; matches the drawn screens.
+    screen: [
+      { label: "Sensors healthy", value: "6 / 6" },
+      { label: "Overshoot after tuning", value: "1%" },
+      { label: "Test flight", value: "14" },
+    ],
+    service: "build-with-us",
+    clientType: "Startup",
+    region: "India",
+    domain: "Website and flight-controller ground software",
+    techStack: ["React", "TypeScript", "Tailwind CSS", "Tauri", "Rust", "MAVLink"],
+    duration: "10 weeks",
+    team: "4 people: PM, designer, front-end dev, embedded-software dev",
+    about:
+      "SWRN Systems builds indigenous flight-control systems for Indian defence and aerospace, from embedded hardware to the software that brings it together. Its product is a rugged, deployment-ready flight-control platform that pairs indigenous hardware, including a 700 MHz microcontroller and a sensor suite with built-in redundancy, with its own software. It works with people and organisations pushing the boundaries of Indian aerospace and defence technology.",
+    problems: [
+      f("A serious product for a serious buyer.", "Defence partners needed to see who SWRN is, what it builds and how to reach it, without noise."),
+      f("Redundancy you can't see.", "A board with redundant sensors needs software that shows which ones are in use, and when one is dropped."),
+      f("Tuning by feel.", "Loop gains had to be set against a measured response, not guesswork."),
+      f("Every test flight is evidence.", "Logs had to put altitude and events on one timeline that anyone can read."),
+    ],
+    solution:
+      "We built swrnsystems.in and the ground software for the flight controller. The website tells the story in seven short sections, from who SWRN is and what it creates to the product and a direct contact for partners, with flight footage and a wireframe of the board. The ground software connects to the board for setup and calibration, shows every sensor's health, and shows the redundancy at work: when one IMU disagrees with the others it is voted out, and the event is logged while the flight carries on. Tuning compares the step response before and after a change before the gains are written, and each flight log lays altitude and events on one timeline.",
+    features: [
+      f("Product website", "Who SWRN is, what it builds, the product and a direct contact."),
+      f("Board setup", "Sensors, calibration and frame, saved to the board."),
+      f("Redundancy view", "Each IMU's reading, which are voting, and when one is dropped."),
+      f("Loop tuning", "Step response before and after, then write the gains."),
+      f("Flight logs", "Altitude and every event on one timeline, ready to download."),
+      f("Firmware", "Update the board from the same app."),
+    ],
+    challenges: [
+      f("Readable under pressure", "Dark, high-contrast screens and plain event wording for the bench and the field."),
+      f("Nothing hidden", "A dropped sensor is shown and logged, never silently swapped."),
+      f("Say less, show more", "The website keeps claims to what the product is, with footage and the board itself."),
+    ],
+    approach: [
+      p("Discovery", "Weeks 1–2", "Learned the board, its sensors and how test flights are run and reviewed."),
+      p("Website", "Weeks 3–5", "Built the site, its sections and the partner contact."),
+      p("Ground software", "Weeks 6–9", "Setup, the redundancy view, tuning and flight logs."),
+      p("Hand-over", "Week 10", "Firmware updates, docs and hand-over to the team."),
+    ],
+    results: {
+      metrics: [
+        { value: "4", label: "jobs in one ground app: setup, sensors, tuning, logs" },
+        { value: "Live", label: "view of sensor redundancy, with voted-out sensors flagged" },
+        { value: "1", label: "site that takes a defence partner from product to contact" },
+        { value: "Live", label: "at swrnsystems.in" },
+      ],
+      narrative:
+        "SWRN Systems has a website that presents an indigenous flight controller plainly to defence partners, and ground software that makes the board's redundancy, tuning and test flights visible to the people who fly it.",
+    },
+    screenshots: [
+      "SWRN's product section: the flight-control platform",
+      "swrnsystems.in on mobile: the home page and the product",
+      "Setup: the board, its redundant sensors and their health",
+      "Redundancy: one IMU voted out mid-flight, and the flight carries on",
+      "Tuning: the pitch rate loop's step response, before and after",
+      "Flight log: altitude and every event on one timeline",
+      "The website on a laptop, with the contact page on a phone",
+    ],
+    images: [
+      { src: "/case-studies/indigenous-flight-controller-india/inner.webp", alt: "SWRN Systems website: Our Product, with a wireframe of the flight-control board", width: 1440, height: 900 },
+      { src: "/case-studies/indigenous-flight-controller-india/mobile-site.webp", alt: "SWRN Systems website on two phones: the home page with flight footage, and Our Product", width: 1440, height: 900 },
+    ],
+    website: { url: "https://www.swrnsystems.in", image: { src: "/sites/swrn.webp", alt: "SWRN Systems website home page: SWRN Systems over flight footage", width: 1440, height: 900 } },
+    ctaHeading: "Building defence hardware that needs software too?",
+    placeholder: true,
+  },
+
   // ------------------------------------------------------------------ proposal · CareerNaksha
   // Source: 2023 VAUG proposal. TODO(content): confirm written consent to name this client.
   {

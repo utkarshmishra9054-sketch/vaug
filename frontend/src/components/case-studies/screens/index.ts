@@ -37,6 +37,7 @@ import { earthsprintScreens } from "./earthsprint";
 import { thermalDawnScreens } from "./thermaldawn";
 import { aerosearchScreens } from "./aerosearch";
 import { stelxScreens } from "./stelx";
+import { swrnScreens } from "./swrn";
 import { tennsaScreens } from "./tennsa";
 import { volkcellScreens } from "./volkcell";
 import { vunapayScreens } from "./vunapay";
@@ -68,6 +69,7 @@ export const SCREENS: Record<string, Screen[]> = {
   "supply-chain-business-ai-south-africa": tennsaScreens,
   "autonomous-landmine-detection-india": aerosearchScreens,
   "gps-denied-drone-robotics-varanasi": stelxScreens,
+  "indigenous-flight-controller-india": swrnScreens,
   "family-office-property-brand-dubai": propertyBrandScreens,
   "rental-prototype-rescue-lisbon": rentalRescueScreens,
   "modest-fashion-marketplace-abu-dhabi": marketplaceScreens,
