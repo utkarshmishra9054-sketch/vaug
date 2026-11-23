@@ -131,6 +131,6 @@ Both are among the 20 startups Utkarsh says VAUG built for (relayed by the leade
 - **Consent:** permission to show each logo and name each startup as a VAUG client.
 - **Logos:** captured from each site's header as it appears there, on a plate of the header colour. YOKO Styles and SWRN Systems have no header logo, and Scitus Labs has no site, so those three show their name in type.
 - **"What we built" lines:** short descriptions inferred from what each live site offers (sign-in, client portal, quote requests and so on). EarthSprint is confirmed (current website and portal; the older WordPress site was another agency's and isn't referenced). Utkarsh to confirm the rest.
-- **Scitus Labs:** scituslabs.io returned a 404 (an unpublished deployment) on 22–23 Nov 2026, and scitus.io is a different site. The card has no link or sector until Utkarsh gives the right URL.
-- **YOKO Styles · Stylique AI:** the relationship between the two names isn't clear from the site. Confirm how to show it.
+- **Scitus Labs:** Utkarsh asked us to use the live site. On 23 Nov 2026 there wasn't one: scituslabs.io is an unpublished Vercel deployment, scitus.io is a different company (never use it), and web searches for the company and its founders (Theresa Sporn, Tom Constance-Maxwell) found no site, Companies House entry or press. The card shows only the name and country. Add the logo, sector, link and a "what we built" line once the site is live.
+- **Stylique AI by YOKO:** shown this way on Utkarsh's instruction (23 Nov 2026); the site itself says "YOKO Styles".
 - Nothing on the wall says or implies VAUG helped any of them raise funding.

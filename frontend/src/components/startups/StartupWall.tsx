@@ -62,10 +62,8 @@ export function StartupWall() {
               <StartupPlate s={s} decorative className="h-16 w-28 shrink-0 sm:h-20 sm:w-full" />
               <div className="flex min-w-0 flex-1 flex-col">
                 <h3 className="font-semibold leading-snug text-fg">{s.name}</h3>
-                <p className="mt-0.5 text-xs text-muted">
-                  {s.country} · {s.sector}
-                </p>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{s.built}</p>
+                <p className="mt-0.5 text-xs text-muted">{[s.country, s.sector].filter(Boolean).join(" · ")}</p>
+                {s.built && <p className="mt-2 text-sm leading-relaxed text-muted">{s.built}</p>}
                 <div className="mt-auto flex flex-wrap gap-x-4 gap-y-1 pt-3 text-sm">
                   {s.url && (
                     <a href={s.url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-6 items-center gap-1 font-medium text-accent-text underline-offset-4 hover:underline">

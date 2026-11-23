@@ -1396,7 +1396,8 @@
   top: max(var(--pt), calc(var(--pt) + (100cqh - var(--pt) - var(--pb) - var(--mh) * var(--s)) / 2));
 }
 .mock-stage.mock-compact { --mw: 480px; --mh: 320px; --pt: 40px; --crop: 1.28; }
-@supports (scale: tan(atan2(1px, 1px))) {
+/* Not in Safari (see .shot-stage): it falls back to --s: 0.7 until CanvasScaler sets the exact value. */
+@supports (scale: tan(atan2(1px, 1px))) and (not (hanging-punctuation: first)) {
   .mock-stage {
     --s: min(1.15, tan(atan2(100cqw - 2 * var(--px), var(--mw))), tan(atan2((100cqh - var(--pt) - var(--pb)) * var(--crop), var(--mh))));
   }
@@ -1439,7 +1440,7 @@
   top: max(var(--pt), calc(var(--pt) + (100cqh - var(--pt) - var(--pb) - var(--mh) * var(--s)) / 2));
 }
 .mock2-stage.mock2-narrow { --mw: 400px; --mh: 270px; --pt: 40px; --pb: 10px; --crop: 1.18; }
-@supports (scale: tan(atan2(1px, 1px))) {
+@supports (scale: tan(atan2(1px, 1px))) and (not (hanging-punctuation: first)) {
   .mock2-stage {
     --s: min(1.15, tan(atan2(100cqw - 2 * var(--px), var(--mw))), tan(atan2((100cqh - var(--pt) - var(--pb)) * var(--crop), var(--mh))));
   }
@@ -1469,9 +1470,175 @@
 
 /* ---------- Case study screenshots: a 640 x 400 design canvas scaled to its box width ---------- */
 .shot { container: shot / inline-size; position: relative; width: 100%; aspect-ratio: 640 / 400; }
-.shot-stage { position: absolute; left: 0; top: 0; width: 640px; height: 400px; transform-origin: top left; scale: 0.5; }
-@supports (scale: tan(atan2(1px, 1px))) {
-  .shot-stage { scale: tan(atan2(100cqw, 640px)); }
+.shot-stage { position: absolute; left: 0; top: 0; width: 640px; height: 400px; transform-origin: top left; scale: var(--shot-scale, 0.5); }
+/* Scale without JS: steps every 8px (at most ~1% small). CanvasScaler.tsx then sets the exact
+   --shot-scale from the box width. */
+@container shot (min-width: 120px) { .shot-stage { scale: var(--shot-scale, 0.1875); } }
+@container shot (min-width: 128px) { .shot-stage { scale: var(--shot-scale, 0.2000); } }
+@container shot (min-width: 136px) { .shot-stage { scale: var(--shot-scale, 0.2125); } }
+@container shot (min-width: 144px) { .shot-stage { scale: var(--shot-scale, 0.2250); } }
+@container shot (min-width: 152px) { .shot-stage { scale: var(--shot-scale, 0.2375); } }
+@container shot (min-width: 160px) { .shot-stage { scale: var(--shot-scale, 0.2500); } }
+@container shot (min-width: 168px) { .shot-stage { scale: var(--shot-scale, 0.2625); } }
+@container shot (min-width: 176px) { .shot-stage { scale: var(--shot-scale, 0.2750); } }
+@container shot (min-width: 184px) { .shot-stage { scale: var(--shot-scale, 0.2875); } }
+@container shot (min-width: 192px) { .shot-stage { scale: var(--shot-scale, 0.3000); } }
+@container shot (min-width: 200px) { .shot-stage { scale: var(--shot-scale, 0.3125); } }
+@container shot (min-width: 208px) { .shot-stage { scale: var(--shot-scale, 0.3250); } }
+@container shot (min-width: 216px) { .shot-stage { scale: var(--shot-scale, 0.3375); } }
+@container shot (min-width: 224px) { .shot-stage { scale: var(--shot-scale, 0.3500); } }
+@container shot (min-width: 232px) { .shot-stage { scale: var(--shot-scale, 0.3625); } }
+@container shot (min-width: 240px) { .shot-stage { scale: var(--shot-scale, 0.3750); } }
+@container shot (min-width: 248px) { .shot-stage { scale: var(--shot-scale, 0.3875); } }
+@container shot (min-width: 256px) { .shot-stage { scale: var(--shot-scale, 0.4000); } }
+@container shot (min-width: 264px) { .shot-stage { scale: var(--shot-scale, 0.4125); } }
+@container shot (min-width: 272px) { .shot-stage { scale: var(--shot-scale, 0.4250); } }
+@container shot (min-width: 280px) { .shot-stage { scale: var(--shot-scale, 0.4375); } }
+@container shot (min-width: 288px) { .shot-stage { scale: var(--shot-scale, 0.4500); } }
+@container shot (min-width: 296px) { .shot-stage { scale: var(--shot-scale, 0.4625); } }
+@container shot (min-width: 304px) { .shot-stage { scale: var(--shot-scale, 0.4750); } }
+@container shot (min-width: 312px) { .shot-stage { scale: var(--shot-scale, 0.4875); } }
+@container shot (min-width: 320px) { .shot-stage { scale: var(--shot-scale, 0.5000); } }
+@container shot (min-width: 328px) { .shot-stage { scale: var(--shot-scale, 0.5125); } }
+@container shot (min-width: 336px) { .shot-stage { scale: var(--shot-scale, 0.5250); } }
+@container shot (min-width: 344px) { .shot-stage { scale: var(--shot-scale, 0.5375); } }
+@container shot (min-width: 352px) { .shot-stage { scale: var(--shot-scale, 0.5500); } }
+@container shot (min-width: 360px) { .shot-stage { scale: var(--shot-scale, 0.5625); } }
+@container shot (min-width: 368px) { .shot-stage { scale: var(--shot-scale, 0.5750); } }
+@container shot (min-width: 376px) { .shot-stage { scale: var(--shot-scale, 0.5875); } }
+@container shot (min-width: 384px) { .shot-stage { scale: var(--shot-scale, 0.6000); } }
+@container shot (min-width: 392px) { .shot-stage { scale: var(--shot-scale, 0.6125); } }
+@container shot (min-width: 400px) { .shot-stage { scale: var(--shot-scale, 0.6250); } }
+@container shot (min-width: 408px) { .shot-stage { scale: var(--shot-scale, 0.6375); } }
+@container shot (min-width: 416px) { .shot-stage { scale: var(--shot-scale, 0.6500); } }
+@container shot (min-width: 424px) { .shot-stage { scale: var(--shot-scale, 0.6625); } }
+@container shot (min-width: 432px) { .shot-stage { scale: var(--shot-scale, 0.6750); } }
+@container shot (min-width: 440px) { .shot-stage { scale: var(--shot-scale, 0.6875); } }
+@container shot (min-width: 448px) { .shot-stage { scale: var(--shot-scale, 0.7000); } }
+@container shot (min-width: 456px) { .shot-stage { scale: var(--shot-scale, 0.7125); } }
+@container shot (min-width: 464px) { .shot-stage { scale: var(--shot-scale, 0.7250); } }
+@container shot (min-width: 472px) { .shot-stage { scale: var(--shot-scale, 0.7375); } }
+@container shot (min-width: 480px) { .shot-stage { scale: var(--shot-scale, 0.7500); } }
+@container shot (min-width: 488px) { .shot-stage { scale: var(--shot-scale, 0.7625); } }
+@container shot (min-width: 496px) { .shot-stage { scale: var(--shot-scale, 0.7750); } }
+@container shot (min-width: 504px) { .shot-stage { scale: var(--shot-scale, 0.7875); } }
+@container shot (min-width: 512px) { .shot-stage { scale: var(--shot-scale, 0.8000); } }
+@container shot (min-width: 520px) { .shot-stage { scale: var(--shot-scale, 0.8125); } }
+@container shot (min-width: 528px) { .shot-stage { scale: var(--shot-scale, 0.8250); } }
+@container shot (min-width: 536px) { .shot-stage { scale: var(--shot-scale, 0.8375); } }
+@container shot (min-width: 544px) { .shot-stage { scale: var(--shot-scale, 0.8500); } }
+@container shot (min-width: 552px) { .shot-stage { scale: var(--shot-scale, 0.8625); } }
+@container shot (min-width: 560px) { .shot-stage { scale: var(--shot-scale, 0.8750); } }
+@container shot (min-width: 568px) { .shot-stage { scale: var(--shot-scale, 0.8875); } }
+@container shot (min-width: 576px) { .shot-stage { scale: var(--shot-scale, 0.9000); } }
+@container shot (min-width: 584px) { .shot-stage { scale: var(--shot-scale, 0.9125); } }
+@container shot (min-width: 592px) { .shot-stage { scale: var(--shot-scale, 0.9250); } }
+@container shot (min-width: 600px) { .shot-stage { scale: var(--shot-scale, 0.9375); } }
+@container shot (min-width: 608px) { .shot-stage { scale: var(--shot-scale, 0.9500); } }
+@container shot (min-width: 616px) { .shot-stage { scale: var(--shot-scale, 0.9625); } }
+@container shot (min-width: 624px) { .shot-stage { scale: var(--shot-scale, 0.9750); } }
+@container shot (min-width: 632px) { .shot-stage { scale: var(--shot-scale, 0.9875); } }
+@container shot (min-width: 640px) { .shot-stage { scale: var(--shot-scale, 1.0000); } }
+@container shot (min-width: 648px) { .shot-stage { scale: var(--shot-scale, 1.0125); } }
+@container shot (min-width: 656px) { .shot-stage { scale: var(--shot-scale, 1.0250); } }
+@container shot (min-width: 664px) { .shot-stage { scale: var(--shot-scale, 1.0375); } }
+@container shot (min-width: 672px) { .shot-stage { scale: var(--shot-scale, 1.0500); } }
+@container shot (min-width: 680px) { .shot-stage { scale: var(--shot-scale, 1.0625); } }
+@container shot (min-width: 688px) { .shot-stage { scale: var(--shot-scale, 1.0750); } }
+@container shot (min-width: 696px) { .shot-stage { scale: var(--shot-scale, 1.0875); } }
+@container shot (min-width: 704px) { .shot-stage { scale: var(--shot-scale, 1.1000); } }
+@container shot (min-width: 712px) { .shot-stage { scale: var(--shot-scale, 1.1125); } }
+@container shot (min-width: 720px) { .shot-stage { scale: var(--shot-scale, 1.1250); } }
+@container shot (min-width: 728px) { .shot-stage { scale: var(--shot-scale, 1.1375); } }
+@container shot (min-width: 736px) { .shot-stage { scale: var(--shot-scale, 1.1500); } }
+@container shot (min-width: 744px) { .shot-stage { scale: var(--shot-scale, 1.1625); } }
+@container shot (min-width: 752px) { .shot-stage { scale: var(--shot-scale, 1.1750); } }
+@container shot (min-width: 760px) { .shot-stage { scale: var(--shot-scale, 1.1875); } }
+@container shot (min-width: 768px) { .shot-stage { scale: var(--shot-scale, 1.2000); } }
+@container shot (min-width: 776px) { .shot-stage { scale: var(--shot-scale, 1.2125); } }
+@container shot (min-width: 784px) { .shot-stage { scale: var(--shot-scale, 1.2250); } }
+@container shot (min-width: 792px) { .shot-stage { scale: var(--shot-scale, 1.2375); } }
+@container shot (min-width: 800px) { .shot-stage { scale: var(--shot-scale, 1.2500); } }
+@container shot (min-width: 808px) { .shot-stage { scale: var(--shot-scale, 1.2625); } }
+@container shot (min-width: 816px) { .shot-stage { scale: var(--shot-scale, 1.2750); } }
+@container shot (min-width: 824px) { .shot-stage { scale: var(--shot-scale, 1.2875); } }
+@container shot (min-width: 832px) { .shot-stage { scale: var(--shot-scale, 1.3000); } }
+@container shot (min-width: 840px) { .shot-stage { scale: var(--shot-scale, 1.3125); } }
+@container shot (min-width: 848px) { .shot-stage { scale: var(--shot-scale, 1.3250); } }
+@container shot (min-width: 856px) { .shot-stage { scale: var(--shot-scale, 1.3375); } }
+@container shot (min-width: 864px) { .shot-stage { scale: var(--shot-scale, 1.3500); } }
+@container shot (min-width: 872px) { .shot-stage { scale: var(--shot-scale, 1.3625); } }
+@container shot (min-width: 880px) { .shot-stage { scale: var(--shot-scale, 1.3750); } }
+@container shot (min-width: 888px) { .shot-stage { scale: var(--shot-scale, 1.3875); } }
+@container shot (min-width: 896px) { .shot-stage { scale: var(--shot-scale, 1.4000); } }
+@container shot (min-width: 904px) { .shot-stage { scale: var(--shot-scale, 1.4125); } }
+@container shot (min-width: 912px) { .shot-stage { scale: var(--shot-scale, 1.4250); } }
+@container shot (min-width: 920px) { .shot-stage { scale: var(--shot-scale, 1.4375); } }
+@container shot (min-width: 928px) { .shot-stage { scale: var(--shot-scale, 1.4500); } }
+@container shot (min-width: 936px) { .shot-stage { scale: var(--shot-scale, 1.4625); } }
+@container shot (min-width: 944px) { .shot-stage { scale: var(--shot-scale, 1.4750); } }
+@container shot (min-width: 952px) { .shot-stage { scale: var(--shot-scale, 1.4875); } }
+@container shot (min-width: 960px) { .shot-stage { scale: var(--shot-scale, 1.5000); } }
+@container shot (min-width: 968px) { .shot-stage { scale: var(--shot-scale, 1.5125); } }
+@container shot (min-width: 976px) { .shot-stage { scale: var(--shot-scale, 1.5250); } }
+@container shot (min-width: 984px) { .shot-stage { scale: var(--shot-scale, 1.5375); } }
+@container shot (min-width: 992px) { .shot-stage { scale: var(--shot-scale, 1.5500); } }
+@container shot (min-width: 1000px) { .shot-stage { scale: var(--shot-scale, 1.5625); } }
+@container shot (min-width: 1008px) { .shot-stage { scale: var(--shot-scale, 1.5750); } }
+@container shot (min-width: 1016px) { .shot-stage { scale: var(--shot-scale, 1.5875); } }
+@container shot (min-width: 1024px) { .shot-stage { scale: var(--shot-scale, 1.6000); } }
+@container shot (min-width: 1032px) { .shot-stage { scale: var(--shot-scale, 1.6125); } }
+@container shot (min-width: 1040px) { .shot-stage { scale: var(--shot-scale, 1.6250); } }
+@container shot (min-width: 1048px) { .shot-stage { scale: var(--shot-scale, 1.6375); } }
+@container shot (min-width: 1056px) { .shot-stage { scale: var(--shot-scale, 1.6500); } }
+@container shot (min-width: 1064px) { .shot-stage { scale: var(--shot-scale, 1.6625); } }
+@container shot (min-width: 1072px) { .shot-stage { scale: var(--shot-scale, 1.6750); } }
+@container shot (min-width: 1080px) { .shot-stage { scale: var(--shot-scale, 1.6875); } }
+@container shot (min-width: 1088px) { .shot-stage { scale: var(--shot-scale, 1.7000); } }
+@container shot (min-width: 1096px) { .shot-stage { scale: var(--shot-scale, 1.7125); } }
+@container shot (min-width: 1104px) { .shot-stage { scale: var(--shot-scale, 1.7250); } }
+@container shot (min-width: 1112px) { .shot-stage { scale: var(--shot-scale, 1.7375); } }
+@container shot (min-width: 1120px) { .shot-stage { scale: var(--shot-scale, 1.7500); } }
+@container shot (min-width: 1128px) { .shot-stage { scale: var(--shot-scale, 1.7625); } }
+@container shot (min-width: 1136px) { .shot-stage { scale: var(--shot-scale, 1.7750); } }
+@container shot (min-width: 1144px) { .shot-stage { scale: var(--shot-scale, 1.7875); } }
+@container shot (min-width: 1152px) { .shot-stage { scale: var(--shot-scale, 1.8000); } }
+@container shot (min-width: 1160px) { .shot-stage { scale: var(--shot-scale, 1.8125); } }
+@container shot (min-width: 1168px) { .shot-stage { scale: var(--shot-scale, 1.8250); } }
+@container shot (min-width: 1176px) { .shot-stage { scale: var(--shot-scale, 1.8375); } }
+@container shot (min-width: 1184px) { .shot-stage { scale: var(--shot-scale, 1.8500); } }
+@container shot (min-width: 1192px) { .shot-stage { scale: var(--shot-scale, 1.8625); } }
+@container shot (min-width: 1200px) { .shot-stage { scale: var(--shot-scale, 1.8750); } }
+@container shot (min-width: 1208px) { .shot-stage { scale: var(--shot-scale, 1.8875); } }
+@container shot (min-width: 1216px) { .shot-stage { scale: var(--shot-scale, 1.9000); } }
+@container shot (min-width: 1224px) { .shot-stage { scale: var(--shot-scale, 1.9125); } }
+@container shot (min-width: 1232px) { .shot-stage { scale: var(--shot-scale, 1.9250); } }
+@container shot (min-width: 1240px) { .shot-stage { scale: var(--shot-scale, 1.9375); } }
+@container shot (min-width: 1248px) { .shot-stage { scale: var(--shot-scale, 1.9500); } }
+@container shot (min-width: 1256px) { .shot-stage { scale: var(--shot-scale, 1.9625); } }
+@container shot (min-width: 1264px) { .shot-stage { scale: var(--shot-scale, 1.9750); } }
+@container shot (min-width: 1272px) { .shot-stage { scale: var(--shot-scale, 1.9875); } }
+@container shot (min-width: 1280px) { .shot-stage { scale: var(--shot-scale, 2.0000); } }
+@container shot (min-width: 1288px) { .shot-stage { scale: var(--shot-scale, 2.0125); } }
+@container shot (min-width: 1296px) { .shot-stage { scale: var(--shot-scale, 2.0250); } }
+@container shot (min-width: 1304px) { .shot-stage { scale: var(--shot-scale, 2.0375); } }
+@container shot (min-width: 1312px) { .shot-stage { scale: var(--shot-scale, 2.0500); } }
+@container shot (min-width: 1320px) { .shot-stage { scale: var(--shot-scale, 2.0625); } }
+@container shot (min-width: 1328px) { .shot-stage { scale: var(--shot-scale, 2.0750); } }
+@container shot (min-width: 1336px) { .shot-stage { scale: var(--shot-scale, 2.0875); } }
+@container shot (min-width: 1344px) { .shot-stage { scale: var(--shot-scale, 2.1000); } }
+@container shot (min-width: 1352px) { .shot-stage { scale: var(--shot-scale, 2.1125); } }
+@container shot (min-width: 1360px) { .shot-stage { scale: var(--shot-scale, 2.1250); } }
+@container shot (min-width: 1368px) { .shot-stage { scale: var(--shot-scale, 2.1375); } }
+@container shot (min-width: 1376px) { .shot-stage { scale: var(--shot-scale, 2.1500); } }
+@container shot (min-width: 1384px) { .shot-stage { scale: var(--shot-scale, 2.1625); } }
+@container shot (min-width: 1392px) { .shot-stage { scale: var(--shot-scale, 2.1750); } }
+@container shot (min-width: 1400px) { .shot-stage { scale: var(--shot-scale, 2.1875); } }
+/* Exact scale without JS where trig works. Safari reads the atan2() angle as radians, so
+   tan(atan2(100cqw, 640px)) comes out negative there and the screen is flipped out of its box
+   (blank frames on iPhone); hanging-punctuation is Safari-only, so it's excluded here. */
+@supports (scale: tan(atan2(1px, 1px))) and (not (hanging-punctuation: first)) {
+  .shot-stage { scale: var(--shot-scale, tan(atan2(100cqw, 640px))); }
 }
 /* Screen viewer (ShotGallery.tsx): fade in; the gesture hint shows for a few seconds, then fades. */
 @keyframes shot-viewer-in { from { opacity: 0; } to { opacity: 1; } }

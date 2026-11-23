@@ -5,6 +5,7 @@ import { ContactProvider } from "@/components/contact/ContactProvider";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { Interactions } from "@/components/ui/Interactions";
+import { CanvasScaler } from "@/components/ui/CanvasScaler";
 import { RevealObserver } from "@/components/ui/RevealObserver";
 import { getFooterColumns, getLegalLinks, getNavigation, getSiteConfig } from "@/lib/content";
 import { motionInitScript } from "@/lib/motion";
@@ -59,6 +60,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           <Footer site={site} columns={footerColumns} legal={legal} />
         </ContactProvider>
         <RevealObserver />
+        <CanvasScaler />
         <Interactions />
       </body>
     </html>
