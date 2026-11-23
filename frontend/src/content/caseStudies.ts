@@ -1663,6 +1663,97 @@ export const caseStudies: CaseStudyDetail[] = [
     placeholder: true,
   },
 
+  // Tennsa: South African AI startup for supply chain businesses (tennsa.com, Tennsa (Pty) Ltd; data hosted
+  // in Johannesburg). Facts from its site and About page, read 23 Nov 2026. Its pricing, backers, press
+  // mentions and sample data are not used. TODO(content): confirm city, scope, stack, timeline, team, logo consent.
+  {
+    slug: "supply-chain-business-ai-south-africa",
+    client: "Tennsa",
+    city: "South Africa",
+    stage: "AI startup",
+    industry: "AI · supply chain",
+    model: "Build With Us",
+    icon: "database",
+    title: "A Website and Tennsa OS, the AI That Reads a Supply Chain Business as One",
+    summary:
+      "The tennsa.com website and sign-in, and the Tennsa OS views behind them: a read-only AI over a business's stock, accounting, payments and email, from back-office servers to cloud tools, that briefs the owner, answers questions from the records and projects cash.",
+    metrics: [
+      { value: "Read-only", label: "on every connected system, enforced in code" },
+      { value: "30/60/90", label: "day cash projection from how customers actually pay" },
+      { value: "3", label: "assistants it works from: Claude, ChatGPT, Gemini" },
+    ],
+    tint: "#1a2f5c",
+    // TODO(content): illustrative; matches the drawn screens.
+    screen: [
+      { label: "Systems read", value: "7" },
+      { label: "In today's briefing", value: "3" },
+      { label: "Cash likely in 30 days", value: "R1.64M" },
+    ],
+    logo: "/logos/tennsa.webp",
+    service: "build-with-us",
+    clientType: "Startup",
+    region: "Africa",
+    domain: "Website, sign-in, briefings, ask-anything, cash, branches and connections",
+    techStack: ["TypeScript", "Python", "PostgreSQL", "Google Cloud", "MCP", "OAuth"],
+    duration: "16 weeks",
+    team: "5 people: PM, designer, two full-stack devs, data engineer",
+    about:
+      "Tennsa builds Tennsa OS, the AI for manufacturers, wholesalers, distributors and retailers in South Africa. It connects the systems a business already runs, from software on a server in the back office such as IQ Retail, Sage 200 Evolution and SYSPRO to cloud tools such as Xero and Shopify, reads them continuously and only ever reads. It keeps what it reads as a record of the business, comes to the owner with what needs attention, answers questions from the business's own history, and works from Claude, ChatGPT or Gemini as well as its own app.",
+    problems: [
+      f("Every system holds a third of the picture.", "Stock, accounting, payments and email each record their part, and none of them agree."),
+      f("The back office isn't in the cloud.", "Much of the supply chain runs on servers no AI tool connects to."),
+      f("Problems found too late.", "The stockout, the late payer and the supplier who changed terms surface after the damage."),
+      f("Numbers an assistant can get wrong.", "Owners wanted AI answers they could trust and trace."),
+    ],
+    solution:
+      "We built tennsa.com, its sign-in and the Tennsa OS views behind it. The website explains, in an owner's terms, how Tennsa OS connects what the business runs and reads it as one, with a free trial and demo booking. Inside, a daily briefing ranks what changed by what it costs, each item traced to the invoice, order or email it came from, and arrives by email too. Owners ask questions in plain language and get answers computed from their own records, with the invoices behind them. Cash is projected 30, 60 and 90 days out from how each customer actually pays, branches on separate systems read as one business, and every connection is read-only. The same answers reach Claude, ChatGPT or Gemini, with each person on their own access.",
+    features: [
+      f("Website and sign-in", "How it works, the systems it reads, a free trial and demo booking."),
+      f("Daily briefing", "Ranked by cost, traced to the record, in the app and by email."),
+      f("Ask anything", "Plain-language questions answered from the business's own history."),
+      f("Cash planning", "30, 60 and 90 days, from how each customer really pays."),
+      f("Branches as one", "Many stores on many systems, compared and combined, with per-person views."),
+      f("Your assistant, too", "The same figures in Claude, ChatGPT or Gemini, computed by Tennsa OS."),
+    ],
+    challenges: [
+      f("Read-only, provably", "Connections only read, enforced in code and by the permissions granted."),
+      f("Figures you can trace", "Every number links to the invoices, payments or emails it was computed from."),
+      f("Servers and cloud together", "On-site systems and cloud tools appear as one business, branch by branch."),
+    ],
+    approach: [
+      p("Discovery", "Weeks 1–2", "Mapped how distributors and retailers run stock, accounts and branches across systems."),
+      p("Website", "Weeks 3–5", "Built the site, the systems list, sign-in and demo booking."),
+      p("Briefing and ask", "Weeks 6–11", "Briefing feed, ask-anything with sources, cash projection and branch views."),
+      p("Connections", "Weeks 12–16", "Connection screens, read-only permissions, assistant access and launch."),
+    ],
+    results: {
+      metrics: [
+        { value: "Read-only", label: "on every connected system, enforced in code" },
+        { value: "30/60/90", label: "day cash projection from how customers actually pay" },
+        { value: "3", label: "assistants it works from: Claude, ChatGPT, Gemini" },
+        { value: "Live", label: "at tennsa.com" },
+      ],
+      narrative:
+        "Tennsa has a website that explains a new kind of product in an owner's language, and a product whose views put the whole business on one screen: what needs attention first, answers traced to the record, cash the owner can plan with, and every branch side by side.",
+    },
+    screenshots: [
+      "Tennsa OS: built on the systems you already run",
+      "tennsa.com on mobile: the home page and sign-in",
+      "Briefing: what changed and what to act on first, traced to the record",
+      "Ask anything: answers from your own records, with the invoices behind them",
+      "Cash: what arrives in 30, 60 and 90 days, from how each customer pays",
+      "Branches: six stores on six systems, read as one business",
+      "Connections: read-only access, and the assistant you already use",
+    ],
+    images: [
+      { src: "/case-studies/supply-chain-business-ai-south-africa/inner.webp", alt: "Tennsa website: Built on the systems you already run", width: 1440, height: 900 },
+      { src: "/case-studies/supply-chain-business-ai-south-africa/mobile-site.webp", alt: "Tennsa website on two phones: the home page and sign-in to Tennsa OS", width: 1440, height: 900 },
+    ],
+    website: { url: "https://tennsa.com", image: { src: "/sites/tennsa.webp", alt: "Tennsa website home page: Your business, with a mind of its own.", width: 1440, height: 900 } },
+    ctaHeading: "Building AI for businesses that run on more than one system?",
+    placeholder: true,
+  },
+
   // ------------------------------------------------------------------ proposal · CareerNaksha
   // Source: 2023 VAUG proposal. TODO(content): confirm written consent to name this client.
   {

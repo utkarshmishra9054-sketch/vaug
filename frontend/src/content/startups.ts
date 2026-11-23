@@ -54,7 +54,7 @@ export const startups: Startup[] = [
   { slug: "doclarity", name: "Klartext AI · doclarity", country: "Austria", region: "Rest of the world", sector: "AI · accessible PDFs", built: "Bilingual website and the doclarity sign-up portal", url: "https://doclarity.eu", logo: logo("doclarity", 381, 108, "#ecf0fb"), study: "accessible-pdf-ai-platform-austria" },
   { slug: "vunapay", name: "VunaPay", country: "Kenya", region: "Rest of the world", sector: "Fintech · agriculture", built: "Website and early-access sign-up for smallholder payments", url: "https://vunapay.com", logo: logo("vunapay", 772, 133, "#ffffff"), study: "smallholder-produce-payments-nairobi" },
   { slug: "nesti", name: "nesti", country: "Kenya", region: "Rest of the world", sector: "Fintech · rent and credit", built: "Website and the property-manager portal", url: "https://nesti.africa", logo: logo("nesti", 279, 108, "#ffffff") },
-  { slug: "tennsa", name: "Tennsa", country: "South Africa", region: "Rest of the world", sector: "AI · supply chain", built: "Website and sign-in for Tennsa OS", url: "https://tennsa.com", logo: logo("tennsa", 520, 112, "#101d38") },
+  { slug: "tennsa", name: "Tennsa", country: "South Africa", region: "Rest of the world", sector: "AI · supply chain", built: "Website and sign-in for Tennsa OS", url: "https://tennsa.com", logo: logo("tennsa", 520, 112, "#101d38"), study: "supply-chain-business-ai-south-africa" },
 ];
 
 export const startupCountries = [...new Set(startups.map((s) => s.country))];
