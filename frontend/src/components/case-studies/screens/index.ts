@@ -36,6 +36,7 @@ import { jolScreens } from "./jolenergy";
 import { earthsprintScreens } from "./earthsprint";
 import { thermalDawnScreens } from "./thermaldawn";
 import { volkcellScreens } from "./volkcell";
+import { vunapayScreens } from "./vunapay";
 import { propertyBrandScreens } from "./propertyBrand";
 import { reconciliationScreens } from "./reconciliation";
 import { rentalRescueScreens } from "./rentalRescue";
@@ -60,6 +61,7 @@ export const SCREENS: Record<string, Screen[]> = {
   "rice-husk-materials-portal-nashik": earthsprintScreens,
   "home-thermal-storage-platform-australia": thermalDawnScreens,
   "ai-microscopy-image-analysis-edinburgh": volkcellScreens,
+  "smallholder-produce-payments-nairobi": vunapayScreens,
   "family-office-property-brand-dubai": propertyBrandScreens,
   "rental-prototype-rescue-lisbon": rentalRescueScreens,
   "modest-fashion-marketplace-abu-dhabi": marketplaceScreens,

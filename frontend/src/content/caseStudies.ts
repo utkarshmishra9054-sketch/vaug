@@ -1571,6 +1571,98 @@ export const caseStudies: CaseStudyDetail[] = [
     placeholder: true,
   },
 
+  // VunaPay: Kenyan agri-fintech startup (vunapay.com, Nairobi). Facts from its site, read 23 Nov 2026:
+  // collect (produce collection synced from IoT devices), manage (farmer records and inventory), payout
+  // (transparent farmer payouts), working with Agricultural Cooperative Societies; early access.
+  // TODO(content): confirm scope, stack, timeline, team, logo consent, produce and payout channel.
+  {
+    slug: "smallholder-produce-payments-nairobi",
+    client: "VunaPay",
+    city: "Nairobi, Kenya",
+    stage: "Agri-fintech startup",
+    industry: "Fintech · agriculture",
+    model: "Build With Us",
+    icon: "users",
+    title: "A Website and Co-op Platform That Weighs, Records and Pays Smallholder Farmers",
+    summary:
+      "The vunapay.com website with its early-access sign-up, and the cooperative product behind it: produce weighed and synced from the scale at collection, live records of every farmer and every centre, and payouts each farmer can check.",
+    metrics: [
+      { value: "3", label: "jobs in one product: collect, manage, payout" },
+      { value: "IoT", label: "scale readings synced at collection, not typed" },
+      { value: "1", label: "record per farmer: deliveries, deductions, payouts" },
+    ],
+    tint: "#559265",
+    // TODO(content): illustrative; matches the drawn screens.
+    screen: [
+      { label: "Collected today", value: "12,480 kg" },
+      { label: "Farmers in this payout", value: "1,206" },
+      { label: "Net to farmers", value: "KES 5.15M" },
+    ],
+    logo: "/logos/vunapay.webp",
+    service: "build-with-us",
+    clientType: "Startup",
+    region: "Africa",
+    domain: "Website, collection app, co-op dashboard and farmer payouts",
+    techStack: ["Wix", "React Native", "Node.js", "PostgreSQL", "Bluetooth LE", "SMS"],
+    duration: "12 weeks",
+    team: "4 people: PM, designer, mobile and full-stack devs",
+    about:
+      "VunaPay is an agri-fintech startup in Nairobi. It partners with Agricultural Cooperative Societies in Kenya to give smallholder farmers efficient, transparent produce management, so they get the most from what they deliver. Its product covers the three jobs a cooperative does for its members: collecting produce, with readings synced from IoT devices instead of written down; keeping accurate, real-time records on farmers and inventory; and paying farmers transparently for what they delivered. It is in early access.",
+    problems: [
+      f("Weights written by hand.", "Paper ledgers and typed weights at collection leave room for errors and disputes."),
+      f("Payouts nobody can check.", "Farmers wait for a lump sum without seeing how it was worked out."),
+      f("No picture across centres.", "A cooperative with several collection centres can't see what came in today, or what's in store."),
+      f("Patchy signal.", "Collection centres are often where the mobile signal is weakest."),
+    ],
+    solution:
+      "We built vunapay.com, on Wix so the team can update it themselves, with an early-access sign-up for cooperatives, and the product behind it. At collection, the clerk finds the member on a phone and the weight comes straight from a connected scale, with the grade; the farmer gets an SMS receipt. Deliveries queue on the phone when there's no signal and sync later. The cooperative sees every centre's collections live, every member's deliveries, deductions and payouts, and its stock in store. Payouts are built from the recorded deliveries less approved deductions, checked, approved and sent, and each farmer gets a statement they can check against their receipts.",
+    features: [
+      f("Early-access website", "What VunaPay does for cooperatives, with a one-field sign-up."),
+      f("Collection app", "Find the member, take the weight from the scale, grade it, send a receipt."),
+      f("Works offline", "Deliveries queue on the phone and sync when the signal returns."),
+      f("Co-op dashboard", "Today's collections by centre, latest deliveries and stock in store."),
+      f("Farmer records", "Every member's deliveries, deductions and payouts in one place."),
+      f("Payout runs", "Net pay per farmer from recorded deliveries, with checks before sending."),
+    ],
+    challenges: [
+      f("Trust in the number", "Every kilo in a payout traces back to a scale reading and a receipt the farmer already has."),
+      f("Built for the collection queue", "Large type, one hand, few taps, so a clerk can keep a morning queue moving."),
+      f("Statements in plain words", "SMS receipts and statements show weight, grade, deductions and net, nothing hidden."),
+    ],
+    approach: [
+      p("Discovery", "Weeks 1–2", "Mapped a cooperative's collection day and payout, from scale to statement."),
+      p("Website", "Weeks 3–4", "Built the site and the early-access sign-up."),
+      p("Collection and records", "Weeks 5–9", "Collection app with scale sync, offline queue, farmer records and the co-op dashboard."),
+      p("Payouts and pilot", "Weeks 10–12", "Payout runs, SMS receipts and statements, ready for the first cooperatives."),
+    ],
+    results: {
+      metrics: [
+        { value: "3", label: "jobs in one product: collect, manage, payout" },
+        { value: "IoT", label: "scale readings synced at collection, not typed" },
+        { value: "1", label: "record per farmer: deliveries, deductions, payouts" },
+        { value: "Live", label: "at vunapay.com" },
+      ],
+      narrative:
+        "VunaPay has a website that explains its offer to cooperatives and collects early-access sign-ups, and a product that takes a delivery from the scale to the farmer's payout with a receipt at every step, so farmers and their cooperative are looking at the same numbers.",
+    },
+    screenshots: [
+      "VunaPay's services: collect, manage and payout",
+      "vunapay.com on mobile: early access and the services",
+      "Collection day: each delivery weighed and synced from the scale",
+      "Co-op dashboard: every centre's collections, live",
+      "One farmer's record: deliveries, deductions and payouts",
+      "Payout run: every farmer's net pay, checked before it's sent",
+      "The website on a laptop, with SMS receipts on a farmer's phone",
+    ],
+    images: [
+      { src: "/case-studies/smallholder-produce-payments-nairobi/inner.webp", alt: "VunaPay website, services: collect, manage and payout", width: 1440, height: 900 },
+      { src: "/case-studies/smallholder-produce-payments-nairobi/mobile-site.webp", alt: "VunaPay website on two phones: Harvesting a better future, and the services", width: 1440, height: 900 },
+    ],
+    website: { url: "https://www.vunapay.com", image: { src: "/sites/vunapay.webp", alt: "VunaPay website home page: Harvesting a better future, with an early-access sign-up", width: 1440, height: 900 } },
+    ctaHeading: "Building fintech for farmers or co-ops?",
+    placeholder: true,
+  },
+
   // ------------------------------------------------------------------ proposal · CareerNaksha
   // Source: 2023 VAUG proposal. TODO(content): confirm written consent to name this client.
   {

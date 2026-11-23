@@ -41,7 +41,7 @@ export const engineering: { slug: EngineeringSlug; label: string; short: string;
   { slug: "quality-assurance", label: "Quality Assurance", short: "Manual, automated and performance testing", icon: "shield" },
 ];
 
-export const regions = ["UK", "Europe", "UAE", "India", "Canada", "Singapore", "Australia", "USA", "Brazil"] as const;
+export const regions = ["UK", "Europe", "UAE", "India", "Canada", "Singapore", "Australia", "USA", "Brazil", "Africa"] as const;
 
 export const routes = {
   home: "/",

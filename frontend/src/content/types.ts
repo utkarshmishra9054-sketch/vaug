@@ -382,4 +382,4 @@ export type EngineeringSlug =
   | "quality-assurance";
 
 export type ClientType = "Startup" | "Enterprise" | "HNI" | "Agency";
-export type Region = "UK" | "Europe" | "UAE" | "India" | "Canada" | "Singapore" | "Australia" | "USA" | "Brazil";
+export type Region = "UK" | "Europe" | "UAE" | "India" | "Canada" | "Singapore" | "Australia" | "USA" | "Brazil" | "Africa";
