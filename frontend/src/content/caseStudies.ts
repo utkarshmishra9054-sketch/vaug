@@ -2122,6 +2122,98 @@ export const caseStudies: CaseStudyDetail[] = [
     placeholder: true,
   },
 
+  // nesti: Kenyan fintech turning rent into a RentScore (nesti.africa). Facts from its site, read 23 Nov
+  // 2026. Its calculator figures, market statistics, partners, fees and savings product are not repeated.
+  // TODO(content): confirm city, scope (website and property-manager portal confirmed; the tenant app
+  // screens are assumed), stack, timeline, team, logo consent.
+  {
+    slug: "rent-credit-score-kenya",
+    client: "nesti",
+    city: "Kenya",
+    stage: "Fintech startup",
+    industry: "Fintech · rent and credit",
+    model: "Build With Us",
+    icon: "trending-up",
+    title: "A Website, Tenant App and Property-Manager Portal That Turn Rent Into a Credit Score",
+    summary:
+      "The nesti.africa website, the tenant app where rent paid by M-Pesa builds a RentScore, and the portal where property managers screen applicants with that score, standardise onboarding and keep audit-ready records.",
+    metrics: [
+      { value: "M-Pesa", label: "rent paid in the app, straight to the landlord or agent" },
+      { value: "6", label: "months of rent before a RentScore starts to open doors" },
+      { value: "1", label: "onboarding checklist for every property in a portfolio" },
+    ],
+    tint: "#1a1a1a",
+    // TODO(content): illustrative; matches the drawn screens.
+    screen: [
+      { label: "Rent collected, November", value: "94%" },
+      { label: "Units in the portfolio", value: "212" },
+      { label: "Applicants to screen", value: "9" },
+    ],
+    logo: "/logos/nesti.webp",
+    service: "build-with-us",
+    clientType: "Startup",
+    region: "Africa",
+    domain: "Website, tenant app and property-manager portal",
+    techStack: ["Next.js", "React Native", "Node.js", "PostgreSQL", "M-Pesa Daraja API"],
+    duration: "16 weeks",
+    team: "5 people: PM, designer, mobile dev, two full-stack devs",
+    about:
+      "nesti is a financial identity platform for Kenya's entrepreneurs, freelancers, contractors and gig workers, who often have no payslip and so stay invisible to banks. Tenants pay rent through the nesti app by M-Pesa, the money goes straight to the landlord, agent or property manager, and every on-time payment builds a RentScore. After six months the score starts to unlock rent financing and better rental terms, and over time it can support personal and business credit, home loans and rent-to-own, shared only with the tenant's consent. Property managers use the same scores to screen applicants before onboarding.",
+    problems: [
+      f("Rent proves nothing today.", "Tenants pay reliably every month, but none of it counts with a lender."),
+      f("Trust in a new way to pay rent.", "Tenants had to see that the money goes straight to their landlord, and what it costs, before paying."),
+      f("Screening on gut feeling.", "Property managers vetted applicants with paperwork and instinct, differently at every property."),
+      f("Decisions they can't defend.", "Landlords wanted to see why a tenant was placed."),
+    ],
+    solution:
+      "We built nesti.africa and the products behind it. The website explains the RentScore to tenants and property managers, with a calculator, how it works and app downloads. In the tenant app, rent is paid by M-Pesa with the service fee shown before paying, the money goes straight to the agent, and each payment adds to a RentScore the tenant can follow month by month, along with what it unlocks. Property managers get a portal where an applicant shares their score and history with consent, the same onboarding steps run at every property, each decision is recorded with its reason, and rent collection is tracked across the portfolio.",
+    features: [
+      f("Website", "The RentScore idea, a rent calculator, how it works and app downloads."),
+      f("Rent by M-Pesa", "Pay in the app, fee shown first, money straight to the landlord or agent."),
+      f("RentScore", "A score built from on-time payments, with what it unlocks over time."),
+      f("Applicant screening", "Score and payment history, shared by the applicant with consent."),
+      f("Standard onboarding", "The same steps at every property, from application to keys."),
+      f("Portfolio view", "Collection and arrears across every property, ready to share with landlords."),
+    ],
+    challenges: [
+      f("Consent first", "Nothing about a tenant reaches a manager unless the tenant chooses to share it."),
+      f("No surprises at payment", "The fee is always shown before the tenant pays."),
+      f("Decisions with reasons", "Every screening decision is stored with why it was made."),
+    ],
+    approach: [
+      p("Discovery", "Weeks 1–2", "Mapped how tenants pay rent today and how property managers vet and onboard."),
+      p("Website", "Weeks 3–5", "Built the site, the calculator and the property-manager pages."),
+      p("Tenant app", "Weeks 6–11", "M-Pesa rent payments, the RentScore and what it unlocks."),
+      p("Manager portal", "Weeks 12–16", "Screening with consent, standard onboarding, audit trail and portfolio view."),
+    ],
+    results: {
+      metrics: [
+        { value: "M-Pesa", label: "rent paid in the app, straight to the landlord or agent" },
+        { value: "6", label: "months of rent before a RentScore starts to open doors" },
+        { value: "1", label: "onboarding checklist for every property in a portfolio" },
+        { value: "Live", label: "at nesti.africa" },
+      ],
+      narrative:
+        "nesti has a website that makes the RentScore idea clear to tenants and property managers, an app that turns a monthly rent payment into a record that counts, and a portal that lets managers place tenants on evidence they can defend.",
+    },
+    screenshots: [
+      "nesti for property managers: screen smarter, onboard with confidence",
+      "nesti.africa on mobile: the home page and the property-manager page",
+      "Tenant app: rent paid by M-Pesa, and the RentScore it builds",
+      "Screening: an applicant's RentScore and history, shared with consent",
+      "Portfolio: rent collected and arrears across every property",
+      "Onboarding: the same steps at every property, each one recorded",
+      "The website on a laptop, with the RentScore path on a phone",
+    ],
+    images: [
+      { src: "/case-studies/rent-credit-score-kenya/inner.webp", alt: "nesti website: nesti for property managers", width: 1440, height: 900 },
+      { src: "/case-studies/rent-credit-score-kenya/mobile-site.webp", alt: "nesti website on two phones: Make your rent count, and nesti for property managers", width: 1440, height: 900 },
+    ],
+    website: { url: "https://nesti.africa", image: { src: "/sites/nesti.webp", alt: "nesti website home page: Make Your Rent Count. Finally!", width: 1440, height: 900 } },
+    ctaHeading: "Building fintech for people banks can't see?",
+    placeholder: true,
+  },
+
   // ------------------------------------------------------------------ proposal · CareerNaksha
   // Source: 2023 VAUG proposal. TODO(content): confirm written consent to name this client.
   {
