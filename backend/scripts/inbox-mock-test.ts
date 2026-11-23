@@ -161,6 +161,13 @@ async function main() {
     assert.equal(flags.length, 7);
     assert.ok(flags.every((m) => !m.flags?.has("\\Seen")), "no message was marked as read");
 
+    // A rejected login is recorded as an error code (no detail), and on-demand body fetches pause.
+    process.env.IMAP_PASS = "wrong-password";
+    await assert.rejects(pollInbox(), (e: { authenticationFailed?: boolean }) => e.authenticationFailed === true);
+    assert.equal((await readState()).lastError, "authentication failed");
+    assert.equal((await inbox.request(`/${byId(1).uid}`, { headers: auth })).status, 502);
+    process.env.IMAP_PASS = "testpass";
+
     console.log(`inbox mock test passed: 7 messages, ${commands.length} client commands checked (${[...verbs].sort().join(", ")}), no writes, no \\Seen flags.`);
   } finally {
     proxy.close();

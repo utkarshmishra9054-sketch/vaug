@@ -215,16 +215,38 @@ async function runPoll(): Promise<PollResult> {
 
 let running: Promise<PollResult> | null = null;
 
+/**
+ * After the server rejects the login, scheduled runs pause for a few hours instead of retrying a wrong
+ * password every 15 minutes (which can lock the mailbox). Changing the IMAP variables in Railway redeploys
+ * the API, which starts a fresh attempt straight away.
+ */
+const AUTH_PAUSE_MS = 6 * 3_600_000;
+let pausedUntil = 0;
+
 /** Reads new mail since the last run. Concurrent calls share one run. */
 export function pollInbox() {
-  running ??= runPoll().finally(() => {
-    running = null;
-  });
+  running ??= runPoll()
+    .catch((error) => {
+      if ((error as { authenticationFailed?: boolean })?.authenticationFailed) {
+        pausedUntil = Date.now() + AUTH_PAUSE_MS;
+        console.error("inbox: login rejected; paused for 6 hours (fix IMAP_USER / IMAP_PASS in Railway to retry now)");
+      }
+      throw error;
+    })
+    .finally(() => {
+      running = null;
+    });
   return running;
 }
 
+const scheduledPoll = () => {
+  if (Date.now() < pausedUntil) return;
+  void pollInbox().catch(() => {});
+};
+
 /** The full plain text of one message the reader has already seen, fetched read-only on demand. */
 export async function fetchBody(record: InboxRecord) {
+  if (Date.now() < pausedUntil) throw Object.assign(new Error("Inbox login paused"), { code: "login paused" });
   return withInbox(async (client, mailbox) => {
     if (String(mailbox.uidValidity) !== record.uidValidity) return null;
     const msg = await client.fetchOne(String(record.uid), { uid: true, bodyStructure: true }, { uid: true });
@@ -253,8 +275,7 @@ export async function inboxStatus() {
 /** Starts polling every INBOX_POLL_MINUTES (15 by default). Does nothing when the IMAP settings are missing. */
 export function startInboxReader() {
   if (!imapConfig()) return;
-  const run = () => void pollInbox().catch(() => {});
-  setTimeout(run, 15_000).unref();
-  setInterval(run, inboxSettings.pollMinutes * 60_000).unref();
+  setTimeout(scheduledPoll, 15_000).unref();
+  setInterval(scheduledPoll, inboxSettings.pollMinutes * 60_000).unref();
   console.log(`inbox: reader on, every ${inboxSettings.pollMinutes} min`);
 }

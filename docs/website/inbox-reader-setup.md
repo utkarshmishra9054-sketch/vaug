@@ -66,4 +66,8 @@ Fill the rules from the leads sheet and `docs/outreach/vaug-sales/prospects.json
 
 - **Deploy log:** look for `inbox: reader on` and the count line about 15 seconds after start.
 - **On failure:** the run logs `inbox: poll failed (authentication failed)` or another error code, and `status.lastError` in the API shows the same code.
+- **After a rejected login:** the reader pauses for 6 hours instead of retrying a wrong password every 15 minutes, which could lock the mailbox. Fixing `IMAP_USER` / `IMAP_PASS` in Railway redeploys the API, and that retries 15 seconds after start. Usual causes:
+  - `IMAP_USER` isn't the full address;
+  - the password has a stray space or line break;
+  - the password was changed in Hostinger.
 - **Code:** `backend/src/lib/inbox/` (reader, store, classification and text helpers) and `backend/src/routes/inbox.ts`.
