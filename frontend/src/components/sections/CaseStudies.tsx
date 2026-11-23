@@ -8,7 +8,7 @@ import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import type { CaseStudy } from "@/content/types";
 import { DemoBadge } from "@/components/ui/DemoBadge";
 import { Icon } from "@/components/ui/Icon";
-import { MockScene, MockTag, type MockStudy } from "@/components/sections/ScreenMockParts";
+import type { MockStudy } from "@/components/sections/ScreenMockParts";
 import { BoardCarousel, boardsFor } from "@/components/sections/BoardCarousel";
 
 /**
@@ -62,17 +62,10 @@ export function ScreenMock({ study, compact = false, priority = false }: { study
       <div className="absolute inset-0 bg-[radial-gradient(rgb(255_255_255/0.12)_1px,transparent_1px)] [background-size:18px_18px] [mask-image:linear-gradient(to_bottom,#000,transparent_85%)]" aria-hidden="true" />
       <div className="absolute -bottom-32 -left-20 size-80 rounded-full bg-black/20 blur-3xl" aria-hidden="true" />
 
-      {boards ? (
-        <BoardCarousel boards={boards} labels={study.screenshots} compact={compact} />
-      ) : study.website ? (
-        <WebsiteShot study={study} compact={compact} />
-      ) : (
-        <>
-          {!compact && <MockScene study={study} v="wide" />}
-          <MockScene study={study} v="narrow" alt={!compact} />
-          <MockTag />
-        </>
-      )}
+      {/* Every study has drawn screens or screenshots (boards). The website shot is the fallback; the old
+          drawn scenes (ScreenMockParts) are no longer shipped to the browser, so a study with neither
+          shows just its tinted panel. */}
+      {boards ? <BoardCarousel boards={boards} labels={study.screenshots} compact={compact} /> : study.website ? <WebsiteShot study={study} compact={compact} /> : null}
     </div>
   );
 }
