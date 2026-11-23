@@ -12,6 +12,7 @@ import { CaseStudyGrid } from "@/components/page/CaseStudyCards";
 import { FeatureGrid, LinkTiles } from "@/components/page/FeatureGrid";
 import { PageHero } from "@/components/page/PageHero";
 import { Section } from "@/components/page/Section";
+import { StartupWall } from "@/components/startups/StartupWall";
 import { TickerBand } from "@/components/sections/TickerBand";
 import { ArrowLink } from "@/components/ui/Button";
 import { getCaseStudiesBy } from "@/lib/content";
@@ -75,6 +76,12 @@ export default async function AudiencePage(props: PageProps<"/who-we-serve/[slug
           </ArrowLink>
         </div>
       </Section>
+
+      {page.slug === "startups" && (
+        <Section tone="dark" id="startups-we-built" eyebrow="Startups we've built for" title="Startups we've digitalised." subtitle="Their websites and portals, built by VAUG. Every card links to the live site, and two have full case studies." flush>
+          <StartupWall />
+        </Section>
+      )}
 
       {lead && (
         <Section tone="dark" id="work" eyebrow="Case studies" title={page.workTitle}>

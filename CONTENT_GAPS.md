@@ -124,3 +124,13 @@ Both are among the 20 startups Utkarsh says VAUG built for (relayed by the leade
 - **City:** shown as "South East England". The site doesn't say where the company is based.
 - **Stack, 12 weeks, team of 4:** inferred. Azure UK South is an assumption.
 - **Screens:** ward, patients (initials), coordinator name, agencies (anonymised provider codes), scores and hours are illustrative. The next-of-kin number uses the Ofcom drama range (07700 900xxx).
+
+## Startups wall (`content/startups.ts`, added 23 Nov 2026)
+
+20 startups VAUG built websites and portals for (per Utkarsh, via the leader). They appear in full on /who-we-serve/startups#startups-we-built, and as logo grids on the home page and /case-studies. Names, sectors and countries come from each startup's own site (read 22–23 Nov 2026).
+- **Consent:** permission to show each logo and name each startup as a VAUG client.
+- **Logos:** captured from each site's header as it appears there, on a plate of the header colour. YOKO Styles and SWRN Systems have no header logo, and Scitus Labs has no site, so those three show their name in type.
+- **"What we built" lines:** short descriptions inferred from what each live site offers (sign-in, client portal, quote requests and so on). EarthSprint is confirmed (current website and portal; the older WordPress site was another agency's and isn't referenced). Utkarsh to confirm the rest.
+- **Scitus Labs:** scituslabs.io returned a 404 (an unpublished deployment) on 22–23 Nov 2026, and scitus.io is a different site. The card has no link or sector until Utkarsh gives the right URL.
+- **YOKO Styles · Stylique AI:** the relationship between the two names isn't clear from the site. Confirm how to show it.
+- Nothing on the wall says or implies VAUG helped any of them raise funding.

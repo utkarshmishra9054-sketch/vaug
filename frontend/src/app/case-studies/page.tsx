@@ -7,6 +7,7 @@ import { ContactSection, PageCta } from "@/components/page/Blocks";
 import { LinkTiles, MetricRow } from "@/components/page/FeatureGrid";
 import { PageHero } from "@/components/page/PageHero";
 import { Section } from "@/components/page/Section";
+import { StartupLogos } from "@/components/startups/StartupLogos";
 import { Band } from "@/components/ui/Band";
 import { getCaseStudies } from "@/lib/content";
 
@@ -49,6 +50,10 @@ export default async function CaseStudiesPage() {
       <Band tone="light" id="all" label="All case studies">
         <CaseStudyExplorer studies={studies} />
       </Band>
+
+      <Section tone="dark" id="startups" eyebrow="Startups" title="Startups we've digitalised." subtitle="Websites and portals for 20 startups across India, the UK, the US, Europe, Africa and Australia." flush>
+        <StartupLogos />
+      </Section>
 
       <Section tone="dark" eyebrow="Browse by sector" title="Find work from your industry." subtitle="Each sector page covers the problems we solve there, the standards we build to and the work we've shipped." flush>
         <LinkTiles items={sectors.map((s) => ({ label: s.label, short: s.short, href: routes.industry(s.slug), icon: s.icon }))} />
