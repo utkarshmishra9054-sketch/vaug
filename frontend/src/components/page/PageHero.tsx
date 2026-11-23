@@ -37,9 +37,10 @@ export function Breadcrumbs({ items }: { items: LinkItem[] }) {
 export function HeroGlow({ tint }: { tint?: string }) {
   return (
     <>
-      {/* Radial gradients, not blur() filters: cheaper to paint, and WebKit can fail to paint big blurs. */}
-      <div className="hero-aurora absolute -left-[14%] -top-[38%] h-[52rem] w-[68%]" style={glow(tint ? `${tint}66` : "rgb(124 58 237 / 0.32)")} />
-      <div className="hero-aurora absolute -right-[14%] top-[18%] h-[38rem] w-[54%] [animation-delay:-6s]" style={glow("rgb(255 210 63 / 0.09)")} />
+      {/* Radial gradients, not blur() filters: cheaper to paint, and WebKit can fail to paint big blurs.
+          Offsets are fixed (rem), not % of the band height, so content loading in can't move them (CLS). */}
+      <div className="hero-aurora absolute -left-[14%] -top-[22rem] h-[52rem] w-[68%]" style={glow(tint ? `${tint}66` : "rgb(124 58 237 / 0.32)")} />
+      <div className="hero-aurora absolute -right-[14%] top-[8rem] h-[38rem] w-[54%] [animation-delay:-6s]" style={glow("rgb(255 210 63 / 0.09)")} />
       <div className="absolute inset-0 opacity-[0.06] [background-image:linear-gradient(rgb(255_255_255)_1px,transparent_1px),linear-gradient(90deg,rgb(255_255_255)_1px,transparent_1px)] [background-size:72px_72px] [mask-image:radial-gradient(ellipse_70%_60%_at_35%_35%,black,transparent)]" />
     </>
   );
