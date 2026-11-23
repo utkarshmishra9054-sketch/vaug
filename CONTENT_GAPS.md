@@ -150,3 +150,8 @@ Per study:
 - **doclarity** (`accessible-pdf-ai-platform-austria`): city unknown, shown as "Austria". The portal screens are in German with a placeholder town ("Gemeinde Musterstadt"), and no doclarity prices appear. The QA claims (VoiceOver, NVDA, 200% zoom) and EU hosting of the portal are assumptions.
 - **Reagvis Labs** (`deepfake-detection-platform-dehradun`): all files, scores and verdicts are illustrative.
 - **Stylique AI by YOKO** (`ai-sewing-pattern-app-india`): city unknown, shown as "India". Waitlist numbers and entries are illustrative.
+
+## Startups batch C: climate and energy (from 23 Nov 2026)
+
+Same standard as batches A and B: facts from each startup's own site, `placeholder: true`, qualitative or product-fact results only, no funding mentions, and the startup's own performance claims never repeated as VAUG results. Utkarsh to confirm for each: scope (website + portal), logo consent, stack, timeline and team.
+- **Alkamy Carbon** (`wastewater-carbon-removal-platform-india`): city unknown, shown as "India". The plant monitoring and MRV portal is assumed. Plants are anonymised pilot sites, and all readings, tonnes and enquiries are illustrative. Alkamy's "20–30% cost savings" and "100,000+ year storage" are its own claims and are not repeated.

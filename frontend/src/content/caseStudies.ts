@@ -1108,6 +1108,99 @@ export const caseStudies: CaseStudyDetail[] = [
     placeholder: true,
   },
 
+  // ------------------------------------------------------------------ Startups · batch C (climate)
+  // Alkamy Carbon: Indian wastewater carbon-removal startup (alkamycarbon.com). Product facts from its
+  // site, read 23 Nov 2026. Its "20–30% cost savings" and "100,000+ year storage" are its own claims and
+  // are not repeated as VAUG results. TODO(content): confirm scope (website + plant monitoring and MRV
+  // portal), stack, timeline, team, city and logo consent (CONTENT_GAPS.md). Screen data is illustrative.
+  {
+    slug: "wastewater-carbon-removal-platform-india",
+    client: "Alkamy Carbon",
+    city: "India",
+    stage: "Climate-tech startup",
+    industry: "Climate · carbon removal",
+    model: "Build With Us",
+    icon: "globe",
+    title: "A Website and MRV Dashboard for Carbon Removal at Wastewater Plants",
+    summary:
+      "The alkamycarbon.com website and a plant portal for its mineral dosing system: live inlet and outlet chemistry, automated dosing, and a carbon-removal ledger where every tonne traces back to measured readings.",
+    metrics: [
+      { value: "Inlet + outlet", label: "chemistry measured continuously, per plant" },
+      { value: "Every", label: "tonne traceable to measured readings" },
+      { value: "1", label: "portal for dosing, monitoring and MRV" },
+    ],
+    tint: "#0b2e2e",
+    // TODO(content): illustrative pilot-plant data; matches the drawn screens.
+    screen: [
+      { label: "CO₂ removed this month", value: "38.4 t" },
+      { label: "Dosing uptime", value: "99.2%" },
+      { label: "Batches verified", value: "26 / 28" },
+    ],
+    logo: "/logos/alkamy.webp",
+    service: "build-with-us",
+    clientType: "Startup",
+    region: "India",
+    domain: "Website and plant monitoring and MRV portal",
+    techStack: ["Next.js", "TypeScript", "Python (FastAPI)", "TimescaleDB", "MQTT", "AWS"],
+    duration: "12 weeks",
+    team: "4 people: PM, designer, full-stack dev, data engineer",
+    about:
+      "Alkamy Carbon turns wastewater treatment into a carbon sink. Natural minerals, dosed precisely into a plant's existing process, stabilise treatment chemistry while converting dissolved CO₂ into stable bicarbonates: permanent, measurable carbon removal. Inlet and outlet sensing measures the change directly, so every credit is traceable, and the credits fund deployment, so utilities pay nothing to take part. The company was founded by Rushil Hari Koppaka and Rishi Rathi.",
+    problems: [
+      f("A new idea for conservative buyers.", "Utility engineers had to see quickly that it needs no process changes and costs them nothing."),
+      f("Removal has to be measured.", "Carbon buyers trust only credits backed by continuous, traceable measurement."),
+      f("Plants run all day, every day.", "Dosing and monitoring had to work without anyone watching a screen."),
+      f("Pilots start with a conversation.", "Partner enquiries had to reach the founders with the details a pilot needs."),
+    ],
+    solution:
+      "We built alkamycarbon.com and a portal for the plants. The website explains the idea in one scroll: the chemistry, the benefits for the plant, why the carbon removal is permanent and verifiable, and a partner form that asks for flow, plant type and location. The portal shows each plant's inlet and outlet chemistry live, the dosing rate and how the optimiser has adjusted it, and alerts when a reading drifts. Every batch of treated water becomes a line in the carbon-removal ledger, with the readings behind it, and verified batches export as an MRV report for the registry.",
+    features: [
+      f("Explainer website", "Chemistry, plant benefits and verifiable removal in one scroll, with partner enquiries."),
+      f("Live plant chemistry", "Inlet and outlet pH, alkalinity and dissolved carbon, per plant."),
+      f("Dosing and optimisation", "Dose rate, set limits and every automatic adjustment, logged."),
+      f("Alerts", "Sensor drift, dosing faults and out-of-range readings, sent to the operator."),
+      f("Carbon-removal ledger", "Each batch with the measurements behind it and its verification status."),
+      f("MRV export", "Verified batches packaged for the registry and the credit buyer."),
+    ],
+    challenges: [
+      f("Data you can audit", "Raw sensor readings are kept unchanged beside the calculated removal, so a verifier can recompute any batch."),
+      f("Patchy plant connectivity", "Gateways buffer readings locally and sync when the link returns, with no gaps in the record."),
+      f("Plain language for utilities", "The website talks about treatment, cost and safety first, and carbon second."),
+    ],
+    approach: [
+      p("Discovery", "Weeks 1–2", "Mapped the chemistry, the sensors and what a verifier needs to see."),
+      p("Website", "Weeks 3–4", "Built the one-scroll site and the partner form."),
+      p("Portal", "Weeks 5–10", "Live chemistry, dosing logs, alerts and the ledger in two-week sprints."),
+      p("Pilot-ready", "Weeks 11–12", "Connected the first pilot plant and tested the MRV export."),
+    ],
+    results: {
+      metrics: [
+        { value: "Inlet + outlet", label: "chemistry measured continuously, per plant" },
+        { value: "Every", label: "tonne traceable to measured readings" },
+        { value: "1", label: "portal for dosing, monitoring and MRV" },
+        { value: "Live", label: "at alkamycarbon.com" },
+      ],
+      narrative:
+        "Alkamy has a website that explains carbon removal at a treatment plant in terms a utility engineer cares about, and a portal where every tonne it claims can be traced back to the readings that prove it.",
+    },
+    screenshots: [
+      "Alkamy's website: permanent and verifiable carbon removal, measured at inlet and outlet",
+      "alkamycarbon.com on mobile: the promise and zero-cost deployment",
+      "Plant dashboard: live inlet and outlet chemistry and carbon removed",
+      "Dosing: dose rate, limits and every automatic adjustment",
+      "Carbon-removal ledger: each batch with its readings and verification status",
+      "Partner enquiries from the website, with plant details for a pilot",
+      "The portal on a laptop, with a sensor alert on a phone",
+    ],
+    images: [
+      { src: "/case-studies/wastewater-carbon-removal-platform-india/inner.webp", alt: "Alkamy Carbon website: permanent and verifiable carbon removal, with inlet, mineral dosing and outlet measurement", width: 1440, height: 900 },
+      { src: "/case-studies/wastewater-carbon-removal-platform-india/mobile-site.webp", alt: "Alkamy Carbon website on two phones: Turning wastewater into a carbon sink, and zero-cost deployment", width: 1440, height: 900 },
+    ],
+    website: { url: "https://alkamycarbon.com", image: { src: "/sites/alkamy.webp", alt: "Alkamy Carbon website home page: Turning wastewater into a carbon sink", width: 1440, height: 900 } },
+    ctaHeading: "Building climate tech that has to prove its numbers?",
+    placeholder: true,
+  },
+
   // ------------------------------------------------------------------ proposal · CareerNaksha
   // Source: 2023 VAUG proposal. TODO(content): confirm written consent to name this client.
   {

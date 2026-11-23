@@ -31,6 +31,7 @@ import { cityverseScreens } from "./cityverse";
 import { doclarityScreens } from "./doclarity";
 import { reagvisScreens } from "./reagvis";
 import { styliqueScreens } from "./stylique";
+import { alkamyScreens } from "./alkamy";
 import { propertyBrandScreens } from "./propertyBrand";
 import { reconciliationScreens } from "./reconciliation";
 import { rentalRescueScreens } from "./rentalRescue";
@@ -50,6 +51,7 @@ export const SCREENS: Record<string, Screen[]> = {
   "accessible-pdf-ai-platform-austria": doclarityScreens,
   "deepfake-detection-platform-dehradun": reagvisScreens,
   "ai-sewing-pattern-app-india": styliqueScreens,
+  "wastewater-carbon-removal-platform-india": alkamyScreens,
   "family-office-property-brand-dubai": propertyBrandScreens,
   "rental-prototype-rescue-lisbon": rentalRescueScreens,
   "modest-fashion-marketplace-abu-dhabi": marketplaceScreens,
