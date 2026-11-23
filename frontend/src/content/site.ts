@@ -85,7 +85,7 @@ export const navigation: NavItem[] = [
       title: "Get in touch",
       links: [
         { label: "Contact us", href: routes.contact },
-        { label: "Book a strategy call", href: "#contact" },
+        { label: "Book a strategy call", href: routes.book },
         { label: "Case studies", href: routes.caseStudies },
       ],
     },

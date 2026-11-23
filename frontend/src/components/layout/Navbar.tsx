@@ -180,10 +180,10 @@ export function Navbar({ items }: { items: NavItem[] }) {
             <MotionToggle />
             <ThemeToggle />
             <div className="hidden sm:block">
-              <a href="#contact" data-magnetic className={arrowButtonClass("outline", "border-border")}>
+              <Link href="/book" data-magnetic className={arrowButtonClass("outline", "border-border")}>
                 <span>Book a call</span>
                 <ArrowBox variant="outline" />
-              </a>
+              </Link>
             </div>
             <button
               type="button"
@@ -286,10 +286,10 @@ export function Navbar({ items }: { items: NavItem[] }) {
             </li>
           ))}
           <li className="pt-4">
-            <a href="#contact" onClick={closeAll} className={arrowButtonClass("solid", "w-full justify-between")}>
+            <Link href="/book" onClick={closeAll} className={arrowButtonClass("solid", "w-full justify-between")}>
               <span>Book a call</span>
               <ArrowBox />
-            </a>
+            </Link>
             <Link href="/contact" onClick={closeAll} className="mt-3 block py-2 text-center text-sm text-muted hover:text-fg">
               Or visit the contact page
             </Link>

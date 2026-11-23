@@ -32,7 +32,7 @@ export default async function ContactPage() {
         subtitle={c.hero.subtitle}
         tags={c.hero.tags}
         primary={{ label: "Start your brief", href: "#brief" }}
-        secondary={{ label: "Book a call", href: "#contact" }}
+        secondary={{ label: "Book a call", href: routes.book }}
         aside={<HeroTracker title={c.heroCard.title} events={c.heroCard.events} />}
       />
 

@@ -71,6 +71,7 @@ export const routes = {
   accessibility: "/accessibility",
   accessibilityAudits: "/accessibility-audits",
   aiSearch: "/ai-search-readiness",
+  book: "/book",
   showcase: (slug: string) => `/showcases/${slug}`,
 } as const;
 

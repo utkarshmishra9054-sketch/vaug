@@ -40,7 +40,7 @@ export default async function WhoWeServePage() {
         title={c.hero.title}
         subtitle={c.hero.subtitle}
         tags={c.hero.tags}
-        primary={{ label: "Book a call", href: "#contact" }}
+        primary={{ label: "Book a call", href: routes.book }}
         secondary={{ label: "Find your page", href: "#audiences" }}
         aside={<AudienceHeroCards pages={audiencePages} />}
       />

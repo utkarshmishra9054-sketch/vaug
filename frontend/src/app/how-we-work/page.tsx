@@ -29,7 +29,7 @@ export default function HowWeWorkPage() {
         title={c.hero.title}
         subtitle={c.hero.subtitle}
         tags={c.hero.tags}
-        primary={{ label: "Book a strategy call", href: "#contact" }}
+        primary={{ label: "Book a strategy call", href: routes.book }}
         secondary={{ label: "See case studies", href: routes.caseStudies }}
         aside={<FridayUpdateMock items={c.heroUpdate} />}
       />

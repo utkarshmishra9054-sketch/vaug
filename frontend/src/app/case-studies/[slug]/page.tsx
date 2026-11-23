@@ -223,7 +223,7 @@ export default async function CaseStudyPage(props: PageProps<"/case-studies/[slu
               <div className="absolute bottom-0 right-24 size-24 rotate-12 rounded-md border-2 border-yellow/60" aria-hidden="true" />
               <p className="relative max-w-xl text-2xl font-semibold leading-snug sm:text-3xl">{study.ctaHeading}</p>
               <div className="relative mt-6">
-                <ArrowLink href="#contact" variant="light">
+                <ArrowLink href={routes.book} variant="light">
                   Book a call
                 </ArrowLink>
               </div>

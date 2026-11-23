@@ -55,7 +55,7 @@ export default async function IndustryPage(props: PageProps<"/industries/[slug]"
         title={page.hero.title}
         subtitle={page.hero.subtitle}
         tags={page.hero.tags}
-        primary={{ label: "Book a call", href: "#contact" }}
+        primary={{ label: "Book a call", href: routes.book }}
         secondary={{ label: studies.length ? "See our work" : "What we build", href: studies.length ? "#work" : "#solutions" }}
         aside={<SectorVisual sector={page.slug} size="hero" />}
       />

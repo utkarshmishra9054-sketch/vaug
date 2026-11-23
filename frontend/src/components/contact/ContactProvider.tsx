@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { CalendarClock, X } from "lucide-react";
 
 import { ContactForm } from "./ContactForm";
@@ -17,6 +18,7 @@ export const useContact = () => useContext(ContactContext);
 export function ContactProvider({ children, email }: { children: React.ReactNode; email: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
+  const onBookingPage = usePathname()?.startsWith("/book") ?? false;
   const lastFocus = useRef<HTMLElement | null>(null);
 
   const open = useCallback(() => {
@@ -62,34 +64,31 @@ export function ContactProvider({ children, email }: { children: React.ReactNode
     <ContactContext.Provider value={{ open }}>
       {children}
 
-      {/* Floating booking launcher: a round button whose label slides out on hover/focus.
-          Solid and compact, so it never sits translucently over page text. */}
-      <button
-        type="button"
-        onClick={open}
-        aria-label="Book a free strategy call"
-        aria-haspopup="dialog"
-        aria-expanded={isOpen}
-        className={`group fixed bottom-5 right-5 z-40 flex h-14 items-center overflow-hidden rounded-full bg-purple pl-[1.1rem] pr-[1.1rem] text-white shadow-xl shadow-purple/30 ring-1 ring-white/15 transition-all duration-300 hover:pr-5 focus-visible:pr-5 ${
-          isOpen ? "pointer-events-none translate-y-3 opacity-0" : ""
-        }`}
-      >
-        <span className="absolute inset-0 animate-ping rounded-full bg-purple/40 [animation-duration:3s] group-hover:hidden" aria-hidden="true" />
-        <CalendarClock className="relative size-5 shrink-0" aria-hidden="true" />
-        <span className="relative max-w-0 whitespace-nowrap text-sm font-semibold opacity-0 transition-all duration-300 group-hover:ml-2.5 group-hover:max-w-40 group-hover:opacity-100 group-focus-visible:ml-2.5 group-focus-visible:max-w-40 group-focus-visible:opacity-100">
-          Book a free call
-        </span>
-      </button>
+      {/* Floating booking launcher: a round link to /book whose label slides out on hover/focus.
+          Solid and compact, so it never sits translucently over page text. Not shown on the booking pages. */}
+      {!onBookingPage && (
+        <aside aria-label="Book a call">
+          <Link
+            href="/book"
+            aria-label="Book a free strategy call"
+            tabIndex={isOpen ? -1 : undefined}
+            aria-hidden={isOpen ? true : undefined}
+            className={`group fixed bottom-5 right-5 z-40 flex h-14 items-center overflow-hidden rounded-full bg-purple pl-[1.1rem] pr-[1.1rem] text-white shadow-xl shadow-purple/30 ring-1 ring-white/15 transition-all duration-300 hover:pr-5 focus-visible:pr-5 ${
+              isOpen ? "pointer-events-none translate-y-3 opacity-0" : ""
+            }`}
+          >
+            <span className="absolute inset-0 animate-ping rounded-full bg-purple/40 [animation-duration:3s] group-hover:hidden" aria-hidden="true" />
+            <CalendarClock className="relative size-5 shrink-0" aria-hidden="true" />
+            <span className="relative max-w-0 whitespace-nowrap text-sm font-semibold opacity-0 transition-all duration-300 group-hover:ml-2.5 group-hover:max-w-40 group-hover:opacity-100 group-focus-visible:ml-2.5 group-focus-visible:max-w-40 group-focus-visible:opacity-100">
+              Book a free call
+            </span>
+          </Link>
+        </aside>
+      )}
 
       {/* Slide-over panel */}
-      <div
-        className={`fixed inset-0 z-[70] transition-[visibility] ${isOpen ? "visible" : "invisible delay-500"}`}
-        aria-hidden={!isOpen}
-      >
-        <div
-          onClick={close}
-          className={`absolute inset-0 bg-ink/60 backdrop-blur-sm transition-opacity duration-500 ${isOpen ? "opacity-100" : "opacity-0"}`}
-        />
+      <div className={`fixed inset-0 z-[70] transition-[visibility] ${isOpen ? "visible" : "invisible delay-500"}`} aria-hidden={!isOpen}>
+        <div onClick={close} className={`absolute inset-0 bg-ink/60 backdrop-blur-sm transition-opacity duration-500 ${isOpen ? "opacity-100" : "opacity-0"}`} />
         <div
           ref={panelRef}
           role="dialog"
@@ -107,6 +106,12 @@ export function ContactProvider({ children, email }: { children: React.ReactNode
                 <span className="font-light">Tell us what you&apos;re</span> building.
               </h2>
               <p className="mt-2 text-sm text-muted">A senior lead replies within one business day to set up a 30-minute call.</p>
+              <p className="mt-2 text-sm text-muted">
+                Prefer to pick a time yourself?{" "}
+                <Link href="/book" onClick={close} className="font-semibold text-accent-text underline-offset-2 hover:underline">
+                  Book a call
+                </Link>
+              </p>
             </div>
             <button
               type="button"

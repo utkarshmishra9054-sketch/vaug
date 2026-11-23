@@ -63,6 +63,7 @@ export async function buildLlmsTxt(): Promise<string> {
     link("Working with us", routes.workingWithUs, "hours, weekly rhythm, IP and contracts"),
     link("Team", routes.team),
     link("Careers", routes.careers),
+    link("Book a 30-minute call", routes.book, "pick a time in your own time zone; Google Meet"),
     link("Contact", routes.contact),
     "",
     "## Optional",

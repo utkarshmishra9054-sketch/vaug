@@ -30,7 +30,7 @@ export default function WorkingWithUsPage() {
         subtitle={c.hero.subtitle}
         tags={c.hero.tags}
         primary={{ label: "See our hours", href: "#hours" }}
-        secondary={{ label: "Book a call", href: "#contact" }}
+        secondary={{ label: "Book a call", href: routes.book }}
       />
 
       <Section tone="light" id="hours" eyebrow="Time zones" title={c.hoursTitle} subtitle={c.hoursSubtitle}>

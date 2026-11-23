@@ -2,6 +2,9 @@ import type { CtaBlock } from "@/content/types";
 import { ArrowLink } from "@/components/ui/Button";
 import { CtaBlocks } from "./CtaBlocks";
 
+/** Banners that offer the 30-minute call go to the booking page; the rest open the written-enquiry panel. */
+const ctaHref = (c: CtaBlock) => (/30-minute|\bcall\b/i.test(`${c.subtitle} ${c.button}`) ? "/book" : "#contact");
+
 export function Cta({ content }: { content: CtaBlock }) {
   return (
     <div className="p-3 sm:p-4">
@@ -20,7 +23,7 @@ export function Cta({ content }: { content: CtaBlock }) {
         </h2>
         <p className="mx-auto mt-5 max-w-xl font-mono text-xs text-white/75 sm:text-sm">{content.subtitle}</p>
         <div data-blocks-ceiling className="mt-10">
-          <ArrowLink href="#contact" variant="light" className="py-2.5 pl-5 text-base">
+          <ArrowLink href={ctaHref(content)} variant="light" className="py-2.5 pl-5 text-base">
             {content.button}
           </ArrowLink>
         </div>

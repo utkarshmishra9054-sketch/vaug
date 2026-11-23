@@ -4,6 +4,7 @@ import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { secureHeaders } from "hono/secure-headers";
 
+import { booking } from "./routes/booking.js";
 import { leads } from "./routes/leads.js";
 import { subscribe, subscribers } from "./routes/subscribe.js";
 
@@ -14,6 +15,7 @@ app.use("*", secureHeaders());
 app.use("*", cors({ origin: (process.env.WEB_ORIGIN ?? "http://localhost:3000").split(","), allowMethods: ["GET", "POST"] }));
 
 app.get("/health", (c) => c.json({ ok: true, service: "vaug-api", time: new Date().toISOString() }));
+app.route("/booking", booking);
 app.route("/leads", leads);
 app.route("/subscribe", subscribe);
 app.route("/subscribers", subscribers);

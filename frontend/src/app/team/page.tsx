@@ -28,7 +28,7 @@ export default function TeamPage() {
         title={c.hero.title}
         subtitle={c.hero.subtitle}
         tags={c.hero.tags}
-        primary={{ label: "Book a call with a lead", href: "#contact" }}
+        primary={{ label: "Book a call with a lead", href: routes.book }}
         secondary={{ label: "Join the team", href: routes.careers }}
         aside={<TeamConstellation people={c.leadership} headcount={c.headcount} />}
       />

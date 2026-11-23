@@ -45,7 +45,7 @@ export default async function ServicesPage() {
         eyebrow={c.eyebrow}
         title={c.title}
         subtitle={c.subtitle}
-        primary={{ label: "Book a strategy call", href: "#contact" }}
+        primary={{ label: "Book a strategy call", href: routes.book }}
         secondary={{ label: "Find your model", href: "#chooser" }}
         tags={c.tags}
         aside={<ServiceConstellation items={links} />}

@@ -64,7 +64,7 @@ export default async function EngineeringDisciplinePage(props: PageProps<"/engin
         title={d.hero.title}
         subtitle={d.hero.subtitle}
         tags={d.hero.tags}
-        primary={{ label: "Book a call", href: "#contact" }}
+        primary={{ label: "Book a call", href: routes.book }}
         secondary={{ label: "See our work", href: routes.caseStudies }}
         aside={<DisciplineVisual slug={d.slug} label={d.hero.visualLabel} title={`${meta.label}: animated illustration`} />}
       />

@@ -145,7 +145,7 @@ export function Channels({ content, site }: { content: ContactPageContent["chann
         // Until a real number is set, this card books a call instead of linking nowhere.
         return digits
           ? { href: `https://wa.me/${digits}`, detail: site.phone, external: true }
-          : { href: "#contact", detail: "Free 30-minute strategy call", external: false };
+          : { href: "/book", detail: "Free 30-minute strategy call", external: false };
       case "careers":
         return { href: routes.careers, detail: "vaug.in/careers", external: false };
       case "partners":

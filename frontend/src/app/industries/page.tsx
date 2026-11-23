@@ -39,7 +39,7 @@ export default async function IndustriesPage() {
         title={c.hero.title}
         subtitle={c.hero.subtitle}
         tags={c.hero.tags}
-        primary={{ label: "Book a call", href: "#contact" }}
+        primary={{ label: "Book a call", href: routes.book }}
         secondary={{ label: "Explore sectors", href: "#sectors" }}
         aside={<IndustryOrbit />}
       />

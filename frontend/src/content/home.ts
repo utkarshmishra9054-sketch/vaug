@@ -24,7 +24,7 @@ export const home: HomePageContent = {
     },
     subtitle: "Agents, developers, custom builds, end-to-end launches, monthly care and rescues. One team uses AI in every service, so you get shorter timelines and leaner budgets.",
     ticker: ["AI as a Service", "Dedicated Developers", "Custom Development", "Build With Us", "Monthly Retainer", "Launch & Rescue"],
-    cta: { label: "Book a strategy call", href: "#contact" },
+    cta: { label: "Book a strategy call", href: "/book" },
     badgeWords: ["automate", "build", "scale"],
   },
 

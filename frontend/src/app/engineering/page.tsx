@@ -47,7 +47,7 @@ export default async function EngineeringPage() {
         title={c.hero.title}
         subtitle={c.hero.subtitle}
         tags={c.hero.tags}
-        primary={{ label: "Book a call", href: "#contact" }}
+        primary={{ label: "Book a call", href: routes.book }}
         secondary={{ label: "See our work", href: routes.caseStudies }}
         aside={<EngineeringOrbit coreLabel="Automate · Build · Scale" items={engineering.map((e) => ({ label: e.label, href: routes.engineeringPage(e.slug), icon: e.icon }))} />}
       />
