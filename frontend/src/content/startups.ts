@@ -41,7 +41,7 @@ export const startups: Startup[] = [
   { slug: "stelx", name: "StelX Dynamics", country: "India", region: "India", sector: "Robotics · drones", built: "Website and portfolio for its GPS-denied drones", url: "https://stelxdynamics.com", logo: logo("stelx", 311, 102, "#191b1f") },
   { slug: "swrn", name: "SWRN Systems", country: "India", region: "India", sector: "Defence · flight control", built: "Website for its indigenous flight controllers", url: "https://swrnsystems.in" },
   { slug: "earthsprint", name: "EarthSprint Solutions", country: "India", region: "India", sector: "Industrial materials", built: "Website and portal, with sample and call-back requests", url: "https://earthsprintsolutions.com", logo: logo("earthsprint", 392, 127, "#ffffff") },
-  { slug: "jolenergy", name: "JOL Energy", country: "India", region: "India", sector: "Climate · battery recycling", built: "Website, metal-price pages and client portal", url: "https://jolenergy.in", logo: logo("jolenergy", 591, 150, "#ffffff") },
+  { slug: "jolenergy", name: "JOL Energy", country: "India", region: "India", sector: "Climate · battery recycling", built: "Website, metal-price pages and client portal", url: "https://jolenergy.in", logo: logo("jolenergy", 591, 150, "#ffffff"), study: "battery-recycling-portal-vellore" },
   { slug: "heliousai", name: "HeliousAI", country: "India", region: "India", sector: "Defence · AI", built: "Website for its canopy-penetrating defence AI", url: "https://heliousai.com", logo: logo("heliousai", 257, 150, "#2b2e2e"), study: "defence-ai-mission-console-india" },
   // UK
   { slug: "scitus", name: "Scitus Labs", country: "UK", region: "UK" },

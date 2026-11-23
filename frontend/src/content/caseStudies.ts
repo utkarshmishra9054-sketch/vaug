@@ -1201,6 +1201,100 @@ export const caseStudies: CaseStudyDetail[] = [
     placeholder: true,
   },
 
+  // JOL Energy: battery-recycling startup incubated at VIT, Vellore (jolenergy.in). Facts from its
+  // site, read 23 Nov 2026; the site itself has metal-price, onboarding and client-dashboard pages.
+  // TODO(content): confirm scope, stack, timeline, team and logo consent (CONTENT_GAPS.md). Consignments,
+  // weights, prices and people in the drawn screens are illustrative.
+  {
+    slug: "battery-recycling-portal-vellore",
+    client: "JOL Energy",
+    city: "Vellore, Tamil Nadu, India",
+    stage: "Climate-tech startup",
+    industry: "Climate · battery recycling",
+    model: "Build With Us",
+    icon: "refresh-cw",
+    title: "A Website, Metal-Price Pages and Client Portal for a Battery Recycler",
+    summary:
+      "The jolenergy.in website with metal pricing and quote requests, supplier onboarding and a client portal where every project, from a battery consignment to a material order, is tracked in one place.",
+    metrics: [
+      { value: "5", label: "recovery stages tracked per consignment" },
+      { value: "3", label: "critical metals to quote: Li, Co, Ni" },
+      { value: "1", label: "portal for suppliers, buyers and the team" },
+    ],
+    tint: "#152633",
+    // TODO(content): illustrative; matches the drawn screens.
+    screen: [
+      { label: "Material received, quarter", value: "18.4 t" },
+      { label: "Consignments in process", value: "4" },
+      { label: "Certificates issued", value: "12" },
+    ],
+    logo: "/logos/jolenergy.webp",
+    service: "build-with-us",
+    clientType: "Startup",
+    region: "India",
+    domain: "Website, metal-price pages, onboarding and client portal",
+    techStack: ["HTML/CSS + vanilla JS", "Node.js", "PostgreSQL", "Cloudflare", "WhatsApp Business API", "S3"],
+    duration: "10 weeks",
+    team: "4 people: PM, designer, full-stack dev, QA",
+    about:
+      "JOL Energy recovers valuable resources from batteries and e-waste. It combines mechanical processing and hydrometallurgy across five stages (collect and sort, prepare and discharge, separate mechanically, recover and refine, check and return) to turn spent lithium-ion batteries and electronic scrap into critical materials such as lithium, cobalt and nickel for manufacturing. It is incubated at the Vellore Institute of Technology in Tamil Nadu.",
+    problems: [
+      f("Two kinds of customer.", "Suppliers of spent batteries and buyers of recovered metals needed different routes through one site."),
+      f("Trust in the chain of custody.", "Suppliers wanted to see where their material was and get a certificate at the end."),
+      f("Every quote is different.", "Recovered-material prices depend on chemistry, grade, volume and delivery, so buyers needed a fast way to ask, not a price list."),
+      f("Onboarding by email.", "New suppliers were signed up over email threads and spreadsheets."),
+    ],
+    solution:
+      "We built jolenergy.in with a route for each audience: suppliers find battery recycling, e-waste processing and how to start, buyers find recovered materials, products and a metal-pricing page that explains what drives the price and takes a quote request by material, grade, volume and delivery terms. A step-by-step onboarding page collects company details, material type, monthly volume, pickup location and compliance documents. Once onboarded, a client signs in to see all their projects in one place and follows every consignment through the five recovery stages, with weights at each stage, weighbridge slips and photos, and downloads the recovery certificate when it is done. Enquiries also arrive over WhatsApp into the same queue.",
+    features: [
+      f("Two-audience website", "Recycling for suppliers, recovered materials for buyers, and the five-stage process for both."),
+      f("Metal pricing and quotes", "What drives the price, and a quote request by material, grade, volume and delivery terms."),
+      f("Supplier onboarding", "Company, material, volume, pickup and compliance documents in one guided flow."),
+      f("Consignment tracking", "Each consignment through the five stages, with weights and photos."),
+      f("Certificates", "Recovery certificates and documents ready to download."),
+      f("WhatsApp enquiries", "Messages from the website's WhatsApp link land in the team's queue."),
+    ],
+    challenges: [
+      f("A mass balance that adds up", "Weights are recorded at every stage, so the portal shows what came in, what was recovered and what left as residue."),
+      f("Quotes, not price lists", "No live market feed is shown as a price; requests capture what the team needs to quote quickly."),
+      f("Fast on slow connections", "Plain, light pages load quickly for suppliers on mobile data across India."),
+    ],
+    approach: [
+      p("Discovery", "Weeks 1–2", "Mapped the supplier and buyer journeys and the five process stages with the team."),
+      p("Website", "Weeks 3–5", "Built the site, product and process pages and the metal-pricing page."),
+      p("Portal", "Weeks 6–9", "Onboarding, consignment tracking and certificates."),
+      p("Launch", "Week 10", "Content, analytics and handover."),
+    ],
+    results: {
+      metrics: [
+        { value: "5", label: "recovery stages tracked per consignment" },
+        { value: "3", label: "critical metals to quote: Li, Co, Ni" },
+        { value: "1", label: "portal for suppliers, buyers and the team" },
+        { value: "Live", label: "at jolenergy.in" },
+      ],
+      narrative:
+        "JOL has one site that speaks to the people who bring it waste and the people who buy what it recovers, and a portal that shows a supplier exactly where their batteries are, down to the certificate at the end.",
+    },
+    screenshots: [
+      "JOL Energy's metal-pricing page: request a current quote by material, grade and volume",
+      "JOL's client access: all of a client's projects in one place",
+      "jolenergy.in on mobile: the home page and products",
+      "Client portal: consignments through the five recovery stages",
+      "Consignment detail: weights at every stage, documents and the certificate",
+      "Quote requests: material, grade, form, volume and delivery terms",
+      "Supplier onboarding: company, material, volume, pickup and documents",
+      "The website on a laptop, with a consignment update on a phone",
+    ],
+    images: [
+      { src: "/case-studies/battery-recycling-portal-vellore/inner.webp", alt: "JOL Energy website: metal pricing, The material. The form. The requirement., with a request for current pricing", width: 1440, height: 900 },
+      { src: "/case-studies/battery-recycling-portal-vellore/client-access.webp", alt: "JOL Energy client access: Your projects. One place., with the sign-in form", width: 1440, height: 900 },
+      { src: "/case-studies/battery-recycling-portal-vellore/mobile-site.webp", alt: "JOL Energy website on two phones: the home page and products", width: 1440, height: 900 },
+    ],
+    website: { url: "https://www.jolenergy.in", image: { src: "/sites/jolenergy.webp", alt: "JOL Energy website home page: Resources, recovered. End of life. Start of value.", width: 1440, height: 900 } },
+    ctaHeading: "Running a circular business that needs a portal?",
+    placeholder: true,
+  },
+
   // ------------------------------------------------------------------ proposal · CareerNaksha
   // Source: 2023 VAUG proposal. TODO(content): confirm written consent to name this client.
   {

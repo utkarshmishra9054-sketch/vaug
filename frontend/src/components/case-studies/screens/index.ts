@@ -32,6 +32,7 @@ import { doclarityScreens } from "./doclarity";
 import { reagvisScreens } from "./reagvis";
 import { styliqueScreens } from "./stylique";
 import { alkamyScreens } from "./alkamy";
+import { jolScreens } from "./jolenergy";
 import { propertyBrandScreens } from "./propertyBrand";
 import { reconciliationScreens } from "./reconciliation";
 import { rentalRescueScreens } from "./rentalRescue";
@@ -52,6 +53,7 @@ export const SCREENS: Record<string, Screen[]> = {
   "deepfake-detection-platform-dehradun": reagvisScreens,
   "ai-sewing-pattern-app-india": styliqueScreens,
   "wastewater-carbon-removal-platform-india": alkamyScreens,
+  "battery-recycling-portal-vellore": jolScreens,
   "family-office-property-brand-dubai": propertyBrandScreens,
   "rental-prototype-rescue-lisbon": rentalRescueScreens,
   "modest-fashion-marketplace-abu-dhabi": marketplaceScreens,
