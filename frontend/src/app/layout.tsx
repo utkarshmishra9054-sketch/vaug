@@ -8,6 +8,7 @@ import { Interactions } from "@/components/ui/Interactions";
 import { CanvasScaler } from "@/components/ui/CanvasScaler";
 import { RevealObserver } from "@/components/ui/RevealObserver";
 import { getFooterColumns, getLegalLinks, getNavigation, getSiteConfig } from "@/lib/content";
+import { JsonLd, ld, organizationSchema, websiteSchema } from "@/lib/jsonld";
 import { motionInitScript } from "@/lib/motion";
 import { themeInitScript } from "@/lib/theme";
 import "./globals.css";
@@ -44,6 +45,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         {/* suppressHydrationWarning: browser extensions often inject into <head> scripts */}
         <script suppressHydrationWarning dangerouslySetInnerHTML={{ __html: themeInitScript + motionInitScript }} />
+        <JsonLd data={ld(organizationSchema(), websiteSchema())} />
       </head>
       <body className="min-h-dvh overflow-x-clip">
         <a

@@ -17,6 +17,7 @@ import { Band, SectionTitle } from "@/components/ui/Band";
 import { ArrowLink } from "@/components/ui/Button";
 import { DemoBadge } from "@/components/ui/DemoBadge";
 import { getCaseStudies, getCaseStudy } from "@/lib/content";
+import { JsonLd, caseStudySchema, ld } from "@/lib/jsonld";
 
 export const dynamicParams = false;
 
@@ -90,6 +91,9 @@ export default async function CaseStudyPage(props: PageProps<"/case-studies/[slu
 
   return (
     <>
+      <JsonLd
+        data={ld(caseStudySchema({ title: study.title, summary: study.summary, client: study.client, path: routes.caseStudy(study.slug), image: study.website?.image.src ?? study.images?.[0]?.src }))}
+      />
       {/* Hero */}
       <Band tone="dark" rails={false} dots={false} label="Case study" backdrop={<HeroGlow tint={study.tint} />}>
         <div className="frame-pad relative pb-16 pt-32 sm:pt-36 lg:pt-40">

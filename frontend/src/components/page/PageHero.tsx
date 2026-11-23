@@ -4,27 +4,31 @@ import { ChevronRight } from "lucide-react";
 import type { Link as LinkItem, SplitTitle } from "@/content/types";
 import { Band } from "@/components/ui/Band";
 import { ArrowLink } from "@/components/ui/Button";
+import { JsonLd, breadcrumbSchema, ld } from "@/lib/jsonld";
 
 export function Breadcrumbs({ items }: { items: LinkItem[] }) {
   return (
-    <nav aria-label="Breadcrumb">
-      <ol className="flex flex-wrap items-center gap-1.5 font-mono text-xs uppercase tracking-[0.15em] text-subtle">
-        {items.map((item, i) => (
-          <li key={item.href} className="flex items-center gap-1.5">
-            {i > 0 && <ChevronRight className="size-3" aria-hidden="true" />}
-            {i === items.length - 1 ? (
-              <span aria-current="page" className="text-muted">
-                {item.label}
-              </span>
-            ) : (
-              <Link href={item.href} className="link-underline transition-colors hover:text-fg">
-                {item.label}
-              </Link>
-            )}
-          </li>
-        ))}
-      </ol>
-    </nav>
+    <>
+      <JsonLd data={ld(breadcrumbSchema(items))} />
+      <nav aria-label="Breadcrumb">
+        <ol className="flex flex-wrap items-center gap-1.5 font-mono text-xs uppercase tracking-[0.15em] text-subtle">
+          {items.map((item, i) => (
+            <li key={item.href} className="flex items-center gap-1.5">
+              {i > 0 && <ChevronRight className="size-3" aria-hidden="true" />}
+              {i === items.length - 1 ? (
+                <span aria-current="page" className="text-muted">
+                  {item.label}
+                </span>
+              ) : (
+                <Link href={item.href} className="link-underline transition-colors hover:text-fg">
+                  {item.label}
+                </Link>
+              )}
+            </li>
+          ))}
+        </ol>
+      </nav>
+    </>
   );
 }
 
@@ -64,7 +68,6 @@ export function PageHero({
 }) {
   return (
     <Band tone="dark" rails={false} dots={false} label="Introduction" backdrop={<HeroGlow />}>
-
       <div className={`frame-pad relative grid gap-12 pb-20 pt-32 sm:pt-36 lg:pb-24 lg:pt-40 ${aside ? "lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:items-center" : ""}`}>
         <div>
           <Breadcrumbs items={breadcrumbs} />

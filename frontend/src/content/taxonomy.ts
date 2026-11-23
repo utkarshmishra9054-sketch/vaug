@@ -70,6 +70,7 @@ export const routes = {
   cookies: "/cookie-policy",
   accessibility: "/accessibility",
   accessibilityAudits: "/accessibility-audits",
+  aiSearch: "/ai-search-readiness",
   showcase: (slug: string) => `/showcases/${slug}`,
 } as const;
 

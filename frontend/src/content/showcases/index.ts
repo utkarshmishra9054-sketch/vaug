@@ -38,6 +38,14 @@ const capabilityPages: (Omit<Showcase, "slug"> & { href: string })[] = [
     services: ["custom-development", "launch-and-rescue", "monthly-retainer"],
     engineering: ["web-engineering", "ui-ux-design", "quality-assurance"],
   },
+  {
+    href: routes.aiSearch,
+    title: "AI search readiness",
+    summary: "Structured data, llms.txt and answer-ready content so assistants and search engines can read and quote you. Shown on vaug.in itself.",
+    icon: "search",
+    services: ["custom-development", "monthly-retainer"],
+    engineering: ["web-engineering", "full-stack-engineering"],
+  },
 ];
 
 export type CapabilityLink = { label: string; short: string; href: string; icon: IconName };

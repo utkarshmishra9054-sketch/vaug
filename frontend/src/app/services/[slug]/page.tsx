@@ -15,6 +15,7 @@ import { CapabilityLinks } from "@/components/showcases/CapabilityLinks";
 import { Band } from "@/components/ui/Band";
 import { ArrowLink } from "@/components/ui/Button";
 import { getCaseStudiesBy, getHomeContent } from "@/lib/content";
+import { JsonLd, ld, serviceSchema } from "@/lib/jsonld";
 
 export const dynamicParams = false;
 
@@ -53,6 +54,7 @@ export default async function ServicePage(props: PageProps<"/services/[slug]">) 
 
   return (
     <>
+      <JsonLd data={ld(serviceSchema({ name: label, description: s.metaDescription, path: routes.service(s.slug) }))} />
       <PageHero
         breadcrumbs={[
           { label: "Home", href: routes.home },

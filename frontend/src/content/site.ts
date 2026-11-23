@@ -63,6 +63,7 @@ export const navigation: NavItem[] = [
         { label: "All disciplines", href: routes.engineering },
         { label: "Dedicated developers", href: routes.service("dedicated-developers") },
         { label: "Accessibility audits", href: routes.accessibilityAudits },
+        { label: "AI search readiness", href: routes.aiSearch },
         { label: "Security & compliance", href: routes.security },
       ],
     },
@@ -94,7 +95,7 @@ export const navigation: NavItem[] = [
 export const footerColumns: FooterColumn[] = [
   { title: "What We Do", links: [...serviceLinks.map(({ label, href }) => ({ label, href })), { label: "VAUG Agents", href: routes.agents }] },
   { title: "Industries", links: [...sectorLinks.map(({ label, href }) => ({ label, href })), { label: "Who we serve", href: routes.whoWeServe }] },
-  { title: "Engineering", links: [...engineeringLinks.map(({ label, href }) => ({ label, href })), { label: "Accessibility audits", href: routes.accessibilityAudits }] },
+  { title: "Engineering", links: [...engineeringLinks.map(({ label, href }) => ({ label, href })), { label: "Accessibility audits", href: routes.accessibilityAudits }, { label: "AI search readiness", href: routes.aiSearch }] },
   {
     title: "Company",
     links: [
