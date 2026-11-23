@@ -39,5 +39,6 @@ export const logoMetrics: Record<string, { ratio: number; ink: number }> = {
   "/logos/traxpay.webp": { ratio: 4.324, ink: 0.296 },
   "/logos/unlockit.webp": { ratio: 4.660, ink: 0.125 },
   "/logos/vivin-design.webp": { ratio: 4.138, ink: 0.362 },
+  "/logos/volkcell.webp": { ratio: 4.579, ink: 0.323 },
   "/logos/well-aliments.webp": { ratio: 0.967, ink: 0.078 },
 };

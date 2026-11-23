@@ -1479,6 +1479,98 @@ export const caseStudies: CaseStudyDetail[] = [
     placeholder: true,
   },
 
+  // VolkCell: AI microscopy image analysis startup (volkcell.com, VolkCell Technologies Ltd, Edinburgh).
+  // Facts from its site and guide, read 23 Nov 2026. Its "used by researchers at" list and its demo
+  // outputs are its own and are not repeated; its pricing and funding are not mentioned.
+  // TODO(content): confirm scope, stack, timeline, team, logo consent.
+  {
+    slug: "ai-microscopy-image-analysis-edinburgh",
+    client: "VolkCell",
+    city: "Edinburgh, UK",
+    stage: "AI startup",
+    industry: "AI · microscopy analysis",
+    model: "Build With Us",
+    icon: "search",
+    title: "A Website and Workspace Where Labs Ask for an Analysis and Check Every Result",
+    summary:
+      "The volkcell.com website and the signed-in workspace behind it: researchers attach microscopy images, describe the analysis in plain words, check the plan, and get counts, overlays and a method they can repeat and cite.",
+    metrics: [
+      { value: "5", label: "common assays you can ask for in plain words" },
+      { value: "3", label: "images per run to try it, with no account" },
+      { value: "1", label: "record per run: plan, method and software version" },
+    ],
+    tint: "#1f6b7a",
+    // TODO(content): illustrative; matches the drawn screens.
+    screen: [
+      { label: "Runs this week", value: "48" },
+      { label: "Images analysed", value: "1,212" },
+      { label: "Warnings to review", value: "3" },
+    ],
+    logo: "/logos/volkcell.webp",
+    service: "build-with-us",
+    clientType: "Startup",
+    region: "UK",
+    domain: "Website, analysis chat, results review, run records and model training",
+    techStack: ["Next.js", "TypeScript", "Python", "FastAPI", "PyTorch", "PostgreSQL"],
+    duration: "14 weeks",
+    team: "5 people: PM, designer, full-stack dev, ML engineer, QA",
+    about:
+      "VolkCell is an image analyst for life-science labs, based in Edinburgh. Researchers attach microscopy images, describe the analysis they need, and get back counts, overlays and the method behind them. It covers cell counts and confluency, wound closure, organoids, cells in suspension and fluorescent nuclei, and says plainly when a request goes beyond what a standard analysis can cover. Anyone can try it without an account, up to 3 images per run, and lab teams, CROs and core facilities can talk to the team about batch runs and models trained on their own images.",
+    problems: [
+      f("Image analysis is a bottleneck.", "Labs either script it themselves or wait for someone who can; the product had to let a researcher just ask."),
+      f("Black-box numbers don't get published.", "Results had to come with masks, warnings and a method a reviewer can check."),
+      f("Every lab's images are different.", "Cell type, plate format and imaging vary, so the default model would not always be right."),
+      f("Trying before trusting.", "Researchers wanted to test it on their own images before creating an account or talking to anyone."),
+    ],
+    solution:
+      "We built volkcell.com and the workspace behind it. The website lets anyone attach images and ask, with no account, and shows how a request runs: describe the question, check what runs, get the data. In the workspace, a researcher describes the assay in a chat; a routine count starts straight away, while a new workflow comes back as a plan to accept or refine. Results arrive with the counts, measurement CSVs, overlays and plots, plus the masks and any quality warnings, so a doubtful value is flagged rather than hidden. Every run keeps its plan, method and software version, so it can be repeated and cited. Where the default model misses, researchers correct the masks and train a model on their own images.",
+    features: [
+      f("Try without an account", "Attach up to 3 images per run on the website and ask for an analysis."),
+      f("Describe your assay", "A chat that turns a plain description into a configured analysis."),
+      f("Check what runs", "New workflows come back as a plan to accept or refine before anything runs."),
+      f("Results you can check", "Counts, CSVs, overlays and plots, with masks and quality warnings alongside."),
+      f("Run records and citation", "Each run keeps its plan, method and software version, ready to repeat and cite."),
+      f("Corrections and training", "Fix masks, then train a model on your own corrected images."),
+    ],
+    challenges: [
+      f("Warnings, not hidden numbers", "Every image is checked; a doubtful value is still returned, with a warning that says what was found."),
+      f("Saying what isn't covered", "If a standard analysis can't cover part of a request, the product says which part, instead of guessing."),
+      f("Reproducible by default", "Plans, methods and versions are stored with every run, not reconstructed afterwards."),
+    ],
+    approach: [
+      p("Discovery", "Weeks 1–2", "Sat with how labs run counts, scratch assays and organoid sizing today, and what a reviewer asks for."),
+      p("Website", "Weeks 3–5", "Built the site with the no-account try-it flow and the how-it-works walkthrough."),
+      p("Workspace", "Weeks 6–11", "Analysis chat, plan review, results with masks and warnings, run records and exports."),
+      p("Training and launch", "Weeks 12–14", "Mask corrections, custom model training, the guide, and launch."),
+    ],
+    results: {
+      metrics: [
+        { value: "5", label: "common assays you can ask for in plain words" },
+        { value: "3", label: "images per run to try it, with no account" },
+        { value: "1", label: "record per run: plan, method and software version" },
+        { value: "Live", label: "at volkcell.com" },
+      ],
+      narrative:
+        "VolkCell has a website where a researcher can try an analysis on their own images in a minute, and a workspace that turns a plain description into a plan, returns results with the masks and warnings to check them, and keeps a record of every run that can go straight into a methods section.",
+    },
+    screenshots: [
+      "VolkCell's how-it-works: describe the question, check what runs, get the data",
+      "volkcell.com on mobile: the home page and how a request runs",
+      "Ask: attach images, describe the assay, check the plan before it runs",
+      "Results: counts and confluency, with masks and a quality warning to review",
+      "Wound healing: closure across time points, with the plot and the CSV",
+      "Run record: the plan, method and software version, ready to repeat and cite",
+      "Corrections: fix a mask, then train a model on your own images",
+    ],
+    images: [
+      { src: "/case-studies/ai-microscopy-image-analysis-edinburgh/inner.webp", alt: "VolkCell website, how it works: Ask. Check. Get the data.", width: 1440, height: 900 },
+      { src: "/case-studies/ai-microscopy-image-analysis-edinburgh/mobile-site.webp", alt: "VolkCell website on two phones: From microscopy to measurements, and how a request runs", width: 1440, height: 900 },
+    ],
+    website: { url: "https://www.volkcell.com", image: { src: "/sites/volkcell.webp", alt: "VolkCell website home page: From microscopy to measurements.", width: 1440, height: 900 } },
+    ctaHeading: "Building a tool scientists have to trust?",
+    placeholder: true,
+  },
+
   // ------------------------------------------------------------------ proposal · CareerNaksha
   // Source: 2023 VAUG proposal. TODO(content): confirm written consent to name this client.
   {

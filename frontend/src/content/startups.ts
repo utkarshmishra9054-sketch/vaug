@@ -46,7 +46,7 @@ export const startups: Startup[] = [
   // UK
   { slug: "scitus", name: "Scitus Labs", country: "UK", region: "UK" },
   { slug: "theronix", name: "Theronix Health", country: "UK", region: "UK", sector: "Healthcare · NHS discharge", built: "Website and the Theronix Flow prototype", url: "https://theronixhealth.com", logo: logo("theronix", 604, 108, "#ffffff"), study: "nhs-discharge-platform-england" },
-  { slug: "volkcell", name: "VolkCell", country: "UK", region: "UK", sector: "AI · microscopy analysis", built: "Website and the sign-in portal for its image analyst", url: "https://volkcell.com", logo: logo("volkcell", 269, 69, "#f0f2f3") },
+  { slug: "volkcell", name: "VolkCell", country: "UK", region: "UK", sector: "AI · microscopy analysis", built: "Website and the sign-in portal for its image analyst", url: "https://volkcell.com", logo: logo("volkcell", 269, 69, "#f0f2f3"), study: "ai-microscopy-image-analysis-edinburgh" },
   { slug: "ndlens", name: "ND Lens", country: "UK", region: "UK", sector: "Healthcare · ADHD assessment", built: "Website and demo bookings for its clinical platform", url: "https://ndlens.com", logo: logo("ndlens", 411, 109, "#16132b") },
   // Rest of the world
   { slug: "cityverse", name: "CityVerse AI", country: "USA", region: "Rest of the world", sector: "GovTech · capital projects", built: "Website and sign-in for its project-intelligence platform", url: "https://cityverseai.com", logo: logo("cityverse", 534, 128, "#fafaf8"), study: "capital-projects-ai-platform-usa" },
